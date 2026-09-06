@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F9B229">
+<meta name="description" content="UPN Talent Lab conecta estudiantes de la Universidad Privada del Norte con pequeñas y medianas empresas a través de microproyectos de 2 a 4 semanas con acompañamiento docente.">
+<title>UPN Talent Lab</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F9B229'/%3E%3Cpath d='M32 12 46 40H18z' fill='%233C3C3B'/%3E%3Crect x='27' y='40' width='10' height='12' rx='3' fill='%233C3C3B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"></noscript>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<div class="app" id="app-shell">
+
+  <!-- ======== Barra lateral (PC) ======== -->
+  <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+    <div class="sidebar__brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="34" height="34"><rect width="64" height="64" rx="16" fill="#F9B229"/><path d="M32 12 46 40H18z" fill="#3C3C3B"/><rect x="27" y="40" width="10" height="12" rx="3" fill="#3C3C3B"/></svg>
+      </span>
+      <span class="sidebar__brandtext">
+        <strong>UPN</strong>
+        <span>Talent Lab</span>
+      </span>
+      <button class="sidebar__close" data-action="ui:cerrar-menu" aria-label="Cerrar menú">&times;</button>
+    </div>
+    <nav class="sidebar__nav" id="nav-lateral"></nav>
+    <div class="sidebar__foot" id="nav-foot"></div>
+  </aside>
+  <div class="scrim" id="scrim" data-action="ui:cerrar-menu" hidden></div>
+
+  <!-- ======== Zona principal ======== -->
+  <div class="main">
+    <header class="topbar">
+      <button class="iconbtn topbar__burger" data-action="ui:abrir-menu" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </button>
+      <a class="topbar__brand" href="#/">
+        <svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#F9B229"/><path d="M32 12 46 40H18z" fill="#3C3C3B"/><rect x="27" y="40" width="10" height="12" rx="3" fill="#3C3C3B"/></svg>
+        <span>Talent&nbsp;Lab</span>
+      </a>
+      <div class="topbar__spacer"></div>
+      <div class="topbar__actions" id="topbar-actions"></div>
+    </header>
+
+    <main id="contenido" class="content" tabindex="-1"></main>
+
+    <footer class="appfoot">
+      <p>UPN Talent Lab · Prototipo académico · Los datos se guardan solo en este dispositivo.</p>
+    </footer>
+  </div>
+
+  <!-- ======== Barra inferior (móvil) ======== -->
+  <nav class="tabbar" id="tabbar" aria-label="Navegación rápida"></nav>
+</div>
+
+<!-- ======== Capas flotantes ======== -->
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<div class="modal" id="modal" hidden>
+  <div class="modal__scrim" data-action="ui:cerrar-modal"></div>
+  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <header class="modal__head">
+      <h2 id="modal-titulo"></h2>
+      <button class="iconbtn" data-action="ui:cerrar-modal" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="modal__body" id="modal-cuerpo"></div>
+  </div>
+</div>
+
+<script src="assets/js/00-config.js"></script>
+<script src="assets/js/01-utils.js"></script>
+<script src="assets/js/02-store.js"></script>
+<script src="assets/js/03-seed.js"></script>
+<script src="assets/js/04-auth.js"></script>
+<script src="assets/js/05-models.js"></script>
+<script src="assets/js/06-matching.js"></script>
+<script src="assets/js/07-ui.js"></script>
+<script src="assets/js/08-components.js"></script>
+<script src="assets/js/09-router.js"></script>
+<script src="assets/js/10-views-public.js"></script>
+<script src="assets/js/11-views-empresa.js"></script>
+<script src="assets/js/12-views-estudiante.js"></script>
+<script src="assets/js/13-views-coordinador.js"></script>
+<script src="assets/js/14-views-mentor.js"></script>
+<script src="assets/js/15-views-proyecto.js"></script>
+<script src="assets/js/16-views-constancia.js"></script>
+<script src="assets/js/17-views-cuenta.js"></script>
+<script src="assets/js/18-actions.js"></script>
+<script src="assets/js/19-app.js"></script>
+</body>
+</html>
