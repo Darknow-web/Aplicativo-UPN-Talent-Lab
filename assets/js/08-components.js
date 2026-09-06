@@ -123,10 +123,13 @@ window.C = (function () {
   }
 
   /* ---------- Contenedores ---------- */
-  function vacio(ico, titulo, texto, cta) {
+  /* nivel: 'h1' cuando el estado vacío es la pantalla completa (404, sin permiso),
+     'h3' (por defecto) cuando va dentro de una sección que ya tiene su encabezado. */
+  function vacio(ico, titulo, texto, cta, nivel) {
+    var t = nivel === 'h1' ? 'h1' : 'h3';
     return h`<div class="empty">
       <div class="empty__ico" aria-hidden="true">${ico}</div>
-      <h3>${titulo}</h3>
+      ${raw('<' + t + '>' + U.esc(titulo) + '</' + t + '>')}
       <p>${texto}</p>
       ${cta || ''}
     </div>`;

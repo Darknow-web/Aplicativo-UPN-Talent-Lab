@@ -329,7 +329,24 @@ window.Actions = (function () {
   on('filtro:constancias', filtro('/constancias'));
 
   /* ================= Datos ================= */
+  /* Algunos visores incrustados no permiten descargas, así que además de intentar
+     el archivo se ofrece copiar el contenido, que funciona en cualquier entorno. */
   on('datos:exportar', function () {
+    var json = Store.exportar();
+    UI.abrirModal('Copia de seguridad', U.html`
+      <p class="small muted">Guarda este contenido en un archivo <code>.json</code>.
+        Puedes restaurarlo más adelante desde cualquier dispositivo.</p>
+      <div class="btnrow">
+        <button class="btn btn--primary btn--sm" data-action="datos:copiar">Copiar todo</button>
+        <button class="btn btn--ghost btn--sm" data-action="datos:descargar">Intentar descargar</button>
+      </div>
+      <textarea class="textarea mt-sm" readonly rows="8"
+        style="font-family:ui-monospace,Menlo,monospace;font-size:.72rem" id="copia-json">${json}</textarea>
+      <p class="tiny muted mb0">${Math.round(json.length / 1024)} KB · ${Store.all('users').length} usuarios,
+        ${Store.all('retos').length} retos, ${Store.all('proyectos').length} proyectos.</p>`);
+  });
+  on('datos:copiar', function () { UI.copiar(Store.exportar()); });
+  on('datos:descargar', function () {
     try {
       var blob = new Blob([Store.exportar()], { type: 'application/json' });
       var a = document.createElement('a');
@@ -337,8 +354,8 @@ window.Actions = (function () {
       a.download = 'upn-talent-lab-' + U.hoy() + '.json';
       document.body.appendChild(a); a.click();
       setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-      UI.toast('Copia descargada.', 'ok');
-    } catch (e) { UI.toast('Tu navegador bloqueó la descarga.', 'err'); }
+      UI.toast('Si tu navegador no la descargó, usa “Copiar todo”.', 'ok', 5000);
+    } catch (e) { UI.toast('Este entorno no permite descargas. Usa “Copiar todo”.', 'warn', 5000); }
   });
   on('datos:reiniciar', function () {
     Store.reiniciar();

@@ -450,7 +450,8 @@ table.tbl tr:last-child td{border-bottom:0}
 /* Estado vacío */
 .empty{text-align:center;padding:2.2rem 1rem;border:1px dashed var(--border-strong);border-radius:var(--r-lg);background:var(--surface)}
 .empty__ico{font-size:2.2rem;line-height:1;margin-bottom:.4rem}
-.empty h3{margin:0 0 .2rem}
+.empty h1,.empty h3{margin:0 0 .2rem}
+.empty h1{font-size:1.35rem}
 .empty p{color:var(--text-soft);margin:0 auto .9rem;max-width:44ch;font-size:.9rem}
 
 /* Tabs */

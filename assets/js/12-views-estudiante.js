@@ -137,7 +137,7 @@ window.Vistas = window.Vistas || {};
     var est = Store.where('users', function (x) { return x.rol === 'estudiante' && x.slug === p.slug; })[0];
     if (!est) return Vistas.noEncontrado('#/portafolio/' + p.slug);
     if (!est.portafolioPublico) {
-      return C.vacio('🔒', 'Portafolio privado', 'Este estudiante decidió no mostrar su portafolio públicamente.');
+      return C.vacio('🔒', 'Portafolio privado', 'Este estudiante decidió no mostrar su portafolio públicamente.', null, 'h1');
     }
     var items = (est.portafolio || []).filter(function (i) { return i.visible; });
     var certs = M.constanciasDe(est.id).filter(function (c) { return c.estado === 'vigente'; });

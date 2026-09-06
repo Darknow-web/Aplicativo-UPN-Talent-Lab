@@ -316,13 +316,13 @@ window.Vistas = window.Vistas || {};
   Vistas.noEncontrado = function (path) {
     return h`${C.vacio('🧭', 'No encontramos esa página',
       'La dirección ' + path + ' no existe o cambió de lugar.',
-      h`<a class="btn btn--primary" href="#/">Ir al inicio</a>`)}`;
+      h`<a class="btn btn--primary" href="#/">Ir al inicio</a>`, 'h1')}`;
   };
   Vistas.sinPermiso = function (roles) {
     var u = Auth.actual();
     return h`${C.vacio('🔒', 'Esta sección no es para tu rol',
       'Tu cuenta es de ' + (u ? CFG.ROLES[u.rol].label : 'invitado') + ' y esta pantalla es de ' +
       roles.map(function (r) { return CFG.ROLES[r] ? CFG.ROLES[r].label : r; }).join(' o ') + '.',
-      h`<a class="btn btn--primary" href="#/">Volver a mi panel</a>`)}`;
+      h`<a class="btn btn--primary" href="#/">Volver a mi panel</a>`, 'h1')}`;
   };
 })();

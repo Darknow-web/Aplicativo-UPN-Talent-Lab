@@ -19,6 +19,14 @@ repositorio. La interfaz se adapta sola — barra lateral en escritorio, barra i
 - Abre `index.html` con doble clic. Funciona directamente desde el disco, sin servidor.
 - O sirve la carpeta: `python3 -m http.server 8000` y entra a `http://localhost:8000`.
 
+**En un solo archivo:** `dist/upn-talent-lab.html` contiene la aplicación completa (HTML, CSS y JS
+fusionados). Se puede enviar por correo o WhatsApp y abrir en cualquier equipo, sin conexión. Para
+regenerarlo tras cambiar el código:
+
+```
+node tools/empaquetar.js
+```
+
 ## Cuentas de demostración
 
 En la pantalla de ingreso hay botones de acceso rápido (un clic, sin escribir nada).
@@ -93,6 +101,8 @@ assets/js/
   10..17-views-*.js        Pantallas por rol
   18-actions.js            Registro de acciones + delegación de eventos
   19-app.js                Arranque y tabla de rutas
+tools/empaquetar.js        Fusiona todo en un archivo HTML autocontenido
+dist/upn-talent-lab.html   Resultado: la app completa en un solo archivo
 ```
 
 ### Decisiones técnicas
