@@ -9,7 +9,12 @@ WORKDIR /app
 COPY package.json server.js ./
 COPY index.html 404.html metadata.json ./
 COPY assets ./assets
-COPY dist ./dist
+
+# El archivo único se genera aquí y no se copia del repositorio: así la imagen
+# nunca queda con un empaquetado viejo, ni falla la construcción si dist/ no
+# está presente.
+COPY tools ./tools
+RUN node tools/empaquetar.js
 
 # Cloud Run inyecta PORT; 8080 es el valor por defecto que usa server.js.
 ENV NODE_ENV=production

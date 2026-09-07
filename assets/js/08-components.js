@@ -236,10 +236,11 @@ window.C = (function () {
           <h3 class="card__title">${r.titulo}</h3>
           <p class="tiny muted mb0">${emp ? (emp.razonSocial || emp.nombre) : ''} · ${emp ? emp.distrito : ''}</p>
         </div>
-        ${m ? anilloMatch(m) : chipReto(r)}
+        ${m ? anilloMatch(m) : ''}
       </div>
       <p class="small muted">${U.truncar(r.problema, 130)}</p>
       <div class="chips">
+        ${m ? '' : chipReto(r)}
         ${chipCategoria(r.categoria)}
         <span class="chip">${icono('reloj', 13)} ${r.semanas} semanas</span>
         <span class="chip">${r.tamanoEquipo} ${U.plural(r.tamanoEquipo, 'vacante')}</span>

@@ -17,60 +17,56 @@ window.Vistas = window.Vistas || {};
     var mt = M.metricas();
     var destacados = Store.where('retos', function (r) { return r.estado === 'publicado'; }).slice(0, 3);
     return h`
-      <section class="hero" style="text-align:center; padding: 4rem 1.5rem; background: var(--crema-soft); border-radius: var(--r-xl); margin-bottom: 3rem;">
-        <span class="eyebrow" style="color:var(--bronce); font-weight:700;">Universidad Privada del Norte</span>
-        <h1 style="font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin: 1rem auto; max-width: 800px;">
-          Conecta talento universitario con retos reales
-        </h1>
-        <p style="font-size: 1.15rem; color: var(--text-soft); max-width: 600px; margin: 0 auto 2.5rem;">
-          Las empresas resuelven necesidades. Los estudiantes ganan experiencia verificable.
-          Todo en microproyectos de 2 a 4 semanas.
+      <section class="portada">
+        <p class="eyebrow">Universidad Privada del Norte</p>
+        <h1 class="portada__t">Conecta talento universitario con <span class="subrayado">retos reales</span></h1>
+        <p class="portada__p">
+          Las empresas plantean una necesidad concreta. La UPN elige a los estudiantes según sus
+          habilidades. En 2 a 4 semanas, con un docente acompañando, el reto queda resuelto.
         </p>
-        <div class="hero__cta" style="justify-content:center; margin-bottom: 2.5rem;">
-          <a class="btn btn--dark btn--lg" href="#/registro?rol=empresa" style="border-radius: var(--r-pill); padding: 0 2rem;">Soy una empresa</a>
-          <a class="btn btn--lg" href="#/registro?rol=estudiante" style="background:var(--surface); border-radius: var(--r-pill); border: 1px solid var(--border); padding: 0 2rem;">Soy estudiante UPN</a>
+        <div class="portada__cta">
+          <a class="btn btn--dark btn--lg" href="#/registro?rol=empresa">Soy una empresa</a>
+          <a class="btn btn--ghost btn--lg" href="#/registro?rol=estudiante">Soy estudiante UPN</a>
         </div>
-        <div class="hero__kpis" style="justify-content:center; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1.5rem;">
-          <div class="hero__kpi"><b>${mt.retosPublicados}</b><span>retos abiertos</span></div>
-          <div class="hero__kpi"><b>${mt.estudiantes}</b><span>estudiantes</span></div>
-          <div class="hero__kpi"><b>${mt.empresas}</b><span>empresas</span></div>
-          <div class="hero__kpi"><b>${mt.constancias}</b><span>constancias</span></div>
-        </div>
+        <dl class="cifras">
+          <div class="cifra"><dt>${mt.retosPublicados}</dt><dd>retos abiertos</dd></div>
+          <div class="cifra"><dt>${mt.estudiantes}</dt><dd>estudiantes</dd></div>
+          <div class="cifra"><dt>${mt.empresas}</dt><dd>empresas</dd></div>
+          <div class="cifra"><dt>${mt.constancias}</dt><dd>constancias</dd></div>
+        </dl>
       </section>
 
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; text-align: center;">
-        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
-          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏢</div>
-          <h3 style="font-size: 1.15rem;">1. Plantea un reto</h3>
-          <p class="small muted mb0">Publica una necesidad acotada y concreta.</p>
-        </div>
-        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
-          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
-          <h3 style="font-size: 1.15rem;">2. Selección UPN</h3>
-          <p class="small muted mb0">Te asignamos el equipo ideal y un mentor.</p>
-        </div>
-        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
-          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚀</div>
-          <h3 style="font-size: 1.15rem;">3. Desarrollo</h3>
-          <p class="small muted mb0">2 a 4 semanas de trabajo con seguimiento.</p>
-        </div>
-      </div>
+      <ol class="pasos">
+        <li class="paso">
+          <h2>Plantea un reto</h2>
+          <p>Una necesidad acotada y en lenguaje simple: ordenar el inventario, reactivar las redes.</p>
+        </li>
+        <li class="paso">
+          <h2>La UPN arma el equipo</h2>
+          <p>Selección por habilidades declaradas y respaldadas, con un docente mentor asignado.</p>
+        </li>
+        <li class="paso">
+          <h2>Dos a cuatro semanas</h2>
+          <p>Hitos semanales y bitácora. Al cerrar, la empresa recibe el resultado y el estudiante su constancia.</p>
+        </li>
+      </ol>
 
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
-        <h2 style="margin: 0; font-size: 1.4rem;">Retos destacados</h2>
-        <a class="btn btn--ghost btn--sm" href="#/retos" style="color: var(--text-soft);">Ver todos &rarr;</a>
+      <div class="row row--between mt">
+        <h2 class="mb0">Retos abiertos ahora</h2>
+        ${destacados.length ? h`<a class="tiny" href="#/retos">Ver todos</a>` : ''}
       </div>
-      ${destacados.length ? h`<div class="grid grid--auto">${destacados.map(function (r) { return C.cardReto(r); })}</div>`
-        : C.vacio('📭', 'Todavía no hay retos publicados', 'Vuelve pronto o publica el primero desde tu cuenta de empresa.',
-            h`<a class="btn btn--primary" href="#/registro?rol=empresa">Publicar un reto</a>`)}
+      ${destacados.length
+        ? h`<div class="grid grid--auto mt-sm">${destacados.map(function (r) { return C.cardReto(r); })}</div>`
+        : C.vacio('📭', 'Todavía no hay retos publicados',
+            'Vuelve pronto, o publica el primero desde una cuenta de empresa.')}
 
-      <div class="card mt" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; background: var(--surface-2); padding: 2rem; border-radius: var(--r-xl); margin-top: 4rem; border: none;">
+      <section class="banda-cta">
         <div>
-          <h2 style="margin-bottom: 0.25rem; font-size: 1.4rem;">Validación transparente</h2>
-          <p class="muted small mb0">Verifica la autenticidad de las constancias con su código único.</p>
+          <h2>Experiencia que se puede comprobar</h2>
+          <p>Cada constancia lleva un código único. Cualquiera puede validarla en línea, sin tener cuenta.</p>
         </div>
-        <a class="btn btn--dark" href="#/verificar" style="border-radius: var(--r-pill); padding: 0 1.5rem;">${C.icono('escudo', 18)} Verificar constancia</a>
-      </div>
+        <a class="btn btn--primary" href="#/verificar">${C.icono('escudo', 18)} Verificar una constancia</a>
+      </section>
     `;
   }
 
@@ -90,7 +86,7 @@ window.Vistas = window.Vistas || {};
               ${cuentas.map(function (c) {
                 return h`<button class="demobtn" data-action="auth:demo" data-id="${c.user.id}">
                   ${C.avatar(c.user)}
-                  <span style="min-width:0">
+                  <span class="demobtn__txt">
                     <b>${c.accion}</b>
                     <span>${CFG.ROLES[c.user.rol].icono} ${c.user.rol === 'empresa' ? (c.user.razonSocial || c.user.nombre) : c.user.nombre}</span>
                     <span class="tiny">${c.detalle}</span>

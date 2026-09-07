@@ -2,7 +2,6 @@
 .github
 .gitignore
 .nojekyll
-tools
 README.md
 DESPLIEGUE.md
 node_modules
