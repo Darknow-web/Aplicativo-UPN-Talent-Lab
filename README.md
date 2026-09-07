@@ -73,18 +73,43 @@ Dentro de la app, **Guía de uso** explica el ciclo, lo que hace cada rol y este
 
 | Factor | Peso |
 |---|---|
-| Cobertura de habilidades requeridas | 40 |
-| Profundidad del nivel declarado | 15 |
+| Cobertura de habilidades requeridas | 38 |
+| Respaldo del nivel declarado | 12 |
 | Disponibilidad horaria | 12 |
-| Afinidad de carrera e intereses | 10 |
-| Desempeño en proyectos previos | 7 |
-| Ciclo académico | 6 |
+| Profundidad del nivel declarado | 10 |
+| Afinidad de carrera e intereses | 8 |
+| Ciclo académico | 5 |
+| Desempeño en proyectos previos | 5 |
 | Modalidad de trabajo | 5 |
 | Habilidades deseables | 5 |
 
 Antes de puntuar hay **filtros duros**: no cumplir una habilidad indispensable, no tener las horas
 mínimas o una modalidad incompatible descartan al candidato con un motivo visible. Después se
 aplican ajustes de equidad (+4 a quien nunca ha participado, −8 a quien ya lleva dos microproyectos).
+
+## Que el nivel declarado sea confiable
+
+El nivel es **Básico, Intermedio o Avanzado**, y cada uno se define por la evidencia que lo sostiene,
+no por autopercepción. Básico se autodeclara; los otros dos piden respaldo. Cuatro rutas, en orden
+de confiabilidad:
+
+1. **Confirmación del mentor.** Al evaluar la entrega final, el docente marca qué habilidades
+   demostró cada estudiante. Esas quedan verificadas y aparecen así en el perfil, el portafolio y la
+   constancia. Es la ruta más confiable y no cuesta tiempo extra a nadie.
+2. **Certificados.** `CFG.CERTIFICADOS` es un catálogo de equivalencias (MOS Excel Associate →
+   Intermedio, PL-300 → Avanzado…) y `M.sugerirNivel()` propone el nivel, cayendo a lectura de
+   palabras clave del título si no está catalogado. **La app sugiere y adjunta; una persona
+   confirma** — no hay verificación automática real.
+3. **Un trabajo propio.** Un tablero, un diseño, un repositorio. Evita dejar fuera a quien no puede
+   pagar certificaciones.
+4. **Prueba práctica corta.** Se genera sola al postular, y solo si se juntan tres condiciones:
+   nivel Intermedio o Avanzado, sin respaldo alguno, y la habilidad es indispensable para ese reto.
+   Es un encargo concreto de 30 a 45 minutos revisado por un docente, nunca un cuestionario de
+   opción múltiple.
+
+Además, **cada cambio de nivel queda registrado con su fecha**. Si alguien sube un nivel después de
+publicarse un reto que lo pide, la coordinación lo ve escrito junto al candidato al comparar. No
+bloquea a nadie: da contexto para que decida una persona.
 
 Para armar el equipo no se toman los mejores puntajes sin más: tras elegir al primero, cada
 siguiente integrante se escoge combinando su puntaje con **cuánta cobertura nueva aporta**, para que

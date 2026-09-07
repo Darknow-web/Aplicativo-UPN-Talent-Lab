@@ -103,6 +103,7 @@ window.Router = (function () {
         { href: '#/talento', icono: 'personas', label: 'Estudiantes', corto: 'Talento' }
       ],
       secundaria: comun.concat([
+        { href: '#/pruebas', icono: 'escudo', label: 'Pruebas prácticas' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
         { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
@@ -116,6 +117,7 @@ window.Router = (function () {
         { href: '#/constancias', icono: 'medalla', label: 'Constancias', corto: 'Constancias' }
       ],
       secundaria: comun.concat([
+        { href: '#/pruebas', icono: 'escudo', label: 'Pruebas prácticas' },
         { href: '#/reportes', icono: 'grafico', label: 'Reportes' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
         { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }

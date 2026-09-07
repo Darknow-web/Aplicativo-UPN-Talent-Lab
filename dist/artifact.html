@@ -593,6 +593,36 @@ table.tbl tr:last-child td{border-bottom:0}
 .ciclo>li b{display:block;font-size:.9rem}
 .ciclo>li span{display:block;font-size:.83rem;color:var(--text-soft);line-height:1.4}
 
+
+/* ---------- Habilidades: nivel y respaldo ---------- */
+.niveles-ref{display:grid;gap:.5rem;grid-template-columns:1fr;margin-top:.7rem}
+@media (min-width:760px){ .niveles-ref{grid-template-columns:repeat(3,1fr)} }
+.niveles-ref__i{
+  background:var(--crema-soft); border:1px solid var(--crema);
+  border-radius:var(--r-md); padding:.6rem .7rem;
+}
+.niveles-ref__i b{display:block;font-size:.88rem;color:var(--bronce)}
+.niveles-ref__i span{display:block;font-size:.8rem;line-height:1.4}
+.niveles-ref__i em{display:block;font-style:normal;font-size:.74rem;color:var(--text-soft);margin-top:.25rem}
+
+.habrow{border:1px solid var(--border);border-radius:var(--r-md);padding:.55rem .7rem;background:var(--surface)}
+.habrow--alto{border-color:var(--border-strong);background:var(--surface-2)}
+.habrow__top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.habrow__n{flex:1;min-width:120px;font-size:.9rem;font-weight:500;margin:0}
+.habrow__s{width:auto;min-width:132px;min-height:38px;padding:.25rem 1.9rem .25rem .55rem;flex:none}
+.habrow__resp{margin-top:.55rem;padding-top:.55rem;border-top:1px dashed var(--border)}
+.habrow__resp[hidden]{display:none}
+.habrow__resp .field label{font-weight:600}
+
+/* Señales que ve la coordinación al comparar candidatos */
+.senales{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.senal{
+  font-size:.72rem;font-weight:600;padding:.15rem .45rem;border-radius:5px;
+  background:var(--warn-bg);color:var(--warn);
+}
+.senal--ojo{background:var(--danger-bg);color:var(--danger)}
+.senal--ok{background:var(--ok-bg);color:var(--ok)}
+
 /* ---------- 9. Toast y modal ---------- */
 .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 12px);z-index:90;display:flex;flex-direction:column;gap:.5rem;width:min(94vw,420px);pointer-events:none}
 @media (min-width:900px){.toasts{bottom:20px;left:auto;right:20px;transform:none}}
@@ -807,7 +837,7 @@ window.CFG = (function () {
     canva:       { nombre: 'Canva / piezas gráficas', categoria: 'diseno' },
     illustrator: { nombre: 'Illustrator', categoria: 'diseno' },
     branding:    { nombre: 'Identidad de marca', categoria: 'diseno' },
-    excel:       { nombre: 'Excel avanzado', categoria: 'datos' },
+    excel:       { nombre: 'Excel', categoria: 'datos' },
     powerbi:     { nombre: 'Power BI', categoria: 'datos' },
     sql:         { nombre: 'SQL', categoria: 'datos' },
     analitica:   { nombre: 'Analítica web', categoria: 'datos' },
@@ -816,7 +846,7 @@ window.CFG = (function () {
     frontend:    { nombre: 'Desarrollo web', categoria: 'tecnologia' },
     automatiza:  { nombre: 'Automatización de tareas', categoria: 'tecnologia' },
     costos:      { nombre: 'Costos y precios', categoria: 'negocios' },
-    finanzas:    { nombre: 'Finanzas básicas', categoria: 'negocios' },
+    finanzas:    { nombre: 'Finanzas', categoria: 'negocios' },
     ventas:      { nombre: 'Técnicas de venta', categoria: 'negocios' },
     atencion:    { nombre: 'Atención al cliente', categoria: 'negocios' },
     inventarios: { nombre: 'Gestión de inventarios', categoria: 'operaciones' },
@@ -873,23 +903,121 @@ window.CFG = (function () {
     { id: 'impacto',      label: 'Impacto para la empresa',      ayuda: '¿El trabajo aporta valor real al negocio?' }
   ];
 
-  /* Pesos del algoritmo de matching (suman 100) */
+  /* Pesos del algoritmo de matching (suman 100).
+     El nivel declarado pierde peso frente al respaldo que lo sostiene: la app
+     deja de premiar lo que alguien dice y empieza a premiar lo que puede probar. */
   var PESOS_MATCH = {
-    cobertura: 40,     // habilidades requeridas cubiertas (ponderadas por importancia)
-    nivel: 15,         // profundidad del nivel declarado
+    cobertura: 38,     // habilidades requeridas cubiertas (ponderadas por importancia)
+    nivel: 10,         // profundidad del nivel declarado
+    respaldo: 12,      // qué tan sustentado está ese nivel (certificado, trabajo, verificación)
     disponibilidad: 12,
-    afinidad: 10,      // carrera / intereses vs categoría del reto
-    ciclo: 6,
+    afinidad: 8,       // carrera / intereses vs categoría del reto
+    ciclo: 5,
     modalidad: 5,
-    historial: 7,
+    historial: 5,
     deseables: 5
+  };
+
+
+  /* ---------- Niveles de habilidad ----------
+     Definidos por la evidencia que los sostiene, no por autopercepción:
+     así declarar un nivel deja de ser una opinión y pasa a ser una afirmación
+     que se sostiene o no se sostiene. */
+  var NIVELES = {
+    1: { label: 'Básico',     corto: 'Bás.', afirma: 'Lo vi en un curso, lo uso con guía',
+         respaldo: 'Se autodeclara, no necesita respaldo' },
+    2: { label: 'Intermedio', corto: 'Int.', afirma: 'Lo he usado para resolver algo real, solo',
+         respaldo: 'Certificado intermedio, o un trabajo propio que puedas mostrar' },
+    3: { label: 'Avanzado',   corto: 'Avz.', afirma: 'Puedo hacerme cargo de punta a punta',
+         respaldo: 'Certificado avanzado, o un microproyecto Talent Lab confirmado por un mentor' }
+  };
+
+  /* Estado del respaldo de una habilidad. Se calcula, no se guarda. */
+  var RESPALDOS = {
+    declarado:  { label: 'Declarado',  chip: '',            ayuda: 'Sin respaldo adjunto' },
+    respaldado: { label: 'Respaldado', chip: 'chip--info',  ayuda: 'Tiene certificado o trabajo propio, falta revisarlo' },
+    verificado: { label: 'Verificado', chip: 'chip--ok',    ayuda: 'Confirmado por un docente tras un trabajo real' }
+  };
+
+  /* ---------- Catálogo de certificados ----------
+     Equivalencias definidas por la UPN entre certificaciones reconocidas y el
+     nivel que acreditan. Es lo que evita que dos estudiantes con el mismo
+     certificado se asignen niveles distintos. */
+  var CERTIFICADOS = [
+    { nombre: 'Microsoft Office Specialist: Excel Associate', emisor: 'Microsoft', skills: ['excel'], nivel: 2 },
+    { nombre: 'Microsoft Office Specialist: Excel Expert', emisor: 'Microsoft', skills: ['excel'], nivel: 3 },
+    { nombre: 'Microsoft PL-300: Power BI Data Analyst', emisor: 'Microsoft', skills: ['powerbi', 'analitica'], nivel: 3 },
+    { nombre: 'Microsoft DP-900: Azure Data Fundamentals', emisor: 'Microsoft', skills: ['sql', 'analitica'], nivel: 1 },
+    { nombre: 'Google Data Analytics Certificate', emisor: 'Google', skills: ['analitica', 'excel', 'sql'], nivel: 2 },
+    { nombre: 'Google Analytics Individual Qualification', emisor: 'Google', skills: ['analitica'], nivel: 2 },
+    { nombre: 'Google Ads Search Certification', emisor: 'Google', skills: ['metaads', 'seo'], nivel: 2 },
+    { nombre: 'Google Digital Marketing & E-commerce', emisor: 'Google', skills: ['marketing', 'ecommerce', 'seo'], nivel: 2 },
+    { nombre: 'Meta Social Media Marketing Professional', emisor: 'Meta', skills: ['community', 'metaads', 'contenido'], nivel: 2 },
+    { nombre: 'Meta Certified Digital Marketing Associate', emisor: 'Meta', skills: ['metaads'], nivel: 2 },
+    { nombre: 'HubSpot Inbound Marketing', emisor: 'HubSpot', skills: ['contenido', 'copy'], nivel: 1 },
+    { nombre: 'HubSpot Content Marketing', emisor: 'HubSpot', skills: ['contenido', 'copy', 'seo'], nivel: 2 },
+    { nombre: 'Adobe Certified Professional: Illustrator', emisor: 'Adobe', skills: ['illustrator', 'branding'], nivel: 3 },
+    { nombre: 'Adobe Certified Professional: Photoshop', emisor: 'Adobe', skills: ['fotografia'], nivel: 3 },
+    { nombre: 'Adobe Certified Professional: Premiere Pro', emisor: 'Adobe', skills: ['video'], nivel: 3 },
+    { nombre: 'Canva Design School: Graphic Design Essentials', emisor: 'Canva', skills: ['canva'], nivel: 1 },
+    { nombre: 'Canva Design School: Advanced Design', emisor: 'Canva', skills: ['canva'], nivel: 2 },
+    { nombre: 'WordPress for Beginners', emisor: 'Udemy', skills: ['wordpress'], nivel: 1 },
+    { nombre: 'Scrum Fundamentals Certified', emisor: 'SCRUMstudy', skills: ['procesos'], nivel: 1 },
+    { nombre: 'Lean Six Sigma Yellow Belt', emisor: 'CSSC', skills: ['procesos'], nivel: 2 },
+    { nombre: 'Lean Six Sigma Green Belt', emisor: 'CSSC', skills: ['procesos', 'inventarios'], nivel: 3 },
+    { nombre: 'APICS CPIM Parte 1', emisor: 'ASCM', skills: ['inventarios', 'logistica'], nivel: 2 },
+    { nombre: 'Certificado de Excel Financiero', emisor: 'UPN', skills: ['excel', 'finanzas', 'costos'], nivel: 2 }
+  ];
+
+  /* Cuando el certificado no está en el catálogo, se lee su título.
+     El orden importa: se evalúa de mayor a menor nivel. */
+  var REGLAS_NIVEL_TEXTO = [
+    { nivel: 3, re: /(avanzad|advanced|expert|profesional|professional|specialist|master|\bc1\b|\bc2\b|green belt|black belt)/i },
+    { nivel: 2, re: /(intermedi|intermediate|associate|practitioner|\bb1\b|\bb2\b|yellow belt)/i },
+    { nivel: 1, re: /(b[áa]sic|basic|fundament|introducc|introduction|beginner|essentials|inicial|\ba1\b|\ba2\b)/i }
+  ];
+
+  /* ---------- Encargos de la prueba práctica ----------
+     Se piden solo cuando alguien declara Intermedio o Avanzado sin respaldo en
+     una habilidad indispensable del reto al que postula. Son encargos cortos y
+     concretos, revisados por un docente: nunca cuestionarios de opción múltiple,
+     que se resuelven con el celular al lado y miden memoria, no capacidad. */
+  var PRUEBAS_POR_HABILIDAD = {
+    excel: 'Con una planilla de ventas de 200 filas (te la enviamos), arma una tabla dinámica de ventas por mes y producto, y una fórmula que marque los productos que están bajo su punto de reposición. Sube el archivo o un enlace.',
+    powerbi: 'Con el archivo de ventas que te enviamos, construye un tablero de una página que responda: qué producto rota más, en qué mes y a qué tipo de cliente. Comparte el enlace o una captura del tablero publicado.',
+    sql: 'Con la base de ejemplo que te enviamos, escribe tres consultas: ventas totales por mes, los diez productos más vendidos, y los clientes que no compran hace 90 días.',
+    analitica: 'Toma una cuenta o web de ejemplo y explica en una página qué medirías para saber si está funcionando, con qué indicadores y cada cuánto los revisarías.',
+    community: 'Propón un plan de contenido de dos semanas para una panadería de barrio: qué publicar cada día, con qué objetivo y en qué formato. Una página.',
+    contenido: 'Escribe tres publicaciones para una veterinaria que quiere educar a sus clientes sobre vacunación, cada una con su texto y la idea de imagen.',
+    copy: 'Escribe el texto de venta de un servicio de limpieza de oficinas: un mensaje de WhatsApp de apertura, una descripción para redes y un titular.',
+    metaads: 'Diseña una campaña de S/ 300 para una ferretería: objetivo, público, formato de anuncio, texto y cómo medirías si funcionó.',
+    seo: 'Elige un negocio local y entrega diez palabras clave con las que debería aparecer en Google, más tres mejoras concretas para su ficha de Google Empresa.',
+    canva: 'Diseña tres piezas para redes de un negocio de tejidos: una de producto, una de promoción y una de marca. Comparte el enlace de Canva.',
+    illustrator: 'Diseña una propuesta de logotipo para un taller de tejidos de alpaca, en versión principal y reducida. Comparte el archivo o un enlace.',
+    branding: 'Define en una página la identidad de una marca de tejidos: personalidad, paleta, tipografías y qué debe evitar.',
+    fotografia: 'Toma seis fotos de un producto cualquiera que tengas en casa, con luz natural y fondo neutro. Comparte el enlace a la carpeta.',
+    video: 'Edita un video vertical de 30 segundos presentando un producto, con texto en pantalla. Comparte el enlace.',
+    wordpress: 'Monta una página de inicio con secciones de servicios, precios y contacto. Comparte el enlace del sitio de prueba.',
+    frontend: 'Construye una página de una sola vista con un formulario de contacto que valide los campos. Comparte el enlace o el repositorio.',
+    ecommerce: 'Explica en una página cómo montarías la venta en línea de una panadería: catálogo, medios de pago, entrega y qué medirías.',
+    automatiza: 'Arma un flujo que reciba un formulario y lo escriba en una hoja de cálculo enviando un correo de aviso. Comparte una captura del flujo.',
+    costos: 'Con los datos de compra de cinco productos que te enviamos, calcula el costo real por unidad incluyendo flete y propón un precio de venta.',
+    finanzas: 'Arma el flujo de caja de tres meses de un negocio pequeño con los datos que te enviamos, e identifica en qué mes se queda sin liquidez.',
+    inventarios: 'Con la lista de 50 productos que te enviamos, propón una codificación, un punto de reposición por producto y un procedimiento de conteo semanal.',
+    procesos: 'Elige un proceso que conozcas, diagrámalo tal como es hoy y propón una versión mejorada explicando qué eliminaste y por qué.',
+    logistica: 'Propón la ruta de reparto de un día para seis clientes en distintos distritos, justificando el orden.',
+    ventas: 'Escribe el guion de una llamada de venta a una empresa que no te conoce, con las tres objeciones más probables y su respuesta.',
+    atencion: 'Escribe cómo responderías por WhatsApp a tres clientes: uno que pregunta precios, uno que reclama y uno que quiere devolver un producto.',
+    encuestas: 'Diseña una encuesta de diez preguntas para saber por qué los clientes de una panadería eligen dónde comprar, y explica qué harías con los resultados.',
+    redaccion: 'Redacta un correo de presentación de una empresa de limpieza a un administrador de oficinas que no la conoce.',
+    seguridad: 'Identifica cinco riesgos en un taller de confecciones y propón una medida de control para cada uno.'
   };
 
   var HORAS_POR_SEMANA_DEFECTO = 10;
 
   return {
     APP: 'UPN Talent Lab',
-    SCHEMA: 3,
+    SCHEMA: 4,
     KEY_DB: 'utl.db',
     KEY_SESSION: 'utl.session',
     KEY_TEMA: 'utl.tema',
@@ -906,6 +1034,11 @@ window.CFG = (function () {
     PLANTILLA_HITOS: PLANTILLA_HITOS,
     RUBRICA: RUBRICA,
     PESOS_MATCH: PESOS_MATCH,
+    NIVELES: NIVELES,
+    RESPALDOS: RESPALDOS,
+    CERTIFICADOS: CERTIFICADOS,
+    REGLAS_NIVEL_TEXTO: REGLAS_NIVEL_TEXTO,
+    PRUEBAS_POR_HABILIDAD: PRUEBAS_POR_HABILIDAD,
     HORAS_POR_SEMANA_DEFECTO: HORAS_POR_SEMANA_DEFECTO
   };
 })();
@@ -1121,7 +1254,8 @@ window.Store = (function () {
   function vacia() {
     return {
       meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 0, proyecto: 0, constancia: 0 } },
-      users: [], retos: [], postulaciones: [], proyectos: [], constancias: [], notificaciones: [], auditoria: []
+      users: [], retos: [], postulaciones: [], proyectos: [], constancias: [],
+      pruebas: [], notificaciones: [], auditoria: []
     };
   }
 
@@ -1309,70 +1443,130 @@ window.SEED = (function () {
       { id: 'u_est1', rol: 'estudiante', nombre: 'Camila Rojas Peña', email: 'camila.rojas@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00218745', carrera: 'Administración y Marketing', ciclo: 8, campus: 'Trujillo San Isidro',
         horasSemana: 15, modalidad: 'hibrido', distrito: 'Trujillo',
-        habilidades: [{ skill: 'community', nivel: 5 }, { skill: 'contenido', nivel: 4 }, { skill: 'metaads', nivel: 4 },
-                      { skill: 'canva', nivel: 4 }, { skill: 'copy', nivel: 3 }],
+        habilidades: [
+          { skill: 'community', nivel: 3, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'contenido', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'metaads', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Meta Certified Digital Marketing Associate', respaldoUrl: 'https://credentials.meta.com/ejemplo' },
+          { skill: 'canva', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'copy', nivel: 1 }
+        ],
         intereses: ['marketing', 'comunicacion'],
         bio: 'Me apasiona el marketing para negocios pequeños. Llevo dos años administrando redes de emprendimientos familiares.',
         portafolioPublico: true },
       { id: 'u_est2', rol: 'estudiante', nombre: 'Sebastián Torres Ludeña', email: 'sebastian.torres@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00241130', carrera: 'Ciencias de la Comunicación', ciclo: 6, campus: 'Lima Los Olivos',
         horasSemana: 12, modalidad: 'remoto', distrito: 'Los Olivos, Lima',
-        habilidades: [{ skill: 'contenido', nivel: 4 }, { skill: 'video', nivel: 5 }, { skill: 'fotografia', nivel: 4 },
-                      { skill: 'community', nivel: 3 }, { skill: 'copy', nivel: 4 }],
+        habilidades: [
+          { skill: 'video', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Adobe Certified Professional: Premiere Pro', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'fotografia', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Portafolio de fotografía de producto para tres marcas locales', respaldoUrl: 'https://behance.net/ejemplo' },
+          { skill: 'contenido', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Reels producidos para una cafetería de Los Olivos', respaldoUrl: 'https://instagram.com/ejemplo' },
+          { skill: 'copy', nivel: 2 },
+          { skill: 'community', nivel: 1 }
+        ],
         intereses: ['comunicacion', 'marketing', 'diseno'],
         bio: 'Editor de video y creador de contenido. Manejo Premiere, CapCut y produzco reels para marcas locales.',
         portafolioPublico: true },
       { id: 'u_est3', rol: 'estudiante', nombre: 'Valeria Quispe Mamani', email: 'valeria.quispe@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00205562', carrera: 'Ingeniería de Sistemas', ciclo: 9, campus: 'Lima San Juan de Lurigancho',
         horasSemana: 18, modalidad: 'remoto', distrito: 'San Juan de Lurigancho, Lima',
-        habilidades: [{ skill: 'frontend', nivel: 4 }, { skill: 'wordpress', nivel: 5 }, { skill: 'ecommerce', nivel: 4 },
-                      { skill: 'automatiza', nivel: 3 }, { skill: 'sql', nivel: 3 }],
+        habilidades: [
+          { skill: 'wordpress', nivel: 3, respaldoTipo: 'trabajo', respaldoDetalle: 'Cuatro tiendas montadas en WooCommerce, con documentación', respaldoUrl: 'https://github.com/ejemplo' },
+          { skill: 'frontend', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Repositorio con tres proyectos web propios', respaldoUrl: 'https://github.com/ejemplo' },
+          { skill: 'ecommerce', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Tienda en línea de una distribuidora de abarrotes' },
+          { skill: 'automatiza', nivel: 1 },
+          { skill: 'sql', nivel: 1 }
+        ],
         intereses: ['tecnologia', 'datos'],
         bio: 'Desarrolladora web. He montado cuatro tiendas en WooCommerce y me gusta dejar todo documentado.',
         portafolioPublico: true },
       { id: 'u_est4', rol: 'estudiante', nombre: 'Diego Alarcón Vega', email: 'diego.alarcon@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00223918', carrera: 'Ingeniería Industrial', ciclo: 9, campus: 'Trujillo El Molino',
         horasSemana: 14, modalidad: 'presencial', distrito: 'Trujillo',
-        habilidades: [{ skill: 'procesos', nivel: 4 }, { skill: 'inventarios', nivel: 4 }, { skill: 'excel', nivel: 5 },
-                      { skill: 'logistica', nivel: 3 }, { skill: 'seguridad', nivel: 3 }],
+        habilidades: [
+          { skill: 'excel', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft Office Specialist: Excel Expert', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'procesos', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Lean Six Sigma Yellow Belt' },
+          { skill: 'inventarios', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Control de almacén en prácticas de verano en una distribuidora' },
+          { skill: 'logistica', nivel: 1 },
+          { skill: 'seguridad', nivel: 1 }
+        ],
         intereses: ['operaciones', 'datos'],
         bio: 'Me interesa ordenar operaciones de negocios pequeños: inventarios, tiempos y costos.',
         portafolioPublico: true },
       { id: 'u_est5', rol: 'estudiante', nombre: 'Fernanda Núñez Silva', email: 'fernanda.nunez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00234407', carrera: 'Contabilidad y Finanzas', ciclo: 7, campus: 'Cajamarca',
         horasSemana: 10, modalidad: 'hibrido', distrito: 'Cajamarca',
-        habilidades: [{ skill: 'excel', nivel: 5 }, { skill: 'costos', nivel: 4 }, { skill: 'finanzas', nivel: 4 },
-                      { skill: 'powerbi', nivel: 3 }],
+        habilidades: [
+          { skill: 'excel', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft Office Specialist: Excel Associate', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'costos', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Certificado de Excel Financiero' },
+          { skill: 'powerbi', nivel: 2 },
+          { skill: 'finanzas', nivel: 1 }
+        ],
         intereses: ['negocios', 'datos'],
-        bio: 'Quiero especializarme en costos para pymes. Manejo Excel a nivel avanzado y estoy aprendiendo Power BI.',
+        bio: 'Quiero especializarme en costos para pymes. Manejo Excel a nivel intermedio con certificación y estoy aprendiendo Power BI.',
         portafolioPublico: true },
       { id: 'u_est6', rol: 'estudiante', nombre: 'Mateo Ibáñez Cruz', email: 'mateo.ibanez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00247781', carrera: 'Diseño Gráfico', ciclo: 6, campus: 'Trujillo San Isidro',
         horasSemana: 16, modalidad: 'hibrido', distrito: 'Trujillo',
-        habilidades: [{ skill: 'canva', nivel: 5 }, { skill: 'illustrator', nivel: 4 }, { skill: 'branding', nivel: 4 },
-                      { skill: 'fotografia', nivel: 4 }],
+        habilidades: [
+          { skill: 'canva', nivel: 3, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'branding', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'fotografia', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'illustrator', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Adobe Certified Professional: Illustrator', respaldoUrl: 'https://credly.com/ejemplo' }
+        ],
         intereses: ['diseno', 'marketing'],
         bio: 'Diseñador enfocado en identidad visual. Me gusta trabajar marcas de barrio y darles carácter.',
         portafolioPublico: true },
       { id: 'u_est7', rol: 'estudiante', nombre: 'Lucía Paredes Gonzales', email: 'lucia.paredes@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00239054', carrera: 'Administración de Empresas', ciclo: 6, campus: 'Lima Breña',
         horasSemana: 12, modalidad: 'presencial', distrito: 'Breña, Lima',
-        habilidades: [{ skill: 'ventas', nivel: 4 }, { skill: 'atencion', nivel: 5 }, { skill: 'encuestas', nivel: 3 },
-                      { skill: 'excel', nivel: 3 }],
+        habilidades: [
+          { skill: 'atencion', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Dos años atendiendo en tienda de retail, medio tiempo' },
+          { skill: 'ventas', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Dos años atendiendo en tienda de retail, medio tiempo' },
+          { skill: 'excel', nivel: 1 },
+          { skill: 'encuestas', nivel: 1 }
+        ],
         intereses: ['negocios', 'marketing'],
         bio: 'Trabajo medio tiempo en retail. Me interesa la experiencia del cliente y los estudios de mercado.',
         portafolioPublico: true },
       { id: 'u_est8', rol: 'estudiante', nombre: 'Andrés Vílchez Mori', email: 'andres.vilchez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00251236', carrera: 'Ingeniería de Sistemas', ciclo: 7, campus: 'Lima Los Olivos',
         horasSemana: 20, modalidad: 'remoto', distrito: 'Comas, Lima',
-        habilidades: [{ skill: 'analitica', nivel: 4 }, { skill: 'sql', nivel: 4 }, { skill: 'powerbi', nivel: 4 },
-                      { skill: 'automatiza', nivel: 4 }, { skill: 'excel', nivel: 4 }],
+        habilidades: [
+          { skill: 'powerbi', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft PL-300: Power BI Data Analyst', respaldoUrl: 'https://learn.microsoft.com/ejemplo' },
+          { skill: 'analitica', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Google Analytics Individual Qualification' },
+          { skill: 'sql', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Consultas y reportes para el negocio familiar' },
+          { skill: 'automatiza', nivel: 2 },
+          { skill: 'excel', nivel: 2 }
+        ],
         intereses: ['datos', 'tecnologia'],
         bio: 'Me gusta convertir datos desordenados en tableros que la gente sí usa.',
         portafolioPublico: true }
     ];
 
     users.forEach(function (u) { if (u.rol === 'estudiante') u.slug = U.slugify(u.nombre) + '-' + u.codigoUPN.slice(-4); });
+
+    /* Camila y Mateo ya cerraron un microproyecto: su mentor confirmó allí qué
+       habilidades demostraron de verdad, así que esas quedan verificadas. */
+    ['u_est1', 'u_est6'].forEach(function (id) {
+      var u = users.filter(function (x) { return x.id === id; })[0];
+      (u.habilidades || []).forEach(function (h) {
+        if (h.respaldoTipo !== 'proyecto') return;
+        h.verificadoPorId = 'u_men1';
+        h.verificadoProyectoId = 'pr1';
+        h.verificadoVia = 'proyecto';
+        h.verificadoAt = iso(-34);
+      });
+    });
+
+    /* Fernanda subió Power BI de Básico a Intermedio dos días después de que se
+       publicara el reto del tablero, y sin respaldo alguno. El sistema no la
+       bloquea: registra el cambio, se lo muestra a coordinación al comparar
+       candidatos y le pide una prueba corta. Es el caso que conviene discutir. */
+    var fernanda = users.filter(function (x) { return x.id === 'u_est5'; })[0];
+    fernanda.historialHabilidades = [
+      { at: iso(-12), skill: 'powerbi', de: 1, a: 2 },
+      { at: iso(-95), skill: 'excel', de: 1, a: 2 }
+    ];
 
     /* ---------------- Retos ---------------- */
     function reto(o) {
@@ -1390,8 +1584,8 @@ window.SEED = (function () {
         problema: 'Nuestro Facebook e Instagram están abandonados hace más de un año. Publicamos cuando nos acordamos, no tenemos fotos decentes de los productos y los clientes nuevos no nos encuentran. Vendemos casi todo en el mostrador y queremos empezar a recibir pedidos por WhatsApp.',
         resultado: 'Redes activas con publicaciones constantes, fotos propias de nuestros productos y un flujo claro para que la gente pida por WhatsApp.',
         entregables: ['Plan de contenido para 4 semanas', 'Banco de 30 fotos de productos', '12 publicaciones diseñadas y programadas', 'Guía corta para que el personal siga publicando'],
-        habilidadesRequeridas: [{ skill: 'community', peso: 3, nivelMin: 3 }, { skill: 'contenido', peso: 3, nivelMin: 3 },
-                                { skill: 'canva', peso: 2, nivelMin: 3 }, { skill: 'fotografia', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'community', peso: 3, nivelMin: 2 }, { skill: 'contenido', peso: 3, nivelMin: 2 },
+                                { skill: 'canva', peso: 2, nivelMin: 2 }, { skill: 'fotografia', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['copy', 'metaads'],
         semanas: 4, horasSemana: 10, tamanoEquipo: 2, modalidad: 'hibrido',
         fechaLimitePostulacion: d(-70), creado: iso(-80), publicado: iso(-75)
@@ -1402,8 +1596,8 @@ window.SEED = (function () {
         problema: 'Los dueños de mascotas nos escriben por WhatsApp a cualquier hora para preguntar precios y pedir cita. Se nos cruzan las citas y perdemos tiempo respondiendo lo mismo. No tenemos ninguna página propia.',
         resultado: 'Una web sencilla con nuestros servicios, precios y un formulario de reserva de citas que llegue ordenado a un correo o planilla.',
         entregables: ['Sitio web con 4 secciones', 'Formulario de reserva conectado a una hoja de cálculo', 'Manual de administración', 'Capacitación al personal'],
-        habilidadesRequeridas: [{ skill: 'wordpress', peso: 3, nivelMin: 3 }, { skill: 'frontend', peso: 2, nivelMin: 3 },
-                                { skill: 'automatiza', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'wordpress', peso: 3, nivelMin: 2 }, { skill: 'frontend', peso: 2, nivelMin: 2 },
+                                { skill: 'automatiza', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['ecommerce', 'analitica'],
         semanas: 4, horasSemana: 12, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-14), creado: iso(-30), publicado: iso(-25)
@@ -1414,8 +1608,8 @@ window.SEED = (function () {
         problema: 'Nuestros tejidos son de muy buena calidad pero la presentación no acompaña: la etiqueta está impresa en casa, no tenemos logo consistente y cada vendedora usa un diseño distinto en sus fotos.',
         resultado: 'Una identidad visual clara (logo, colores, tipografías) con etiquetas listas para imprimir y plantillas para redes.',
         entregables: ['Manual de marca básico (10 páginas)', 'Logo en versiones digitales e imprimibles', 'Diseño de etiqueta colgante y adhesiva', '6 plantillas editables para redes'],
-        habilidadesRequeridas: [{ skill: 'branding', peso: 3, nivelMin: 3 }, { skill: 'illustrator', peso: 3, nivelMin: 3 },
-                                { skill: 'canva', peso: 1, nivelMin: 2 }],
+        habilidadesRequeridas: [{ skill: 'branding', peso: 3, nivelMin: 2 }, { skill: 'illustrator', peso: 3, nivelMin: 2 },
+                                { skill: 'canva', peso: 1, nivelMin: 1 }],
         habilidadesDeseables: ['fotografia', 'copy'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(9), creado: iso(-9), publicado: iso(-7)
@@ -1426,8 +1620,8 @@ window.SEED = (function () {
         problema: 'Llevamos el stock en cuadernos. No sabemos qué se vende más ni cuándo reponer, y cada semana perdemos ventas porque algo se acabó sin que nos diéramos cuenta. Tenemos más de 900 productos.',
         resultado: 'Un sistema simple en Excel o Google Sheets con catálogo codificado, control de entradas y salidas, y alertas de reposición.',
         entregables: ['Catálogo codificado de productos', 'Archivo de control de inventario con alertas', 'Procedimiento de conteo semanal', 'Capacitación a 3 trabajadores'],
-        habilidadesRequeridas: [{ skill: 'inventarios', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 4 },
-                                { skill: 'procesos', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'inventarios', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 3 },
+                                { skill: 'procesos', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['logistica', 'powerbi'],
         semanas: 4, horasSemana: 12, tamanoEquipo: 2, modalidad: 'presencial',
         fechaLimitePostulacion: d(12), creado: iso(-6), publicado: iso(-5)
@@ -1438,8 +1632,8 @@ window.SEED = (function () {
         problema: 'Ponemos los precios mirando a la competencia. No sabemos cuánto nos cuesta realmente cada producto ni cuál nos deja más ganancia. Sospechamos que algunos los vendemos casi al costo.',
         resultado: 'Una estructura de costos por producto y una propuesta de precios sustentada.',
         entregables: ['Hoja de costeo por producto', 'Análisis de margen de los 15 productos principales', 'Propuesta de lista de precios', 'Explicación al equipo'],
-        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'finanzas', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'finanzas', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['powerbi'],
         semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'remoto',
         fechaLimitePostulacion: d(6), creado: iso(-4), publicado: iso(-3)
@@ -1450,8 +1644,8 @@ window.SEED = (function () {
         problema: 'Registramos las ventas en un Excel largo que nadie mira. Queremos ver de un vistazo qué modelos y talles se venden, en qué meses y a qué tipo de cliente, para decidir qué producir.',
         resultado: 'Un tablero visual actualizable que responda esas preguntas sin que tengamos que armar el reporte a mano.',
         entregables: ['Limpieza y estructura de la base de ventas', 'Tablero en Power BI o Looker Studio', 'Manual de actualización mensual', 'Sesión de lectura del tablero'],
-        habilidadesRequeridas: [{ skill: 'powerbi', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'analitica', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'powerbi', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'analitica', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['sql'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-1), creado: iso(-16), publicado: iso(-14)
@@ -1462,8 +1656,8 @@ window.SEED = (function () {
         problema: 'Todos nuestros clientes llegan por recomendación. No tenemos presencia en internet y cuando alguien busca "servicio de limpieza Trujillo" no aparecemos por ningún lado.',
         resultado: 'Presencia básica en internet que genere consultas: ficha de Google, perfil profesional y un mensaje de venta claro.',
         entregables: ['Ficha de Google Empresa optimizada', 'Perfil de Instagram y Facebook con 8 publicaciones', 'Guion de venta por WhatsApp', 'Lista de 30 empresas objetivo'],
-        habilidadesRequeridas: [{ skill: 'seo', peso: 3, nivelMin: 2 }, { skill: 'community', peso: 2, nivelMin: 3 },
-                                { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'seo', peso: 3, nivelMin: 1 }, { skill: 'community', peso: 2, nivelMin: 2 },
+                                { skill: 'copy', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['ventas', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
         fechaLimitePostulacion: d(15), creado: iso(-2)
@@ -1474,7 +1668,7 @@ window.SEED = (function () {
         problema: 'Los clientes llegan con dudas repetidas sobre vacunas y alimentación. Queremos educarlos y de paso mostrar que sabemos del tema.',
         resultado: 'Una serie de contenidos cortos que respondan las 10 dudas más frecuentes.',
         entregables: ['10 piezas de contenido', 'Calendario de publicación', '3 videos cortos'],
-        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'video', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 2 }, { skill: 'video', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['copy', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(20), creado: iso(-1)
@@ -1485,8 +1679,8 @@ window.SEED = (function () {
         problema: 'Cuando una tienda de Lima nos pide precios les mandamos fotos sueltas por WhatsApp y una lista en Word. Se ve improvisado y varias veces nos han dicho que no entienden qué modelos y talles tenemos.',
         resultado: 'Un catálogo en PDF ordenado, con fotos, códigos, talles y precios mayoristas, que podamos enviar por correo o WhatsApp.',
         entregables: ['Catálogo en PDF de 20 páginas', 'Fichas de 40 productos con código', 'Plantilla editable para actualizarlo', 'Guion de presentación para vendedoras'],
-        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'canva', peso: 3, nivelMin: 3 },
-                                { skill: 'fotografia', peso: 2, nivelMin: 3 }, { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 2 }, { skill: 'canva', peso: 3, nivelMin: 2 },
+                                { skill: 'fotografia', peso: 2, nivelMin: 2 }, { skill: 'copy', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['branding', 'ventas'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-24), creado: iso(-40), publicado: iso(-38)
@@ -1497,8 +1691,8 @@ window.SEED = (function () {
         problema: 'Tenemos más de 900 productos y ponemos los precios por costumbre. Sospechamos que en algunos de los que más vendemos casi no ganamos, pero nunca lo hemos calculado.',
         resultado: 'Saber cuánto deja realmente cada producto de los que más rotan y tener una propuesta de precios sustentada.',
         entregables: ['Análisis de margen de los 40 productos más vendidos', 'Propuesta de nueva lista de precios', 'Hoja de cálculo para mantenerlo'],
-        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'ventas', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'ventas', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['finanzas', 'atencion'],
         semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
         fechaLimitePostulacion: d(-30), creado: iso(-46), publicado: iso(-44)
@@ -1526,11 +1720,11 @@ window.SEED = (function () {
         motivacion: 'Puedo encargarme de la automatización de las reservas y de dejar medición instalada para ver cuántas citas entran.' }),
       /* r6 (en selección) — el coordinador puede armar el equipo ahora mismo */
       post({ id: 'p6', retoId: 'r6', estudianteId: 'u_est5', creado: iso(-10),
-        motivacion: 'Llevo dos ciclos trabajando con Excel avanzado y estoy terminando un curso de Power BI. Vivo en Cajamarca, así que puedo ir al taller a levantar la información.' }),
+        motivacion: 'Tengo la certificación de Excel de Microsoft y estoy terminando un curso de Power BI. Vivo en Cajamarca, así que puedo ir al taller a levantar la información.' }),
       post({ id: 'p7', retoId: 'r6', estudianteId: 'u_est8', creado: iso(-9),
         motivacion: 'Armo tableros desde hace dos años. Puedo limpiar la base de ventas y dejar el tablero actualizable sin depender de mí.' }),
       post({ id: 'p8', retoId: 'r6', estudianteId: 'u_est4', creado: iso(-8),
-        motivacion: 'Manejo Excel avanzado y análisis de rotación. Me interesa el cruce entre producción y ventas.' }),
+        motivacion: 'Tengo Excel a nivel avanzado certificado y experiencia en análisis de rotación. Me interesa el cruce entre producción y ventas.' }),
       post({ id: 'p9', retoId: 'r6', estudianteId: 'u_est7', creado: iso(-7),
         motivacion: 'Quiero aprender análisis de datos aplicado a ventas y puedo apoyar en el levantamiento con las vendedoras.' }),
       /* r3 y r4 con postulantes */
@@ -1752,10 +1946,19 @@ window.SEED = (function () {
       });
     });
 
+    /* ---------------- Pruebas prácticas ---------------- */
+    var pruebas = [{
+      id: 'pru1', estudianteId: 'u_est5', skill: 'powerbi', retoId: 'r6',
+      nivelPretendido: 2, encargo: CFG.PRUEBAS_POR_HABILIDAD.powerbi,
+      estado: 'solicitada', evidenciaUrl: '', comentario: '', revisorId: null,
+      solicitadaAt: iso(-10), entregadaAt: null, revisadaAt: null
+    }];
+
     /* ---------------- Notificaciones ---------------- */
     var notificaciones = [
       { id: U.uid('n'), userId: 'u_coord1', tipo: 'reto', titulo: 'Nuevo reto para revisar', cuerpo: 'EcoLimpio Servicios envió “Conseguir los primeros clientes de oficinas por internet”.', link: '#/reto/r7', leida: false, at: iso(-2) },
       { id: U.uid('n'), userId: 'u_coord1', tipo: 'seleccion', titulo: '4 postulaciones esperando selección', cuerpo: 'El reto “Tablero de ventas” cerró postulaciones. Falta conformar el equipo.', link: '#/matching/r6', leida: false, at: iso(-1) },
+      { id: U.uid('n'), userId: 'u_est5', tipo: 'prueba', titulo: 'Te pedimos una prueba corta', cuerpo: 'Declaraste Intermedio en Power BI, que ese reto pide como indispensable, y aún no tiene respaldo.', link: '#/postulaciones', leida: false, at: iso(-10) },
       { id: U.uid('n'), userId: 'u_men3', tipo: 'hito', titulo: 'Hito entregado para revisión', cuerpo: 'Valeria Quispe entregó “Propuesta” del proyecto PRY-2026-0002.', link: '#/proyecto/pr2?tab=hitos', leida: false, at: iso(-1) },
       { id: U.uid('n'), userId: 'u_est3', tipo: 'hito', titulo: 'Hito 1 aprobado', cuerpo: 'Tu mentor aprobó el hito “Diagnóstico”.', link: '#/proyecto/pr2?tab=hitos', leida: true, at: iso(-4) },
       { id: U.uid('n'), userId: 'u_est8', tipo: 'hito', titulo: 'Hito 1 aprobado', cuerpo: 'Tu mentor aprobó el hito “Diagnóstico”.', link: '#/proyecto/pr2?tab=hitos', leida: true, at: iso(-4) },
@@ -1768,7 +1971,7 @@ window.SEED = (function () {
     return {
       meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 10, proyecto: 4, constancia: 2 } },
       users: users, retos: retos, postulaciones: postulaciones, proyectos: proyectos,
-      constancias: constancias, notificaciones: notificaciones, auditoria: []
+      constancias: constancias, pruebas: pruebas, notificaciones: notificaciones, auditoria: []
     };
   }
 
@@ -2086,6 +2289,221 @@ window.M = (function () {
     });
   }
 
+
+  /* ================= Habilidades y su respaldo ================= */
+
+  function habilidadDe(user, skill) {
+    if (!user) return null;
+    var l = (user.habilidades || []).filter(function (x) { return x.skill === skill; });
+    return l.length ? l[0] : null;
+  }
+
+  /* El estado se calcula, no se guarda: así nunca puede quedar desincronizado
+     de los datos que lo sostienen. */
+  function estadoHabilidad(h) {
+    if (!h) return 'declarado';
+    if (h.verificadoPorId) return 'verificado';
+    if (h.respaldoTipo && h.respaldoTipo !== 'ninguno' && String(h.respaldoDetalle || '').trim()) return 'respaldado';
+    return 'declarado';
+  }
+
+  function nivelLabel(n) { return (CFG.NIVELES[n] || {}).label || '—'; }
+
+  /* Propone un nivel a partir del nombre del certificado: primero busca en el
+     catálogo de equivalencias de la UPN y, si no está, lee palabras clave del
+     título. Devuelve también de dónde salió, porque la app sugiere y una
+     persona confirma: aquí no hay verificación automática de verdad. */
+  function sugerirNivel(texto) {
+    var t = String(texto || '').trim();
+    if (!t) return null;
+
+    var norm = U.normaliza(t);
+    var encontrado = null;
+    CFG.CERTIFICADOS.forEach(function (c) {
+      if (encontrado) return;
+      var cn = U.normaliza(c.nombre);
+      if (norm.indexOf(cn) !== -1 || cn.indexOf(norm) !== -1) encontrado = c;
+    });
+    if (encontrado) {
+      return { nivel: encontrado.nivel, fuente: 'catalogo', certificado: encontrado,
+        detalle: 'Reconocido en el catálogo UPN: ' + encontrado.nombre + ' (' + encontrado.emisor + ')' };
+    }
+
+    for (var i = 0; i < CFG.REGLAS_NIVEL_TEXTO.length; i++) {
+      if (CFG.REGLAS_NIVEL_TEXTO[i].re.test(t)) {
+        return { nivel: CFG.REGLAS_NIVEL_TEXTO[i].nivel, fuente: 'texto',
+          detalle: 'Deducido del título del certificado. Coordinación lo confirmará.' };
+      }
+    }
+    return { nivel: null, fuente: null,
+      detalle: 'No lo reconocemos automáticamente. Coordinación lo revisará al compararte con otros postulantes.' };
+  }
+
+  /* Marca como verificadas las habilidades que un tercero confirmó.
+     Si el estudiante no la tenía declarada, se agrega: la demostró en un
+     trabajo real, que es mejor evidencia que cualquier autodeclaración. Y si
+     la tenía en Básico, sube a Intermedio, que es justo lo que acaba de
+     probar: «la usé para resolver algo real». Nunca sube sola a Avanzado. */
+  function verificarHabilidades(estudianteId, skills, opts) {
+    opts = opts || {};
+    var est = usuario(estudianteId);
+    if (!est || !skills || !skills.length) return 0;
+    est.habilidades = est.habilidades || [];
+    est.historialHabilidades = est.historialHabilidades || [];
+    var ahora = new Date().toISOString();
+    var n = 0;
+
+    skills.forEach(function (sk) {
+      if (!CFG.HABILIDADES[sk]) return;
+      var h = habilidadDe(est, sk);
+      if (h && h.verificadoPorId) return;                    // ya estaba verificada
+
+      if (!h) {
+        h = { skill: sk, nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: '', respaldoUrl: '' };
+        est.habilidades.push(h);
+        est.historialHabilidades.push({ at: ahora, skill: sk, de: 0, a: 2, por: 'mentor' });
+      } else if (h.nivel < 2) {
+        est.historialHabilidades.push({ at: ahora, skill: sk, de: h.nivel, a: 2, por: 'mentor' });
+        h.nivel = 2;
+      }
+
+      h.verificadoPorId = opts.porId || null;
+      h.verificadoAt = ahora;
+      h.verificadoProyectoId = opts.proyectoId || null;
+      h.verificadoVia = opts.via || 'proyecto';
+      if (!h.respaldoDetalle) {
+        h.respaldoTipo = opts.via === 'prueba' ? 'prueba' : 'proyecto';
+        h.respaldoDetalle = opts.via === 'prueba'
+          ? 'Prueba práctica revisada por un docente'
+          : 'Demostrada en un microproyecto Talent Lab';
+      }
+      n++;
+    });
+    return n;
+  }
+
+  /* ================= Señales para quien decide =================
+     Contexto sobre la declaración de un candidato frente a UN reto concreto.
+     No acusa a nadie: puede ser exageración o un curso recién terminado. */
+  function senalesDe(estudianteId, reto) {
+    var est = usuario(estudianteId);
+    var out = { sinRespaldo: [], subidasRecientes: [], pruebas: [] };
+    if (!est || !reto) return out;
+
+    var pedidas = (reto.habilidadesRequeridas || []).map(function (x) { return x.skill; });
+
+    pedidas.forEach(function (sk) {
+      var h = habilidadDe(est, sk);
+      if (h && h.nivel >= 2 && estadoHabilidad(h) === 'declarado') {
+        out.sinRespaldo.push({ skill: sk, nivel: h.nivel });
+      }
+    });
+
+    var desde = reto.publicado || reto.creado;
+    (est.historialHabilidades || []).forEach(function (c) {
+      if (pedidas.indexOf(c.skill) === -1) return;
+      if (c.a <= c.de) return;
+      if (c.por === 'mentor') return;          // la otorgó un docente, no es autodeclarada
+      if (desde && new Date(c.at) < new Date(desde)) return;
+      out.subidasRecientes.push(c);
+    });
+
+    out.pruebas = Store.where('pruebas', function (pr) {
+      return pr.estudianteId === estudianteId && pr.retoId === reto.id;
+    });
+    return out;
+  }
+
+  /* ================= Prueba práctica =================
+     Solo se pide cuando coinciden las tres condiciones: nivel Intermedio o
+     Avanzado, sin respaldo alguno, y la habilidad es indispensable para ese
+     reto. Casi nunca se cumplen las tres, y por eso cuesta poco tiempo docente. */
+  function habilidadesQueRequierenPrueba(estudianteId, reto) {
+    var est = usuario(estudianteId);
+    if (!est || !reto) return [];
+    return (reto.habilidadesRequeridas || []).filter(function (req) {
+      if (req.peso !== 3) return false;                       // solo las indispensables
+      var h = habilidadDe(est, req.skill);
+      if (!h || h.nivel < 2) return false;                    // Básico no necesita respaldo
+      return estadoHabilidad(h) === 'declarado';
+    }).map(function (req) { return req.skill; });
+  }
+
+  function crearPruebas(estudianteId, reto) {
+    var skills = habilidadesQueRequierenPrueba(estudianteId, reto);
+    var creadas = [];
+    skills.forEach(function (sk) {
+      var yaHay = Store.where('pruebas', function (pr) {
+        return pr.estudianteId === estudianteId && pr.skill === sk &&
+               ['solicitada', 'entregada', 'aprobada'].indexOf(pr.estado) !== -1;
+      })[0];
+      if (yaHay) return;
+      var est = usuario(estudianteId);
+      var h = habilidadDe(est, sk);
+      var pr = {
+        id: U.uid('pru'), estudianteId: estudianteId, skill: sk, retoId: reto.id,
+        nivelPretendido: h.nivel, encargo: CFG.PRUEBAS_POR_HABILIDAD[sk] || 'Muestra un trabajo propio donde hayas usado esta habilidad.',
+        estado: 'solicitada', evidenciaUrl: '', comentario: '', revisorId: null,
+        solicitadaAt: new Date().toISOString(), entregadaAt: null, revisadaAt: null
+      };
+      Store.get().pruebas.push(pr);
+      creadas.push(pr);
+    });
+    return creadas;
+  }
+
+  function pruebasDe(estudianteId) {
+    return U.sortBy(Store.where('pruebas', function (pr) { return pr.estudianteId === estudianteId; }),
+      function (pr) { return pr.solicitadaAt; }, true);
+  }
+  function pruebasPorRevisar() {
+    return Store.where('pruebas', function (pr) { return pr.estado === 'entregada'; });
+  }
+
+  function entregarPrueba(pruebaId, url) {
+    var pr = Store.find('pruebas', pruebaId);
+    if (!pr) return { ok: false, error: 'No encontramos esa prueba.' };
+    var limpia = U.safeUrl(url);
+    if (!limpia) return { ok: false, error: 'Agrega un enlace válido a tu trabajo (Drive, Canva, Figma, un repositorio…).' };
+    Store.tx(function () {
+      pr.evidenciaUrl = limpia;
+      pr.estado = 'entregada';
+      pr.entregadaAt = new Date().toISOString();
+      Store.auditar('prueba:entregar', 'prueba', pr.id, { skill: pr.skill });
+      coordinadores().forEach(function (c) {
+        notificar(c.id, 'prueba', 'Prueba práctica entregada',
+          nombre(pr.estudianteId) + ' entregó su prueba de ' + habilidadNombre(pr.skill) + '.', '#/pruebas');
+      });
+    });
+    return { ok: true };
+  }
+
+  function revisarPrueba(pruebaId, decision, comentario) {
+    var pr = Store.find('pruebas', pruebaId);
+    if (!pr) return { ok: false, error: 'No encontramos esa prueba.' };
+    if (decision === 'observada' && !String(comentario || '').trim())
+      return { ok: false, error: 'Explícale al estudiante qué le faltó.' };
+    var u = Auth.actual();
+    Store.tx(function () {
+      pr.estado = decision;
+      pr.comentario = String(comentario || '').trim();
+      pr.revisorId = u ? u.id : null;
+      pr.revisadaAt = new Date().toISOString();
+      Store.auditar('prueba:' + decision, 'prueba', pr.id, { skill: pr.skill });
+
+      if (decision === 'aprobada') {
+        verificarHabilidades(pr.estudianteId, [pr.skill],
+          { porId: u ? u.id : null, via: 'prueba' });
+        notificar(pr.estudianteId, 'prueba', 'Tu nivel quedó verificado',
+          habilidadNombre(pr.skill) + ' pasó a estar verificada gracias a tu prueba práctica.', '#/perfil');
+      } else {
+        notificar(pr.estudianteId, 'prueba', 'Tu prueba tiene observaciones',
+          pr.comentario, '#/postulaciones');
+      }
+    });
+    return { ok: true };
+  }
+
   /* ================= Retos ================= */
   function crearReto(empresaId, datos) {
     var codigo = Store.siguienteCodigo('reto', 'RET');
@@ -2182,12 +2600,21 @@ window.M = (function () {
       estado: 'postulada', score: res.total, creado: new Date().toISOString()
     };
     Store.insert('postulaciones', p);
+    var pruebas = [];
     Store.tx(function () {
       Store.auditar('postulacion:crear', 'postulacion', p.id, { retoId: retoId });
       notificar(r.empresaId, 'postulacion', 'Nueva postulación',
         nombre(estudianteId) + ' postuló a “' + r.titulo + '”.', '#/reto/' + r.id);
+
+      pruebas = crearPruebas(estudianteId, r);
+      pruebas.forEach(function (pr) {
+        notificar(estudianteId, 'prueba', 'Te pedimos una prueba corta',
+          'Declaraste ' + nivelLabel(pr.nivelPretendido) + ' en ' + habilidadNombre(pr.skill) +
+          ', que este reto pide como indispensable, y aún no tiene respaldo. Con una prueba de 30 a 45 minutos queda verificada.',
+          '#/postulaciones');
+      });
     });
-    return { ok: true, postulacion: p };
+    return { ok: true, postulacion: p, pruebas: pruebas };
   }
 
   function retirarPostulacion(postId) {
@@ -2381,11 +2808,30 @@ window.M = (function () {
     if (decision === 'observado' && !String(datos.comentario || '').trim())
       return { ok: false, error: 'Explica qué debe corregir el equipo.' };
 
+    /* El mentor marca qué habilidades demostró realmente cada estudiante.
+       Esa confirmación es la ruta más confiable para subir de nivel: dos a
+       cuatro semanas de trabajo observado predicen mejor que cualquier examen. */
+    var demostradas = {};
+    if (rol === 'mentor') {
+      p.estudianteIds.forEach(function (id) {
+        demostradas[id] = [].concat(datos['dem_' + id] || []);
+      });
+    }
+
     Store.tx(function () {
       p.evaluaciones.push({
         id: U.uid('ev'), rol: rol, evaluadorId: u.id, at: new Date().toISOString(),
-        decision: decision, criterios: criterios, comentario: String(datos.comentario || '').trim()
+        decision: decision, criterios: criterios, comentario: String(datos.comentario || '').trim(),
+        habilidadesDemostradas: rol === 'mentor' ? demostradas : null
       });
+
+      if (rol === 'mentor' && decision === 'aprobado') {
+        Object.keys(demostradas).forEach(function (id) {
+          var n = verificarHabilidades(id, demostradas[id], { porId: u.id, proyectoId: p.id, via: 'proyecto' });
+          if (n) notificar(id, 'prueba', n + ' ' + U.plural(n, 'habilidad', 'habilidades') + ' verificadas',
+            'Tu mentor confirmó lo que demostraste en este proyecto. Ya aparece en tu perfil y tu portafolio.', '#/perfil');
+        });
+      }
       Store.auditar('evaluacion:' + rol, 'proyecto', p.id, { decision: decision });
 
       if (decision === 'observado') {
@@ -2536,6 +2982,11 @@ window.M = (function () {
   return {
     usuario: usuario, nombre: nombre, empresaNombre: empresaNombre, reto: reto, proyecto: proyecto,
     habilidadNombre: habilidadNombre, categoria: categoria,
+    habilidadDe: habilidadDe, estadoHabilidad: estadoHabilidad, nivelLabel: nivelLabel,
+    sugerirNivel: sugerirNivel, verificarHabilidades: verificarHabilidades, senalesDe: senalesDe,
+    habilidadesQueRequierenPrueba: habilidadesQueRequierenPrueba, crearPruebas: crearPruebas,
+    pruebasDe: pruebasDe, pruebasPorRevisar: pruebasPorRevisar,
+    entregarPrueba: entregarPrueba, revisarPrueba: revisarPrueba,
     estudiantes: estudiantes, empresas: empresas, mentores: mentores, coordinadores: coordinadores,
     proyectoDeReto: proyectoDeReto, postulacionesDe: postulacionesDe, postulacionDe: postulacionDe,
     proyectosDe: proyectosDe, constanciasDe: constanciasDe, constanciaPorCodigo: constanciaPorCodigo,
@@ -2570,7 +3021,9 @@ window.Matching = (function () {
     var faltantes = criticas.filter(function (h) { return nivelDe(est, h.skill) < h.nivelMin; });
     if (faltantes.length) {
       return { ok: false, motivo: 'No cumple el requisito indispensable: ' +
-        faltantes.map(function (h) { return M.habilidadNombre(h.skill) + ' (nivel ' + h.nivelMin + '+)'; }).join(', ') };
+        faltantes.map(function (h) {
+          return M.habilidadNombre(h.skill) + ' (' + M.nivelLabel(h.nivelMin) + ' o más)';
+        }).join(', ') };
     }
     var minHoras = Math.ceil((reto.horasSemana || 10) * 0.7);
     if ((est.horasSemana || 0) < minHoras) {
@@ -2601,7 +3054,7 @@ window.Matching = (function () {
         (cubiertas.length ? ': ' + cubiertas.map(function (h) { return M.habilidadNombre(h.skill); }).join(', ') : '')
     });
 
-    /* B. Profundidad de nivel */
+    /* B. Profundidad de nivel declarado */
     var pNivel = U.sum(req, function (h) {
       return h.peso * Math.min(1, nivelDe(est, h.skill) / (h.nivelMin || 1));
     }) / pesoTotal;
@@ -2609,6 +3062,27 @@ window.Matching = (function () {
       id: 'nivel', label: 'Nivel declarado', max: W.nivel, puntos: pNivel * W.nivel,
       detalle: pNivel >= 0.99 ? 'Alcanza o supera el nivel pedido en todas' :
                (pNivel >= 0.7 ? 'Cerca del nivel pedido' : 'Por debajo del nivel pedido en varias')
+    });
+
+    /* B2. Respaldo de ese nivel. Un nivel sin sustento vale la mitad que uno
+       verificado por un docente: la app premia lo que se puede probar, no lo
+       que se afirma. Quien empieza sin nada pierde puntos, no queda fuera. */
+    var VALOR_RESPALDO = { declarado: 0, respaldado: 0.6, verificado: 1 };
+    var estados = { declarado: 0, respaldado: 0, verificado: 0 };
+    var pRespaldo = U.sum(req, function (r) {
+      var h = M.habilidadDe(est, r.skill);
+      if (!h) return 0;
+      var e = M.estadoHabilidad(h);
+      estados[e]++;
+      return r.peso * VALOR_RESPALDO[e];
+    }) / pesoTotal;
+    var detRespaldo;
+    if (estados.verificado) detRespaldo = estados.verificado + ' verificada' + (estados.verificado === 1 ? '' : 's') + ' por un docente';
+    else if (estados.respaldado) detRespaldo = estados.respaldado + ' con certificado o trabajo propio, sin revisar aún';
+    else detRespaldo = 'Ninguna habilidad tiene respaldo adjunto todavía';
+    desglose.push({
+      id: 'respaldo', label: 'Respaldo del nivel', max: W.respaldo,
+      puntos: pRespaldo * W.respaldo, detalle: detRespaldo
     });
 
     /* C. Disponibilidad horaria */
@@ -2971,11 +3445,24 @@ window.C = (function () {
     return h`<span class="chips">
       ${lista.map(function (s) {
         var id = typeof s === 'string' ? s : s.skill;
-        var extra = (typeof s === 'object' && s.nivelMin) ? ' · nivel ' + s.nivelMin + '+' : '';
+        var extra = (typeof s === 'object' && s.nivelMin) ? ' · ' + M.nivelLabel(s.nivelMin) + '+' : '';
         var critico = (typeof s === 'object' && s.peso === 3);
         return h`<span class="chip ${critico ? 'chip--dark' : ''}">${M.habilidadNombre(id)}${extra}</span>`;
       })}
       ${resto > 0 ? h`<span class="chip">+${resto}</span>` : ''}
+    </span>`;
+  }
+
+
+  /* Habilidad declarada por un estudiante: nivel + qué tan sustentado está. */
+  function chipHabilidad(hab, conNivel) {
+    var estado = M.estadoHabilidad(hab);
+    var r = CFG.RESPALDOS[estado];
+    var titulo = M.nivelLabel(hab.nivel) + ' · ' + r.label + '. ' +
+      (hab.respaldoDetalle ? hab.respaldoDetalle : r.ayuda);
+    return h`<span class="chip ${r.chip}" title="${titulo}">
+      ${M.habilidadNombre(hab.skill)}${conNivel === false ? '' : ' · ' + M.nivelLabel(hab.nivel)}
+      ${estado === 'verificado' ? raw('<b aria-label="verificada">✓</b>') : ''}
     </span>`;
   }
 
@@ -3280,7 +3767,7 @@ window.C = (function () {
     progreso: progreso, medidor: medidor, anilloMatch: anilloMatch, desgloseMatch: desgloseMatch,
     estrellas: estrellas, vacio: vacio, stat: stat, aviso: aviso, volver: volver, pageHead: pageHead,
     campo: campo, checkHabilidades: checkHabilidades, selectorEstrellas: selectorEstrellas,
-    cardReto: cardReto, cardProyecto: cardProyecto,
+    cardReto: cardReto, cardProyecto: cardProyecto, chipHabilidad: chipHabilidad,
     proximasAcciones: proximasAcciones, tarjetaAcciones: tarjetaAcciones
   };
 })();
@@ -3391,6 +3878,7 @@ window.Router = (function () {
         { href: '#/talento', icono: 'personas', label: 'Estudiantes', corto: 'Talento' }
       ],
       secundaria: comun.concat([
+        { href: '#/pruebas', icono: 'escudo', label: 'Pruebas prácticas' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
         { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
@@ -3404,6 +3892,7 @@ window.Router = (function () {
         { href: '#/constancias', icono: 'medalla', label: 'Constancias', corto: 'Constancias' }
       ],
       secundaria: comun.concat([
+        { href: '#/pruebas', icono: 'escudo', label: 'Pruebas prácticas' },
         { href: '#/reportes', icono: 'grafico', label: 'Reportes' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
         { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
@@ -3844,7 +4333,7 @@ window.Vistas = window.Vistas || {};
       rol: 'estudiante', titulo: 'Si eres estudiante UPN',
       resumen: 'Ganas experiencia real con una empresa y te llevas una constancia que cualquiera puede verificar.',
       pasos: [
-        ['Completar tu perfil', 'Registra tus habilidades con su nivel del 1 al 5. De eso depende qué retos te recomendamos y a cuáles puedes postular.'],
+        ['Completar tu perfil', 'Registra tus habilidades como Básico, Intermedio o Avanzado. Los dos niveles altos piden respaldo: un certificado o un trabajo tuyo. De eso depende qué retos te recomendamos y a cuáles puedes postular.'],
         ['Explorar oportunidades', 'Cada reto te muestra tu porcentaje de compatibilidad y por qué: qué habilidades cubres, tu disponibilidad, tu carrera.'],
         ['Postular', 'Explicas en pocas líneas por qué quieres participar. Solo puedes tener un microproyecto a la vez.'],
         ['Trabajar el proyecto', 'Entregas un hito por semana con el enlace a tu evidencia, y registras tus horas y avances en la bitácora.'],
@@ -3948,7 +4437,11 @@ window.Vistas = window.Vistas || {};
           { q: '¿Cuánto le cuesta a la empresa?', a: 'Nada. Es parte de la vinculación de la UPN con su entorno. La empresa aporta su tiempo para las reuniones y la información que el equipo necesita.' },
           { q: '¿Cuántas horas dedica el estudiante?', a: 'Entre 8 y 12 horas por semana según el reto, durante 2 a 4 semanas. Cada reto lo indica antes de postular.' },
           { q: '¿Puedo tener dos microproyectos a la vez?', a: 'No. Solo uno activo por estudiante, para asegurar que el compromiso con la empresa se cumpla.' },
-          { q: '¿Cómo se elige a los estudiantes?', a: 'Por un puntaje de 0 a 100 que pesa habilidades, nivel declarado, disponibilidad, afinidad con la carrera, ciclo y desempeño previo. El puntaje siempre se muestra desglosado: nadie queda seleccionado sin que se vea por qué.' },
+          { q: '¿Cómo se elige a los estudiantes?', a: 'Por un puntaje de 0 a 100 que pesa habilidades, nivel declarado, cuánto respaldo tiene ese nivel, disponibilidad, afinidad con la carrera, ciclo y desempeño previo. El puntaje siempre se muestra desglosado: nadie queda seleccionado sin que se vea por qué.' },
+          { q: '¿Cómo saben que el estudiante dice la verdad sobre su nivel?', a: 'No se confía en la declaración sola. El nivel se define por la evidencia que lo sostiene: Básico se autodeclara, pero Intermedio y Avanzado piden un certificado (la app reconoce los más comunes y propone el nivel que acreditan) o un trabajo propio que se pueda mostrar. Cada cambio de nivel queda registrado con su fecha, así que si alguien sube un nivel justo después de publicarse un reto, la coordinación lo ve al comparar candidatos. Y si declara Intermedio o Avanzado sin ningún respaldo en una habilidad indispensable, el sistema le pide una prueba práctica corta que revisa un docente.' },
+          { q: '¿Y si alguien no tiene certificados?', a: 'No queda fuera. Puede respaldar su nivel con un trabajo propio —un tablero, un diseño, un repositorio, una cuenta que gestionó—, que es lo que más pesa en una postulación real, o con la prueba práctica. Exigir certificados dejaría fuera a quien no puede pagarlos, y muchos estudiantes aprenden trabajando.' },
+          { q: '¿La app verifica los certificados automáticamente?', a: 'No, y conviene decirlo con claridad: la app reconoce el certificado, propone el nivel que acredita según el catálogo de equivalencias de la UPN y lo adjunta. Quien confirma es una persona. Una verificación automática real exigiría leer el documento y consultar al emisor.' },
+          { q: '¿La prueba práctica es un examen?', a: 'No es un cuestionario de opción múltiple: eso se resuelve con el celular al lado y mide memoria, no capacidad. Es un encargo corto y concreto de 30 a 45 minutos, del tipo de trabajo que haría en el proyecto, y lo revisa un docente del área. Solo se pide cuando falta todo respaldo y la habilidad es indispensable para ese reto.' },
           { q: '¿Qué pasa si la entrega no cumple?', a: 'El mentor o la empresa pueden observarla. El proyecto vuelve a ejecución y el equipo corrige antes de volver a enviarla.' },
           { q: '¿La constancia sirve para mi CV?', a: 'Sí. Incluye la empresa, el periodo, las horas, las competencias acreditadas y un código que cualquier reclutador puede verificar en línea, sin cuenta.' },
           { q: '¿Los datos son reales?', a: 'No. Es una demostración con empresas y estudiantes de ejemplo, y todo se guarda solo en tu navegador. Puedes crear, modificar y borrar sin miedo: en Ajustes se restauran los datos originales.' }
@@ -4505,7 +4998,7 @@ window.Vistas = window.Vistas || {};
             <p class="tiny muted">Habilidades declaradas</p>
             ${(u.habilidades || []).length
               ? h`<div class="chips">${(u.habilidades || []).slice(0, 6).map(function (s) {
-                  return h`<span class="chip chip--brand">${M.habilidadNombre(s.skill)} · ${s.nivel}/5</span>`; })}</div>`
+                  return C.chipHabilidad(s); })}</div>`
               : h`<p class="small muted">Aún no registras habilidades.</p>`}
             <a class="btn btn--ghost btn--sm btn--block mt-sm" href="#/perfil">Editar perfil y portafolio</a>
           </div>
@@ -4556,9 +5049,46 @@ window.Vistas = window.Vistas || {};
     var etiqueta = { postulada: ['chip--info', 'En revisión'], preseleccionada: ['chip--warn', 'Preseleccionado'],
       seleccionada: ['chip--ok', 'Seleccionado'], no_seleccionada: ['', 'No seleccionado'] };
 
+    var pruebas = M.pruebasDe(u.id);
+    var abiertas = pruebas.filter(function (pr) { return pr.estado === 'solicitada' || pr.estado === 'observada'; });
+
     return h`
       ${C.pageHead('Mis postulaciones', lista.length + ' ' + U.plural(lista.length, 'postulación', 'postulaciones') + ' enviadas',
         h`<a class="btn btn--primary" href="#/retos">Buscar más retos</a>`)}
+
+      ${abiertas.length ? h`<section class="stack" style="margin-bottom:1.2rem">
+        ${abiertas.map(function (pr) {
+          var r = M.reto(pr.retoId);
+          return h`<div class="card card--accent">
+            <div class="row row--between">
+              <h2 style="font-size:1.05rem;margin:0">Prueba práctica: ${M.habilidadNombre(pr.skill)}</h2>
+              <span class="chip chip--warn">${pr.estado === 'observada' ? 'Con observaciones' : 'Pendiente'}</span>
+            </div>
+            <p class="small muted">Declaraste <b>${M.nivelLabel(pr.nivelPretendido)}</b> en esta habilidad
+              y el reto ${r ? '“' + U.truncar(r.titulo, 40) + '”' : ''} la pide como indispensable.
+              Como todavía no tiene respaldo, te pedimos mostrar lo que sabes hacer. Toma entre 30 y 45 minutos
+              y la revisa un docente del área.</p>
+            <div class="notice notice--brand"><span class="notice__ico">📝</span><p>${pr.encargo}</p></div>
+            ${pr.estado === 'observada' && pr.comentario
+              ? h`<div class="mt-sm">${C.aviso('warn', '💬', raw('<b>Qué corregir:</b> ' + U.esc(pr.comentario)))}</div>` : ''}
+            <form class="mt-sm" data-action="prueba:entregar">
+              <input type="hidden" name="pruebaId" value="${pr.id}">
+              ${C.campo({ name: 'evidenciaUrl', label: 'Enlace a tu trabajo', required: true,
+                placeholder: 'https://drive.google.com/…', valor: pr.evidenciaUrl,
+                ayuda: 'Drive, Canva, Figma, un repositorio: lo que uses.' })}
+              <button class="btn btn--primary btn--block" type="submit">Enviar mi prueba</button>
+            </form>
+          </div>`;
+        })}
+      </section>` : ''}
+
+      ${pruebas.filter(function (pr) { return pr.estado === 'entregada' || pr.estado === 'aprobada'; }).map(function (pr) {
+        return h`<div style="margin-bottom:.7rem">${C.aviso(pr.estado === 'aprobada' ? 'ok' : 'info',
+          pr.estado === 'aprobada' ? '✅' : '⏳',
+          pr.estado === 'aprobada'
+            ? 'Tu prueba de ' + M.habilidadNombre(pr.skill) + ' fue aprobada: esa habilidad quedó verificada.'
+            : 'Tu prueba de ' + M.habilidadNombre(pr.skill) + ' está en revisión.')}</div>`;
+      })}
       ${lista.length ? h`<div class="panel"><ul class="list">
         ${lista.map(function (p) {
           var r = M.reto(p.retoId);
@@ -4789,6 +5319,7 @@ window.Vistas = window.Vistas || {};
                         ${ocupado ? raw('<span class="chip chip--warn tiny">Con proyecto activo</span>') : ''}</span>
                       <span class="listitem__s">${x.estudiante.carrera} · Ciclo ${x.estudiante.ciclo} · ${x.estudiante.horasSemana} h/sem · ${CFG.MODALIDADES[x.estudiante.modalidad]}</span>
                       ${x.match.descartado ? h`<span class="tiny" style="color:var(--danger)">${x.match.motivo}</span>` : ''}
+                      ${senales(x.estudiante.id, r)}
                       <details style="margin-top:.4rem">
                         <summary class="tiny" style="cursor:pointer;color:var(--bronce);font-weight:700">Ver por qué este puntaje</summary>
                         <div style="margin-top:.4rem">${C.desgloseMatch(x.match)}</div>
@@ -4856,6 +5387,29 @@ window.Vistas = window.Vistas || {};
         </div>
       </div>`;
   };
+
+
+  /* Contexto sobre lo que declaró un candidato, frente a este reto en concreto.
+     No acusa: una subida de nivel puede ser exageración o un curso recién
+     terminado. Quien decide es la coordinación, y decide con el dato a la vista. */
+  function senales(estudianteId, reto) {
+    var se = M.senalesDe(estudianteId, reto);
+    if (!se.sinRespaldo.length && !se.subidasRecientes.length && !se.pruebas.length) return h``;
+    return h`<span class="senales">
+      ${se.subidasRecientes.map(function (c) {
+        return h`<span class="senal senal--ojo">subió ${M.habilidadNombre(c.skill)} de
+          ${M.nivelLabel(c.de)} a ${M.nivelLabel(c.a)} ${U.haceTiempo(c.at)}, ya publicado este reto</span>`;
+      })}
+      ${se.sinRespaldo.map(function (x) {
+        return h`<span class="senal">${M.habilidadNombre(x.skill)} ${M.nivelLabel(x.nivel)} sin respaldo</span>`;
+      })}
+      ${se.pruebas.map(function (pr) {
+        var txt = { solicitada: 'prueba práctica pendiente', entregada: 'prueba entregada, por revisar',
+                    aprobada: 'prueba aprobada', observada: 'prueba con observaciones' }[pr.estado];
+        return h`<span class="senal ${pr.estado === 'aprobada' ? 'senal--ok' : ''}">${M.habilidadNombre(pr.skill)}: ${txt}</span>`;
+      })}
+    </span>`;
+  }
 
   /* ================= Directorio de talento ================= */
   Vistas.talento = function (p, q) {
@@ -4994,6 +5548,62 @@ window.Vistas = window.Vistas || {};
         </div>
       </div>`;
   };
+
+  /* ================= Bandeja de pruebas prácticas ================= */
+  Vistas.pruebas = function () {
+    var todas = U.sortBy(Store.all('pruebas'), function (pr) { return pr.solicitadaAt; }, true);
+    var porRevisar = todas.filter(function (pr) { return pr.estado === 'entregada'; });
+    var esperando = todas.filter(function (pr) { return pr.estado === 'solicitada'; });
+    var cerradas = todas.filter(function (pr) { return ['aprobada', 'observada'].indexOf(pr.estado) !== -1; });
+
+    function tarjeta(pr, conFormulario) {
+      var est = M.usuario(pr.estudianteId);
+      var r = M.reto(pr.retoId);
+      return h`<div class="card">
+        <div class="card__head">
+          ${C.avatar(est)}
+          <div class="hcol">
+            <h3 class="card__title">${M.habilidadNombre(pr.skill)} · ${M.nivelLabel(pr.nivelPretendido)}</h3>
+            <p class="tiny muted mb0"><a href="#/perfil/${pr.estudianteId}">${est ? est.nombre : ''}</a>
+              ${r ? ' · para “' + U.truncar(r.titulo, 34) + '”' : ''}</p>
+          </div>
+          <span class="chip ${pr.estado === 'aprobada' ? 'chip--ok' : (pr.estado === 'entregada' ? 'chip--info' : 'chip--warn')}">
+            ${({ solicitada: 'Sin entregar', entregada: 'Por revisar', aprobada: 'Aprobada', observada: 'Observada' })[pr.estado]}</span>
+        </div>
+        <p class="small muted">${pr.encargo}</p>
+        ${pr.evidenciaUrl ? h`<p class="small mb0">📎
+          <a href="${U.safeUrl(pr.evidenciaUrl)}" target="_blank" rel="noopener noreferrer">${U.hostOf(pr.evidenciaUrl) || 'Ver el trabajo'}</a>
+          <span class="tiny muted"> · entregada ${U.haceTiempo(pr.entregadaAt)}</span></p>` : ''}
+        ${pr.comentario ? h`<div class="mt-sm">${C.aviso(pr.estado === 'aprobada' ? 'ok' : 'warn', '💬', pr.comentario)}</div>` : ''}
+        ${conFormulario ? h`<form class="mt-sm" data-action="prueba:revisar">
+          <input type="hidden" name="pruebaId" value="${pr.id}">
+          ${C.campo({ name: 'comentario', label: 'Comentario para el estudiante', tipo: 'textarea', rows: 2,
+            placeholder: 'Qué resolvió bien y qué le faltó' })}
+          <div class="btnrow">
+            <button class="btn btn--ok btn--sm" type="submit" name="decision" value="aprobada">Aprobar y verificar la habilidad</button>
+            <button class="btn btn--ghost btn--sm" type="submit" name="decision" value="observada">Devolver con observaciones</button>
+          </div>
+        </form>` : ''}
+      </div>`;
+    }
+
+    return h`
+      ${C.pageHead('Pruebas prácticas', 'Se piden solo cuando alguien declara Intermedio o Avanzado sin respaldo en una habilidad indispensable del reto al que postula.')}
+
+      ${!todas.length ? C.vacio('📝', 'No hay pruebas pendientes',
+        'Aparecen automáticamente cuando una postulación lo amerita.') : h`
+        <h2 style="font-size:1rem">Por revisar ${porRevisar.length ? raw('<span class="chip chip--info">' + porRevisar.length + '</span>') : ''}</h2>
+        ${porRevisar.length ? h`<div class="stack">${porRevisar.map(function (pr) { return tarjeta(pr, true); })}</div>`
+          : h`<p class="small muted">Nada entregado esperando revisión.</p>`}
+
+        ${esperando.length ? h`<h2 style="font-size:1rem" class="mt">Solicitadas, aún sin entregar</h2>
+          <div class="stack">${esperando.map(function (pr) { return tarjeta(pr, false); })}</div>` : ''}
+
+        ${cerradas.length ? h`<h2 style="font-size:1rem" class="mt">Ya revisadas</h2>
+          <div class="stack">${cerradas.map(function (pr) { return tarjeta(pr, false); })}</div>` : ''}
+      `}`;
+  };
+
 })();
 
 /* ===== assets/js/14-views-mentor.js ===== */
@@ -5486,6 +6096,33 @@ window.Vistas = window.Vistas || {};
           ${C.selectorEstrellas('crit_' + c.id, 4)}
         </div>`;
       })}
+      ${u.rol === 'mentor' ? h`
+        <hr>
+        <h4 style="font-size:.95rem;margin-bottom:.2rem">¿Qué habilidades demostró cada uno?</h4>
+        <p class="tiny muted">Lo que marques aquí queda <b>verificado</b> en el perfil del estudiante y
+          aparece en su portafolio y su constancia. Es la forma más confiable de acreditar un nivel:
+          tú lo viste trabajar durante semanas. Marca solo lo que realmente demostró.</p>
+        ${proy.estudianteIds.map(function (id) {
+          var est = M.usuario(id);
+          var reto = M.reto(proy.retoId);
+          var candidatas = U.unique((reto.habilidadesRequeridas || []).map(function (x) { return x.skill; })
+            .concat(reto.habilidadesDeseables || []));
+          return h`<div class="mt-sm">
+            <p class="small mb0"><b>${est ? est.nombre : ''}</b></p>
+            <div class="checkgrid">
+              ${candidatas.map(function (sk) {
+                var hab = M.habilidadDe(est, sk);
+                var ya = hab && hab.verificadoPorId;
+                return raw('<label class="checkline' + (ya ? ' checkline--on' : '') + '">' +
+                  '<input type="checkbox" name="dem_' + U.esc(id) + '[]" value="' + U.esc(sk) + '"' + (ya ? ' checked disabled' : '') + '>' +
+                  '<span>' + U.esc(M.habilidadNombre(sk)) +
+                  (hab ? ' <small>(declara ' + U.esc(M.nivelLabel(hab.nivel)) + ')</small>' : ' <small>(no la declara)</small>') +
+                  (ya ? ' <b>✓ ya verificada</b>' : '') + '</span></label>');
+              })}
+            </div>
+          </div>`;
+        })}
+        <hr>` : ''}
       ${C.campo({ name: 'comentario', label: 'Comentario', tipo: 'textarea', rows: 3,
         placeholder: u.rol === 'empresa' ? '¿Qué te pareció el resultado? ¿Lo estás usando?' : '¿Cómo trabajó el equipo?' })}
       <div class="btnrow">
@@ -5747,12 +6384,20 @@ window.Vistas = window.Vistas || {};
   /* ---------- Estudiante (editable) ---------- */
   function perfilEstudiante(u) {
     var mapa = {};
-    (u.habilidades || []).forEach(function (s) { mapa[s.skill] = s.nivel; });
+    (u.habilidades || []).forEach(function (s) { mapa[s.skill] = s; });
     var porCat = U.groupBy(Object.keys(CFG.HABILIDADES), function (k) { return CFG.HABILIDADES[k].categoria; });
+    var pendientes = (u.habilidades || []).filter(function (s) {
+      return s.nivel >= 2 && M.estadoHabilidad(s) === 'declarado';
+    });
+    var pruebas = M.pruebasDe(u.id).filter(function (pr) { return pr.estado === 'solicitada' || pr.estado === 'observada'; });
 
     return h`<div style="max-width:860px;margin:0 auto">
       ${C.pageHead('Mi perfil', 'Mientras más completo, mejores recomendaciones recibirás.',
         u.slug ? h`<a class="btn btn--ghost" href="#/portafolio/${u.slug}">Ver mi portafolio público</a>` : null)}
+
+      ${pruebas.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '📝',
+        raw('Tienes ' + pruebas.length + ' ' + U.plural(pruebas.length, 'prueba') + ' práctica pendiente. ' +
+        '<a href="#/postulaciones"><b>Ver de qué se trata</b></a>'))}</div>` : ''}
 
       <form class="stack" data-action="perfil:guardar">
         <div class="card">
@@ -5783,24 +6428,79 @@ window.Vistas = window.Vistas || {};
 
         <div class="card">
           <h2 style="font-size:1.05rem">Mis habilidades</h2>
-          <p class="small muted">Indica tu nivel real del 1 al 5. Esto define a qué retos puedes postular y tu porcentaje de compatibilidad.</p>
+          <p class="small muted">El nivel no es cuánto crees que sabes: es qué puedes sostener con algo.
+            Declarar Intermedio o Avanzado sin respaldo no te bloquea, pero coordinación lo verá al
+            compararte, y si la habilidad es indispensable para el reto te pediremos una prueba corta.</p>
+
+          <div class="niveles-ref">
+            ${[1, 2, 3].map(function (n) {
+              return h`<div class="niveles-ref__i">
+                <b>${CFG.NIVELES[n].label}</b>
+                <span>${CFG.NIVELES[n].afirma}</span>
+                <em>${CFG.NIVELES[n].respaldo}</em>
+              </div>`;
+            })}
+          </div>
+
+          ${pendientes.length ? h`<div class="mt-sm">${C.aviso('warn', '⚠️',
+            raw('Sin respaldo: <b>' + U.esc(pendientes.map(function (x) { return M.habilidadNombre(x.skill); }).join(', ')) +
+            '</b>. Agrega un certificado o un trabajo tuyo más abajo.'))}</div>` : ''}
+
           ${Object.keys(porCat).map(function (cat) {
-            return h`<div class="mt-sm">
+            return h`<div class="mt">
               <p class="eyebrow">${M.categoria(cat).icono} ${M.categoria(cat).label}</p>
-              <div class="checkgrid">
+              <div class="stack" style="gap:.5rem">
                 ${porCat[cat].map(function (k) {
-                  return h`<div class="row row--between" style="gap:.5rem;border:1px solid var(--border);border-radius:var(--r-md);padding:.4rem .6rem">
-                    <label class="small" for="hab_${k}" class="hcol">${CFG.HABILIDADES[k].nombre}</label>
-                    <select class="select" id="hab_${k}" name="hab_${k}" style="width:auto;min-width:104px;min-height:38px;padding:.25rem 1.8rem .25rem .5rem">
-                      ${[['', 'No la tengo'], ['1', 'Nivel 1'], ['2', 'Nivel 2'], ['3', 'Nivel 3'], ['4', 'Nivel 4'], ['5', 'Nivel 5']].map(function (o) {
-                        return raw('<option value="' + o[0] + '"' + (String(mapa[k] || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
-                      })}
-                    </select>
+                  var hab = mapa[k];
+                  var nivel = hab ? hab.nivel : 0;
+                  var estado = hab ? M.estadoHabilidad(hab) : 'declarado';
+                  return h`<div class="habrow ${nivel >= 2 ? 'habrow--alto' : ''}">
+                    <div class="habrow__top">
+                      <label class="habrow__n" for="hab_${k}">${CFG.HABILIDADES[k].nombre}</label>
+                      ${nivel && estado !== 'declarado'
+                        ? h`<span class="chip ${CFG.RESPALDOS[estado].chip} tiny">${CFG.RESPALDOS[estado].label}${estado === 'verificado' ? ' ✓' : ''}</span>`
+                        : ''}
+                      <select class="select habrow__s" id="hab_${k}" name="hab_${k}"
+                        data-action="perfil:nivel" data-skill="${k}">
+                        ${[['', 'No la tengo'], ['1', 'Básico'], ['2', 'Intermedio'], ['3', 'Avanzado']].map(function (o) {
+                          return raw('<option value="' + o[0] + '"' + (String(nivel || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
+                        })}
+                      </select>
+                    </div>
+
+                    <div class="habrow__resp" id="resp_${k}" ${raw(nivel >= 2 ? '' : 'hidden')}>
+                      ${estado === 'verificado'
+                        ? h`<p class="tiny mb0" style="color:var(--ok)">Verificada por ${M.nombre(hab.verificadoPorId)}${hab.verificadoVia === 'prueba' ? ' tras tu prueba práctica' : ' en un microproyecto'}. Ya no necesitas sustentarla.</p>`
+                        : h`
+                        <div class="field-row field-row--2" style="gap:.5rem">
+                          <div class="field" style="margin:0">
+                            <label class="tiny" for="tipo_${k}">¿Con qué lo sustentas?</label>
+                            <select class="select" id="tipo_${k}" name="tipo_${k}">
+                              ${[['ninguno', 'Todavía con nada'], ['certificado', 'Un certificado'], ['trabajo', 'Un trabajo mío']].map(function (o) {
+                                return raw('<option value="' + o[0] + '"' + ((hab && hab.respaldoTipo) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
+                              })}
+                            </select>
+                          </div>
+                          <div class="field" style="margin:0">
+                            <label class="tiny" for="det_${k}">Nombre del certificado o del trabajo</label>
+                            <input class="input" id="det_${k}" name="det_${k}" data-action="perfil:certificado" data-skill="${k}"
+                              list="lista-certificados" placeholder="Ej.: Microsoft Office Specialist: Excel Associate"
+                              value="${hab && hab.respaldoDetalle ? hab.respaldoDetalle : ''}">
+                          </div>
+                        </div>
+                        <input class="input mt-sm" name="url_${k}" placeholder="Enlace al certificado o al trabajo (opcional)"
+                          value="${hab && hab.respaldoUrl ? hab.respaldoUrl : ''}">
+                        <p class="tiny muted mb0" id="sug_${k}"></p>`}
+                    </div>
                   </div>`;
                 })}
               </div>
             </div>`;
           })}
+
+          <datalist id="lista-certificados">
+            ${CFG.CERTIFICADOS.map(function (c) { return raw('<option value="' + U.esc(c.nombre) + '">'); })}
+          </datalist>
         </div>
 
         <button class="btn btn--primary btn--lg" type="submit">Guardar cambios</button>
@@ -5942,9 +6642,13 @@ window.Vistas = window.Vistas || {};
             <h2 style="font-size:1.05rem">Habilidades declaradas</h2>
             ${(persona.habilidades || []).length ? h`<ul class="list">
               ${U.sortBy(persona.habilidades || [], function (s) { return s.nivel; }, true).map(function (s) {
-                return h`<li style="padding:.4rem 0"><div class="row row--between">
-                  <span class="small">${M.habilidadNombre(s.skill)}</span>
-                  <span style="width:110px">${C.progreso(s.nivel * 20)}</span></div></li>`;
+                return h`<li style="padding:.4rem 0">
+                  <div class="row row--between">
+                    <span class="small">${M.habilidadNombre(s.skill)}</span>
+                    <span class="chip ${CFG.RESPALDOS[M.estadoHabilidad(s)].chip} tiny">${M.nivelLabel(s.nivel)}${M.estadoHabilidad(s) === 'verificado' ? ' ✓' : ''}</span>
+                  </div>
+                  ${s.respaldoDetalle ? h`<p class="tiny muted mb0">${s.respaldoDetalle}</p>` : ''}
+                </li>`;
               })}</ul>` : h`<p class="small muted">Sin habilidades registradas.</p>`}
           </div>
           <div class="card">
@@ -6119,7 +6823,7 @@ window.Actions = (function () {
 
     var habilidades = req.map(function (s) {
       var critica = criticas.indexOf(s) !== -1;
-      return { skill: s, peso: critica ? 3 : 2, nivelMin: critica ? 3 : 2 };
+      return { skill: s, peso: critica ? 3 : 2, nivelMin: critica ? 2 : 1 };
     });
     var datos = {
       titulo: d.titulo, problema: d.problema, resultado: d.resultado, categoria: d.categoria,
@@ -6218,6 +6922,12 @@ window.Actions = (function () {
     var res = M.postular(u.id, d.retoId, d);
     UI.cerrarModal();
     if (!res.ok) return UI.toast(res.error, 'err');
+    if (res.pruebas && res.pruebas.length) {
+      UI.toast('Postulación enviada. Te pedimos una prueba corta para sustentar ' +
+        res.pruebas.map(function (pr) { return M.habilidadNombre(pr.skill); }).join(' y ') + '.', 'warn', 6000);
+      Router.go('#/postulaciones');
+      return;
+    }
     UI.toast('¡Postulación enviada! Te avisaremos por notificación.', 'ok');
     Router.refresh();
   });
@@ -6339,12 +7049,42 @@ window.Actions = (function () {
     });
     if (u.rol === 'estudiante') {
       cambios.portafolioPublico = d.portafolioPublico === 'true';
-      var habs = [];
+
+      var previos = {};
+      (u.habilidades || []).forEach(function (x) { previos[x.skill] = x; });
+
+      var habs = [], historial = (u.historialHabilidades || []).slice();
       Object.keys(CFG.HABILIDADES).forEach(function (k) {
         var v = parseInt(d['hab_' + k], 10);
-        if (v >= 1 && v <= 5) habs.push({ skill: k, nivel: v });
+        if (!(v >= 1 && v <= 3)) return;
+        var antes = previos[k];
+        var tipo = d['tipo_' + k] || 'ninguno';
+        var detalle = String(d['det_' + k] || '').trim();
+        var hab = {
+          skill: k, nivel: v,
+          respaldoTipo: v >= 2 ? tipo : 'ninguno',
+          respaldoDetalle: v >= 2 ? detalle : '',
+          respaldoUrl: v >= 2 ? U.safeUrl(d['url_' + k]) : ''
+        };
+        /* La verificación de un docente no se pierde al editar el perfil:
+           la otorgó un tercero sobre un trabajo real, no el propio estudiante. */
+        if (antes && antes.verificadoPorId && antes.nivel === v) {
+          hab.verificadoPorId = antes.verificadoPorId;
+          hab.verificadoAt = antes.verificadoAt;
+          hab.verificadoProyectoId = antes.verificadoProyectoId;
+          hab.verificadoVia = antes.verificadoVia;
+        }
+        habs.push(hab);
+
+        /* Registrar las subidas de nivel: es el dato que le da contexto a
+           coordinación cuando compara candidatos. */
+        var nivelAntes = antes ? antes.nivel : 0;
+        if (v !== nivelAntes) {
+          historial.push({ at: new Date().toISOString(), skill: k, de: nivelAntes, a: v });
+        }
       });
       cambios.habilidades = habs;
+      cambios.historialHabilidades = historial;
       if (cambios.carrera) cambios.intereses = CFG.CARRERAS[cambios.carrera] || u.intereses || [];
       if (cambios.nombre && u.codigoUPN) cambios.slug = U.slugify(cambios.nombre) + '-' + u.codigoUPN.slice(-4);
     }
@@ -6362,6 +7102,54 @@ window.Actions = (function () {
       });
     });
     UI.toast('Portafolio actualizado.', 'ok');
+    Router.refresh();
+  });
+
+
+  /* ---- Habilidades: respaldo y sugerencia de nivel ---- */
+
+  /* Al elegir Intermedio o Avanzado se pide el respaldo en el momento, para no
+     tener que guardar primero y descubrir después que faltaba. */
+  on('perfil:nivel', function (d, el) {
+    var caja = document.getElementById('resp_' + d.skill);
+    if (!caja) return;
+    caja.hidden = parseInt(el.value, 10) < 2;
+    var fila = el.closest('.habrow');
+    if (fila) fila.classList.toggle('habrow--alto', parseInt(el.value, 10) >= 2);
+  });
+
+  /* La app propone el nivel que acredita el certificado; confirmarlo es de una
+     persona. No hay verificación automática real y no la prometemos. */
+  on('perfil:certificado', function (d, el) {
+    var salida = document.getElementById('sug_' + d.skill);
+    if (!salida) return;
+    var texto = String(el.value || '').trim();
+    if (!texto) { salida.textContent = ''; return; }
+    var sug = M.sugerirNivel(texto);
+    if (sug && sug.nivel) {
+      salida.textContent = 'Equivale a ' + M.nivelLabel(sug.nivel) + '. ' + sug.detalle;
+      var sel = document.getElementById('hab_' + d.skill);
+      if (sel && parseInt(sel.value, 10) > sug.nivel) {
+        salida.textContent += ' Declaraste un nivel mayor: coordinación pedirá cómo lo sustentas.';
+      }
+    } else {
+      salida.textContent = sug ? sug.detalle : '';
+    }
+  });
+
+  /* ---- Prueba práctica ---- */
+  on('prueba:entregar', function (d) {
+    var res = M.entregarPrueba(d.pruebaId, d.evidenciaUrl);
+    if (!res.ok) return UI.toast(res.error, 'err');
+    UI.toast('Prueba enviada. La revisará un docente del área.', 'ok');
+    Router.refresh();
+  });
+  on('prueba:revisar', function (d) {
+    var res = M.revisarPrueba(d.pruebaId, d.decision, d.comentario);
+    if (!res.ok) return UI.toast(res.error, 'err');
+    UI.toast(d.decision === 'aprobada'
+      ? 'Prueba aprobada. La habilidad quedó verificada.'
+      : 'Prueba devuelta con observaciones.', 'ok');
     Router.refresh();
   });
 
@@ -6515,6 +7303,7 @@ window.Actions = (function () {
 
     Router.add('/talento', { view: Vistas.talento, roles: ['empresa', 'mentor', 'coordinador'], titulo: 'Talento UPN' });
     Router.add('/reportes', { view: Vistas.reportes, roles: ['coordinador'], titulo: 'Reportes' });
+    Router.add('/pruebas', { view: Vistas.pruebas, roles: ['coordinador', 'mentor'], titulo: 'Pruebas prácticas' });
     Router.add('/constancias', { view: Vistas.constancias, roles: ['estudiante', 'coordinador'], titulo: 'Constancias' });
 
     Router.add('/notificaciones', { view: Vistas.notificaciones, roles: T, titulo: 'Notificaciones' });

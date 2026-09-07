@@ -150,6 +150,7 @@ window.Vistas = window.Vistas || {};
                         ${ocupado ? raw('<span class="chip chip--warn tiny">Con proyecto activo</span>') : ''}</span>
                       <span class="listitem__s">${x.estudiante.carrera} · Ciclo ${x.estudiante.ciclo} · ${x.estudiante.horasSemana} h/sem · ${CFG.MODALIDADES[x.estudiante.modalidad]}</span>
                       ${x.match.descartado ? h`<span class="tiny" style="color:var(--danger)">${x.match.motivo}</span>` : ''}
+                      ${senales(x.estudiante.id, r)}
                       <details style="margin-top:.4rem">
                         <summary class="tiny" style="cursor:pointer;color:var(--bronce);font-weight:700">Ver por qué este puntaje</summary>
                         <div style="margin-top:.4rem">${C.desgloseMatch(x.match)}</div>
@@ -217,6 +218,29 @@ window.Vistas = window.Vistas || {};
         </div>
       </div>`;
   };
+
+
+  /* Contexto sobre lo que declaró un candidato, frente a este reto en concreto.
+     No acusa: una subida de nivel puede ser exageración o un curso recién
+     terminado. Quien decide es la coordinación, y decide con el dato a la vista. */
+  function senales(estudianteId, reto) {
+    var se = M.senalesDe(estudianteId, reto);
+    if (!se.sinRespaldo.length && !se.subidasRecientes.length && !se.pruebas.length) return h``;
+    return h`<span class="senales">
+      ${se.subidasRecientes.map(function (c) {
+        return h`<span class="senal senal--ojo">subió ${M.habilidadNombre(c.skill)} de
+          ${M.nivelLabel(c.de)} a ${M.nivelLabel(c.a)} ${U.haceTiempo(c.at)}, ya publicado este reto</span>`;
+      })}
+      ${se.sinRespaldo.map(function (x) {
+        return h`<span class="senal">${M.habilidadNombre(x.skill)} ${M.nivelLabel(x.nivel)} sin respaldo</span>`;
+      })}
+      ${se.pruebas.map(function (pr) {
+        var txt = { solicitada: 'prueba práctica pendiente', entregada: 'prueba entregada, por revisar',
+                    aprobada: 'prueba aprobada', observada: 'prueba con observaciones' }[pr.estado];
+        return h`<span class="senal ${pr.estado === 'aprobada' ? 'senal--ok' : ''}">${M.habilidadNombre(pr.skill)}: ${txt}</span>`;
+      })}
+    </span>`;
+  }
 
   /* ================= Directorio de talento ================= */
   Vistas.talento = function (p, q) {
@@ -355,4 +379,60 @@ window.Vistas = window.Vistas || {};
         </div>
       </div>`;
   };
+
+  /* ================= Bandeja de pruebas prácticas ================= */
+  Vistas.pruebas = function () {
+    var todas = U.sortBy(Store.all('pruebas'), function (pr) { return pr.solicitadaAt; }, true);
+    var porRevisar = todas.filter(function (pr) { return pr.estado === 'entregada'; });
+    var esperando = todas.filter(function (pr) { return pr.estado === 'solicitada'; });
+    var cerradas = todas.filter(function (pr) { return ['aprobada', 'observada'].indexOf(pr.estado) !== -1; });
+
+    function tarjeta(pr, conFormulario) {
+      var est = M.usuario(pr.estudianteId);
+      var r = M.reto(pr.retoId);
+      return h`<div class="card">
+        <div class="card__head">
+          ${C.avatar(est)}
+          <div class="hcol">
+            <h3 class="card__title">${M.habilidadNombre(pr.skill)} · ${M.nivelLabel(pr.nivelPretendido)}</h3>
+            <p class="tiny muted mb0"><a href="#/perfil/${pr.estudianteId}">${est ? est.nombre : ''}</a>
+              ${r ? ' · para “' + U.truncar(r.titulo, 34) + '”' : ''}</p>
+          </div>
+          <span class="chip ${pr.estado === 'aprobada' ? 'chip--ok' : (pr.estado === 'entregada' ? 'chip--info' : 'chip--warn')}">
+            ${({ solicitada: 'Sin entregar', entregada: 'Por revisar', aprobada: 'Aprobada', observada: 'Observada' })[pr.estado]}</span>
+        </div>
+        <p class="small muted">${pr.encargo}</p>
+        ${pr.evidenciaUrl ? h`<p class="small mb0">📎
+          <a href="${U.safeUrl(pr.evidenciaUrl)}" target="_blank" rel="noopener noreferrer">${U.hostOf(pr.evidenciaUrl) || 'Ver el trabajo'}</a>
+          <span class="tiny muted"> · entregada ${U.haceTiempo(pr.entregadaAt)}</span></p>` : ''}
+        ${pr.comentario ? h`<div class="mt-sm">${C.aviso(pr.estado === 'aprobada' ? 'ok' : 'warn', '💬', pr.comentario)}</div>` : ''}
+        ${conFormulario ? h`<form class="mt-sm" data-action="prueba:revisar">
+          <input type="hidden" name="pruebaId" value="${pr.id}">
+          ${C.campo({ name: 'comentario', label: 'Comentario para el estudiante', tipo: 'textarea', rows: 2,
+            placeholder: 'Qué resolvió bien y qué le faltó' })}
+          <div class="btnrow">
+            <button class="btn btn--ok btn--sm" type="submit" name="decision" value="aprobada">Aprobar y verificar la habilidad</button>
+            <button class="btn btn--ghost btn--sm" type="submit" name="decision" value="observada">Devolver con observaciones</button>
+          </div>
+        </form>` : ''}
+      </div>`;
+    }
+
+    return h`
+      ${C.pageHead('Pruebas prácticas', 'Se piden solo cuando alguien declara Intermedio o Avanzado sin respaldo en una habilidad indispensable del reto al que postula.')}
+
+      ${!todas.length ? C.vacio('📝', 'No hay pruebas pendientes',
+        'Aparecen automáticamente cuando una postulación lo amerita.') : h`
+        <h2 style="font-size:1rem">Por revisar ${porRevisar.length ? raw('<span class="chip chip--info">' + porRevisar.length + '</span>') : ''}</h2>
+        ${porRevisar.length ? h`<div class="stack">${porRevisar.map(function (pr) { return tarjeta(pr, true); })}</div>`
+          : h`<p class="small muted">Nada entregado esperando revisión.</p>`}
+
+        ${esperando.length ? h`<h2 style="font-size:1rem" class="mt">Solicitadas, aún sin entregar</h2>
+          <div class="stack">${esperando.map(function (pr) { return tarjeta(pr, false); })}</div>` : ''}
+
+        ${cerradas.length ? h`<h2 style="font-size:1rem" class="mt">Ya revisadas</h2>
+          <div class="stack">${cerradas.map(function (pr) { return tarjeta(pr, false); })}</div>` : ''}
+      `}`;
+  };
+
 })();

@@ -14,7 +14,9 @@ window.Matching = (function () {
     var faltantes = criticas.filter(function (h) { return nivelDe(est, h.skill) < h.nivelMin; });
     if (faltantes.length) {
       return { ok: false, motivo: 'No cumple el requisito indispensable: ' +
-        faltantes.map(function (h) { return M.habilidadNombre(h.skill) + ' (nivel ' + h.nivelMin + '+)'; }).join(', ') };
+        faltantes.map(function (h) {
+          return M.habilidadNombre(h.skill) + ' (' + M.nivelLabel(h.nivelMin) + ' o más)';
+        }).join(', ') };
     }
     var minHoras = Math.ceil((reto.horasSemana || 10) * 0.7);
     if ((est.horasSemana || 0) < minHoras) {
@@ -45,7 +47,7 @@ window.Matching = (function () {
         (cubiertas.length ? ': ' + cubiertas.map(function (h) { return M.habilidadNombre(h.skill); }).join(', ') : '')
     });
 
-    /* B. Profundidad de nivel */
+    /* B. Profundidad de nivel declarado */
     var pNivel = U.sum(req, function (h) {
       return h.peso * Math.min(1, nivelDe(est, h.skill) / (h.nivelMin || 1));
     }) / pesoTotal;
@@ -53,6 +55,27 @@ window.Matching = (function () {
       id: 'nivel', label: 'Nivel declarado', max: W.nivel, puntos: pNivel * W.nivel,
       detalle: pNivel >= 0.99 ? 'Alcanza o supera el nivel pedido en todas' :
                (pNivel >= 0.7 ? 'Cerca del nivel pedido' : 'Por debajo del nivel pedido en varias')
+    });
+
+    /* B2. Respaldo de ese nivel. Un nivel sin sustento vale la mitad que uno
+       verificado por un docente: la app premia lo que se puede probar, no lo
+       que se afirma. Quien empieza sin nada pierde puntos, no queda fuera. */
+    var VALOR_RESPALDO = { declarado: 0, respaldado: 0.6, verificado: 1 };
+    var estados = { declarado: 0, respaldado: 0, verificado: 0 };
+    var pRespaldo = U.sum(req, function (r) {
+      var h = M.habilidadDe(est, r.skill);
+      if (!h) return 0;
+      var e = M.estadoHabilidad(h);
+      estados[e]++;
+      return r.peso * VALOR_RESPALDO[e];
+    }) / pesoTotal;
+    var detRespaldo;
+    if (estados.verificado) detRespaldo = estados.verificado + ' verificada' + (estados.verificado === 1 ? '' : 's') + ' por un docente';
+    else if (estados.respaldado) detRespaldo = estados.respaldado + ' con certificado o trabajo propio, sin revisar aún';
+    else detRespaldo = 'Ninguna habilidad tiene respaldo adjunto todavía';
+    desglose.push({
+      id: 'respaldo', label: 'Respaldo del nivel', max: W.respaldo,
+      puntos: pRespaldo * W.respaldo, detalle: detRespaldo
     });
 
     /* C. Disponibilidad horaria */

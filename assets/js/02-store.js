@@ -23,7 +23,8 @@ window.Store = (function () {
   function vacia() {
     return {
       meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 0, proyecto: 0, constancia: 0 } },
-      users: [], retos: [], postulaciones: [], proyectos: [], constancias: [], notificaciones: [], auditoria: []
+      users: [], retos: [], postulaciones: [], proyectos: [], constancias: [],
+      pruebas: [], notificaciones: [], auditoria: []
     };
   }
 

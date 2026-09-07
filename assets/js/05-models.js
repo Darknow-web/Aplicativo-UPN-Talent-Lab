@@ -115,6 +115,221 @@ window.M = (function () {
     });
   }
 
+
+  /* ================= Habilidades y su respaldo ================= */
+
+  function habilidadDe(user, skill) {
+    if (!user) return null;
+    var l = (user.habilidades || []).filter(function (x) { return x.skill === skill; });
+    return l.length ? l[0] : null;
+  }
+
+  /* El estado se calcula, no se guarda: así nunca puede quedar desincronizado
+     de los datos que lo sostienen. */
+  function estadoHabilidad(h) {
+    if (!h) return 'declarado';
+    if (h.verificadoPorId) return 'verificado';
+    if (h.respaldoTipo && h.respaldoTipo !== 'ninguno' && String(h.respaldoDetalle || '').trim()) return 'respaldado';
+    return 'declarado';
+  }
+
+  function nivelLabel(n) { return (CFG.NIVELES[n] || {}).label || '—'; }
+
+  /* Propone un nivel a partir del nombre del certificado: primero busca en el
+     catálogo de equivalencias de la UPN y, si no está, lee palabras clave del
+     título. Devuelve también de dónde salió, porque la app sugiere y una
+     persona confirma: aquí no hay verificación automática de verdad. */
+  function sugerirNivel(texto) {
+    var t = String(texto || '').trim();
+    if (!t) return null;
+
+    var norm = U.normaliza(t);
+    var encontrado = null;
+    CFG.CERTIFICADOS.forEach(function (c) {
+      if (encontrado) return;
+      var cn = U.normaliza(c.nombre);
+      if (norm.indexOf(cn) !== -1 || cn.indexOf(norm) !== -1) encontrado = c;
+    });
+    if (encontrado) {
+      return { nivel: encontrado.nivel, fuente: 'catalogo', certificado: encontrado,
+        detalle: 'Reconocido en el catálogo UPN: ' + encontrado.nombre + ' (' + encontrado.emisor + ')' };
+    }
+
+    for (var i = 0; i < CFG.REGLAS_NIVEL_TEXTO.length; i++) {
+      if (CFG.REGLAS_NIVEL_TEXTO[i].re.test(t)) {
+        return { nivel: CFG.REGLAS_NIVEL_TEXTO[i].nivel, fuente: 'texto',
+          detalle: 'Deducido del título del certificado. Coordinación lo confirmará.' };
+      }
+    }
+    return { nivel: null, fuente: null,
+      detalle: 'No lo reconocemos automáticamente. Coordinación lo revisará al compararte con otros postulantes.' };
+  }
+
+  /* Marca como verificadas las habilidades que un tercero confirmó.
+     Si el estudiante no la tenía declarada, se agrega: la demostró en un
+     trabajo real, que es mejor evidencia que cualquier autodeclaración. Y si
+     la tenía en Básico, sube a Intermedio, que es justo lo que acaba de
+     probar: «la usé para resolver algo real». Nunca sube sola a Avanzado. */
+  function verificarHabilidades(estudianteId, skills, opts) {
+    opts = opts || {};
+    var est = usuario(estudianteId);
+    if (!est || !skills || !skills.length) return 0;
+    est.habilidades = est.habilidades || [];
+    est.historialHabilidades = est.historialHabilidades || [];
+    var ahora = new Date().toISOString();
+    var n = 0;
+
+    skills.forEach(function (sk) {
+      if (!CFG.HABILIDADES[sk]) return;
+      var h = habilidadDe(est, sk);
+      if (h && h.verificadoPorId) return;                    // ya estaba verificada
+
+      if (!h) {
+        h = { skill: sk, nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: '', respaldoUrl: '' };
+        est.habilidades.push(h);
+        est.historialHabilidades.push({ at: ahora, skill: sk, de: 0, a: 2, por: 'mentor' });
+      } else if (h.nivel < 2) {
+        est.historialHabilidades.push({ at: ahora, skill: sk, de: h.nivel, a: 2, por: 'mentor' });
+        h.nivel = 2;
+      }
+
+      h.verificadoPorId = opts.porId || null;
+      h.verificadoAt = ahora;
+      h.verificadoProyectoId = opts.proyectoId || null;
+      h.verificadoVia = opts.via || 'proyecto';
+      if (!h.respaldoDetalle) {
+        h.respaldoTipo = opts.via === 'prueba' ? 'prueba' : 'proyecto';
+        h.respaldoDetalle = opts.via === 'prueba'
+          ? 'Prueba práctica revisada por un docente'
+          : 'Demostrada en un microproyecto Talent Lab';
+      }
+      n++;
+    });
+    return n;
+  }
+
+  /* ================= Señales para quien decide =================
+     Contexto sobre la declaración de un candidato frente a UN reto concreto.
+     No acusa a nadie: puede ser exageración o un curso recién terminado. */
+  function senalesDe(estudianteId, reto) {
+    var est = usuario(estudianteId);
+    var out = { sinRespaldo: [], subidasRecientes: [], pruebas: [] };
+    if (!est || !reto) return out;
+
+    var pedidas = (reto.habilidadesRequeridas || []).map(function (x) { return x.skill; });
+
+    pedidas.forEach(function (sk) {
+      var h = habilidadDe(est, sk);
+      if (h && h.nivel >= 2 && estadoHabilidad(h) === 'declarado') {
+        out.sinRespaldo.push({ skill: sk, nivel: h.nivel });
+      }
+    });
+
+    var desde = reto.publicado || reto.creado;
+    (est.historialHabilidades || []).forEach(function (c) {
+      if (pedidas.indexOf(c.skill) === -1) return;
+      if (c.a <= c.de) return;
+      if (c.por === 'mentor') return;          // la otorgó un docente, no es autodeclarada
+      if (desde && new Date(c.at) < new Date(desde)) return;
+      out.subidasRecientes.push(c);
+    });
+
+    out.pruebas = Store.where('pruebas', function (pr) {
+      return pr.estudianteId === estudianteId && pr.retoId === reto.id;
+    });
+    return out;
+  }
+
+  /* ================= Prueba práctica =================
+     Solo se pide cuando coinciden las tres condiciones: nivel Intermedio o
+     Avanzado, sin respaldo alguno, y la habilidad es indispensable para ese
+     reto. Casi nunca se cumplen las tres, y por eso cuesta poco tiempo docente. */
+  function habilidadesQueRequierenPrueba(estudianteId, reto) {
+    var est = usuario(estudianteId);
+    if (!est || !reto) return [];
+    return (reto.habilidadesRequeridas || []).filter(function (req) {
+      if (req.peso !== 3) return false;                       // solo las indispensables
+      var h = habilidadDe(est, req.skill);
+      if (!h || h.nivel < 2) return false;                    // Básico no necesita respaldo
+      return estadoHabilidad(h) === 'declarado';
+    }).map(function (req) { return req.skill; });
+  }
+
+  function crearPruebas(estudianteId, reto) {
+    var skills = habilidadesQueRequierenPrueba(estudianteId, reto);
+    var creadas = [];
+    skills.forEach(function (sk) {
+      var yaHay = Store.where('pruebas', function (pr) {
+        return pr.estudianteId === estudianteId && pr.skill === sk &&
+               ['solicitada', 'entregada', 'aprobada'].indexOf(pr.estado) !== -1;
+      })[0];
+      if (yaHay) return;
+      var est = usuario(estudianteId);
+      var h = habilidadDe(est, sk);
+      var pr = {
+        id: U.uid('pru'), estudianteId: estudianteId, skill: sk, retoId: reto.id,
+        nivelPretendido: h.nivel, encargo: CFG.PRUEBAS_POR_HABILIDAD[sk] || 'Muestra un trabajo propio donde hayas usado esta habilidad.',
+        estado: 'solicitada', evidenciaUrl: '', comentario: '', revisorId: null,
+        solicitadaAt: new Date().toISOString(), entregadaAt: null, revisadaAt: null
+      };
+      Store.get().pruebas.push(pr);
+      creadas.push(pr);
+    });
+    return creadas;
+  }
+
+  function pruebasDe(estudianteId) {
+    return U.sortBy(Store.where('pruebas', function (pr) { return pr.estudianteId === estudianteId; }),
+      function (pr) { return pr.solicitadaAt; }, true);
+  }
+  function pruebasPorRevisar() {
+    return Store.where('pruebas', function (pr) { return pr.estado === 'entregada'; });
+  }
+
+  function entregarPrueba(pruebaId, url) {
+    var pr = Store.find('pruebas', pruebaId);
+    if (!pr) return { ok: false, error: 'No encontramos esa prueba.' };
+    var limpia = U.safeUrl(url);
+    if (!limpia) return { ok: false, error: 'Agrega un enlace válido a tu trabajo (Drive, Canva, Figma, un repositorio…).' };
+    Store.tx(function () {
+      pr.evidenciaUrl = limpia;
+      pr.estado = 'entregada';
+      pr.entregadaAt = new Date().toISOString();
+      Store.auditar('prueba:entregar', 'prueba', pr.id, { skill: pr.skill });
+      coordinadores().forEach(function (c) {
+        notificar(c.id, 'prueba', 'Prueba práctica entregada',
+          nombre(pr.estudianteId) + ' entregó su prueba de ' + habilidadNombre(pr.skill) + '.', '#/pruebas');
+      });
+    });
+    return { ok: true };
+  }
+
+  function revisarPrueba(pruebaId, decision, comentario) {
+    var pr = Store.find('pruebas', pruebaId);
+    if (!pr) return { ok: false, error: 'No encontramos esa prueba.' };
+    if (decision === 'observada' && !String(comentario || '').trim())
+      return { ok: false, error: 'Explícale al estudiante qué le faltó.' };
+    var u = Auth.actual();
+    Store.tx(function () {
+      pr.estado = decision;
+      pr.comentario = String(comentario || '').trim();
+      pr.revisorId = u ? u.id : null;
+      pr.revisadaAt = new Date().toISOString();
+      Store.auditar('prueba:' + decision, 'prueba', pr.id, { skill: pr.skill });
+
+      if (decision === 'aprobada') {
+        verificarHabilidades(pr.estudianteId, [pr.skill],
+          { porId: u ? u.id : null, via: 'prueba' });
+        notificar(pr.estudianteId, 'prueba', 'Tu nivel quedó verificado',
+          habilidadNombre(pr.skill) + ' pasó a estar verificada gracias a tu prueba práctica.', '#/perfil');
+      } else {
+        notificar(pr.estudianteId, 'prueba', 'Tu prueba tiene observaciones',
+          pr.comentario, '#/postulaciones');
+      }
+    });
+    return { ok: true };
+  }
+
   /* ================= Retos ================= */
   function crearReto(empresaId, datos) {
     var codigo = Store.siguienteCodigo('reto', 'RET');
@@ -211,12 +426,21 @@ window.M = (function () {
       estado: 'postulada', score: res.total, creado: new Date().toISOString()
     };
     Store.insert('postulaciones', p);
+    var pruebas = [];
     Store.tx(function () {
       Store.auditar('postulacion:crear', 'postulacion', p.id, { retoId: retoId });
       notificar(r.empresaId, 'postulacion', 'Nueva postulación',
         nombre(estudianteId) + ' postuló a “' + r.titulo + '”.', '#/reto/' + r.id);
+
+      pruebas = crearPruebas(estudianteId, r);
+      pruebas.forEach(function (pr) {
+        notificar(estudianteId, 'prueba', 'Te pedimos una prueba corta',
+          'Declaraste ' + nivelLabel(pr.nivelPretendido) + ' en ' + habilidadNombre(pr.skill) +
+          ', que este reto pide como indispensable, y aún no tiene respaldo. Con una prueba de 30 a 45 minutos queda verificada.',
+          '#/postulaciones');
+      });
     });
-    return { ok: true, postulacion: p };
+    return { ok: true, postulacion: p, pruebas: pruebas };
   }
 
   function retirarPostulacion(postId) {
@@ -410,11 +634,30 @@ window.M = (function () {
     if (decision === 'observado' && !String(datos.comentario || '').trim())
       return { ok: false, error: 'Explica qué debe corregir el equipo.' };
 
+    /* El mentor marca qué habilidades demostró realmente cada estudiante.
+       Esa confirmación es la ruta más confiable para subir de nivel: dos a
+       cuatro semanas de trabajo observado predicen mejor que cualquier examen. */
+    var demostradas = {};
+    if (rol === 'mentor') {
+      p.estudianteIds.forEach(function (id) {
+        demostradas[id] = [].concat(datos['dem_' + id] || []);
+      });
+    }
+
     Store.tx(function () {
       p.evaluaciones.push({
         id: U.uid('ev'), rol: rol, evaluadorId: u.id, at: new Date().toISOString(),
-        decision: decision, criterios: criterios, comentario: String(datos.comentario || '').trim()
+        decision: decision, criterios: criterios, comentario: String(datos.comentario || '').trim(),
+        habilidadesDemostradas: rol === 'mentor' ? demostradas : null
       });
+
+      if (rol === 'mentor' && decision === 'aprobado') {
+        Object.keys(demostradas).forEach(function (id) {
+          var n = verificarHabilidades(id, demostradas[id], { porId: u.id, proyectoId: p.id, via: 'proyecto' });
+          if (n) notificar(id, 'prueba', n + ' ' + U.plural(n, 'habilidad', 'habilidades') + ' verificadas',
+            'Tu mentor confirmó lo que demostraste en este proyecto. Ya aparece en tu perfil y tu portafolio.', '#/perfil');
+        });
+      }
       Store.auditar('evaluacion:' + rol, 'proyecto', p.id, { decision: decision });
 
       if (decision === 'observado') {
@@ -565,6 +808,11 @@ window.M = (function () {
   return {
     usuario: usuario, nombre: nombre, empresaNombre: empresaNombre, reto: reto, proyecto: proyecto,
     habilidadNombre: habilidadNombre, categoria: categoria,
+    habilidadDe: habilidadDe, estadoHabilidad: estadoHabilidad, nivelLabel: nivelLabel,
+    sugerirNivel: sugerirNivel, verificarHabilidades: verificarHabilidades, senalesDe: senalesDe,
+    habilidadesQueRequierenPrueba: habilidadesQueRequierenPrueba, crearPruebas: crearPruebas,
+    pruebasDe: pruebasDe, pruebasPorRevisar: pruebasPorRevisar,
+    entregarPrueba: entregarPrueba, revisarPrueba: revisarPrueba,
     estudiantes: estudiantes, empresas: empresas, mentores: mentores, coordinadores: coordinadores,
     proyectoDeReto: proyectoDeReto, postulacionesDe: postulacionesDe, postulacionDe: postulacionDe,
     proyectosDe: proyectosDe, constanciasDe: constanciasDe, constanciaPorCodigo: constanciaPorCodigo,

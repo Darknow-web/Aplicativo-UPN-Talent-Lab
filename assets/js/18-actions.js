@@ -87,7 +87,7 @@ window.Actions = (function () {
 
     var habilidades = req.map(function (s) {
       var critica = criticas.indexOf(s) !== -1;
-      return { skill: s, peso: critica ? 3 : 2, nivelMin: critica ? 3 : 2 };
+      return { skill: s, peso: critica ? 3 : 2, nivelMin: critica ? 2 : 1 };
     });
     var datos = {
       titulo: d.titulo, problema: d.problema, resultado: d.resultado, categoria: d.categoria,
@@ -186,6 +186,12 @@ window.Actions = (function () {
     var res = M.postular(u.id, d.retoId, d);
     UI.cerrarModal();
     if (!res.ok) return UI.toast(res.error, 'err');
+    if (res.pruebas && res.pruebas.length) {
+      UI.toast('Postulación enviada. Te pedimos una prueba corta para sustentar ' +
+        res.pruebas.map(function (pr) { return M.habilidadNombre(pr.skill); }).join(' y ') + '.', 'warn', 6000);
+      Router.go('#/postulaciones');
+      return;
+    }
     UI.toast('¡Postulación enviada! Te avisaremos por notificación.', 'ok');
     Router.refresh();
   });
@@ -307,12 +313,42 @@ window.Actions = (function () {
     });
     if (u.rol === 'estudiante') {
       cambios.portafolioPublico = d.portafolioPublico === 'true';
-      var habs = [];
+
+      var previos = {};
+      (u.habilidades || []).forEach(function (x) { previos[x.skill] = x; });
+
+      var habs = [], historial = (u.historialHabilidades || []).slice();
       Object.keys(CFG.HABILIDADES).forEach(function (k) {
         var v = parseInt(d['hab_' + k], 10);
-        if (v >= 1 && v <= 5) habs.push({ skill: k, nivel: v });
+        if (!(v >= 1 && v <= 3)) return;
+        var antes = previos[k];
+        var tipo = d['tipo_' + k] || 'ninguno';
+        var detalle = String(d['det_' + k] || '').trim();
+        var hab = {
+          skill: k, nivel: v,
+          respaldoTipo: v >= 2 ? tipo : 'ninguno',
+          respaldoDetalle: v >= 2 ? detalle : '',
+          respaldoUrl: v >= 2 ? U.safeUrl(d['url_' + k]) : ''
+        };
+        /* La verificación de un docente no se pierde al editar el perfil:
+           la otorgó un tercero sobre un trabajo real, no el propio estudiante. */
+        if (antes && antes.verificadoPorId && antes.nivel === v) {
+          hab.verificadoPorId = antes.verificadoPorId;
+          hab.verificadoAt = antes.verificadoAt;
+          hab.verificadoProyectoId = antes.verificadoProyectoId;
+          hab.verificadoVia = antes.verificadoVia;
+        }
+        habs.push(hab);
+
+        /* Registrar las subidas de nivel: es el dato que le da contexto a
+           coordinación cuando compara candidatos. */
+        var nivelAntes = antes ? antes.nivel : 0;
+        if (v !== nivelAntes) {
+          historial.push({ at: new Date().toISOString(), skill: k, de: nivelAntes, a: v });
+        }
       });
       cambios.habilidades = habs;
+      cambios.historialHabilidades = historial;
       if (cambios.carrera) cambios.intereses = CFG.CARRERAS[cambios.carrera] || u.intereses || [];
       if (cambios.nombre && u.codigoUPN) cambios.slug = U.slugify(cambios.nombre) + '-' + u.codigoUPN.slice(-4);
     }
@@ -330,6 +366,54 @@ window.Actions = (function () {
       });
     });
     UI.toast('Portafolio actualizado.', 'ok');
+    Router.refresh();
+  });
+
+
+  /* ---- Habilidades: respaldo y sugerencia de nivel ---- */
+
+  /* Al elegir Intermedio o Avanzado se pide el respaldo en el momento, para no
+     tener que guardar primero y descubrir después que faltaba. */
+  on('perfil:nivel', function (d, el) {
+    var caja = document.getElementById('resp_' + d.skill);
+    if (!caja) return;
+    caja.hidden = parseInt(el.value, 10) < 2;
+    var fila = el.closest('.habrow');
+    if (fila) fila.classList.toggle('habrow--alto', parseInt(el.value, 10) >= 2);
+  });
+
+  /* La app propone el nivel que acredita el certificado; confirmarlo es de una
+     persona. No hay verificación automática real y no la prometemos. */
+  on('perfil:certificado', function (d, el) {
+    var salida = document.getElementById('sug_' + d.skill);
+    if (!salida) return;
+    var texto = String(el.value || '').trim();
+    if (!texto) { salida.textContent = ''; return; }
+    var sug = M.sugerirNivel(texto);
+    if (sug && sug.nivel) {
+      salida.textContent = 'Equivale a ' + M.nivelLabel(sug.nivel) + '. ' + sug.detalle;
+      var sel = document.getElementById('hab_' + d.skill);
+      if (sel && parseInt(sel.value, 10) > sug.nivel) {
+        salida.textContent += ' Declaraste un nivel mayor: coordinación pedirá cómo lo sustentas.';
+      }
+    } else {
+      salida.textContent = sug ? sug.detalle : '';
+    }
+  });
+
+  /* ---- Prueba práctica ---- */
+  on('prueba:entregar', function (d) {
+    var res = M.entregarPrueba(d.pruebaId, d.evidenciaUrl);
+    if (!res.ok) return UI.toast(res.error, 'err');
+    UI.toast('Prueba enviada. La revisará un docente del área.', 'ok');
+    Router.refresh();
+  });
+  on('prueba:revisar', function (d) {
+    var res = M.revisarPrueba(d.pruebaId, d.decision, d.comentario);
+    if (!res.ok) return UI.toast(res.error, 'err');
+    UI.toast(d.decision === 'aprobada'
+      ? 'Prueba aprobada. La habilidad quedó verificada.'
+      : 'Prueba devuelta con observaciones.', 'ok');
     Router.refresh();
   });
 

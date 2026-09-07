@@ -76,11 +76,24 @@ window.C = (function () {
     return h`<span class="chips">
       ${lista.map(function (s) {
         var id = typeof s === 'string' ? s : s.skill;
-        var extra = (typeof s === 'object' && s.nivelMin) ? ' · nivel ' + s.nivelMin + '+' : '';
+        var extra = (typeof s === 'object' && s.nivelMin) ? ' · ' + M.nivelLabel(s.nivelMin) + '+' : '';
         var critico = (typeof s === 'object' && s.peso === 3);
         return h`<span class="chip ${critico ? 'chip--dark' : ''}">${M.habilidadNombre(id)}${extra}</span>`;
       })}
       ${resto > 0 ? h`<span class="chip">+${resto}</span>` : ''}
+    </span>`;
+  }
+
+
+  /* Habilidad declarada por un estudiante: nivel + qué tan sustentado está. */
+  function chipHabilidad(hab, conNivel) {
+    var estado = M.estadoHabilidad(hab);
+    var r = CFG.RESPALDOS[estado];
+    var titulo = M.nivelLabel(hab.nivel) + ' · ' + r.label + '. ' +
+      (hab.respaldoDetalle ? hab.respaldoDetalle : r.ayuda);
+    return h`<span class="chip ${r.chip}" title="${titulo}">
+      ${M.habilidadNombre(hab.skill)}${conNivel === false ? '' : ' · ' + M.nivelLabel(hab.nivel)}
+      ${estado === 'verificado' ? raw('<b aria-label="verificada">✓</b>') : ''}
     </span>`;
   }
 
@@ -385,7 +398,7 @@ window.C = (function () {
     progreso: progreso, medidor: medidor, anilloMatch: anilloMatch, desgloseMatch: desgloseMatch,
     estrellas: estrellas, vacio: vacio, stat: stat, aviso: aviso, volver: volver, pageHead: pageHead,
     campo: campo, checkHabilidades: checkHabilidades, selectorEstrellas: selectorEstrellas,
-    cardReto: cardReto, cardProyecto: cardProyecto,
+    cardReto: cardReto, cardProyecto: cardProyecto, chipHabilidad: chipHabilidad,
     proximasAcciones: proximasAcciones, tarjetaAcciones: tarjetaAcciones
   };
 })();

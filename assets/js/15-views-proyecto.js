@@ -396,6 +396,33 @@ window.Vistas = window.Vistas || {};
           ${C.selectorEstrellas('crit_' + c.id, 4)}
         </div>`;
       })}
+      ${u.rol === 'mentor' ? h`
+        <hr>
+        <h4 style="font-size:.95rem;margin-bottom:.2rem">¿Qué habilidades demostró cada uno?</h4>
+        <p class="tiny muted">Lo que marques aquí queda <b>verificado</b> en el perfil del estudiante y
+          aparece en su portafolio y su constancia. Es la forma más confiable de acreditar un nivel:
+          tú lo viste trabajar durante semanas. Marca solo lo que realmente demostró.</p>
+        ${proy.estudianteIds.map(function (id) {
+          var est = M.usuario(id);
+          var reto = M.reto(proy.retoId);
+          var candidatas = U.unique((reto.habilidadesRequeridas || []).map(function (x) { return x.skill; })
+            .concat(reto.habilidadesDeseables || []));
+          return h`<div class="mt-sm">
+            <p class="small mb0"><b>${est ? est.nombre : ''}</b></p>
+            <div class="checkgrid">
+              ${candidatas.map(function (sk) {
+                var hab = M.habilidadDe(est, sk);
+                var ya = hab && hab.verificadoPorId;
+                return raw('<label class="checkline' + (ya ? ' checkline--on' : '') + '">' +
+                  '<input type="checkbox" name="dem_' + U.esc(id) + '[]" value="' + U.esc(sk) + '"' + (ya ? ' checked disabled' : '') + '>' +
+                  '<span>' + U.esc(M.habilidadNombre(sk)) +
+                  (hab ? ' <small>(declara ' + U.esc(M.nivelLabel(hab.nivel)) + ')</small>' : ' <small>(no la declara)</small>') +
+                  (ya ? ' <b>✓ ya verificada</b>' : '') + '</span></label>');
+              })}
+            </div>
+          </div>`;
+        })}
+        <hr>` : ''}
       ${C.campo({ name: 'comentario', label: 'Comentario', tipo: 'textarea', rows: 3,
         placeholder: u.rol === 'empresa' ? '¿Qué te pareció el resultado? ¿Lo estás usando?' : '¿Cómo trabajó el equipo?' })}
       <div class="btnrow">

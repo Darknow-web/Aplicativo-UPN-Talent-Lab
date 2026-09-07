@@ -37,6 +37,7 @@
 
     Router.add('/talento', { view: Vistas.talento, roles: ['empresa', 'mentor', 'coordinador'], titulo: 'Talento UPN' });
     Router.add('/reportes', { view: Vistas.reportes, roles: ['coordinador'], titulo: 'Reportes' });
+    Router.add('/pruebas', { view: Vistas.pruebas, roles: ['coordinador', 'mentor'], titulo: 'Pruebas prácticas' });
     Router.add('/constancias', { view: Vistas.constancias, roles: ['estudiante', 'coordinador'], titulo: 'Constancias' });
 
     Router.add('/notificaciones', { view: Vistas.notificaciones, roles: T, titulo: 'Notificaciones' });

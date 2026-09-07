@@ -18,12 +18,20 @@ window.Vistas = window.Vistas || {};
   /* ---------- Estudiante (editable) ---------- */
   function perfilEstudiante(u) {
     var mapa = {};
-    (u.habilidades || []).forEach(function (s) { mapa[s.skill] = s.nivel; });
+    (u.habilidades || []).forEach(function (s) { mapa[s.skill] = s; });
     var porCat = U.groupBy(Object.keys(CFG.HABILIDADES), function (k) { return CFG.HABILIDADES[k].categoria; });
+    var pendientes = (u.habilidades || []).filter(function (s) {
+      return s.nivel >= 2 && M.estadoHabilidad(s) === 'declarado';
+    });
+    var pruebas = M.pruebasDe(u.id).filter(function (pr) { return pr.estado === 'solicitada' || pr.estado === 'observada'; });
 
     return h`<div style="max-width:860px;margin:0 auto">
       ${C.pageHead('Mi perfil', 'Mientras más completo, mejores recomendaciones recibirás.',
         u.slug ? h`<a class="btn btn--ghost" href="#/portafolio/${u.slug}">Ver mi portafolio público</a>` : null)}
+
+      ${pruebas.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '📝',
+        raw('Tienes ' + pruebas.length + ' ' + U.plural(pruebas.length, 'prueba') + ' práctica pendiente. ' +
+        '<a href="#/postulaciones"><b>Ver de qué se trata</b></a>'))}</div>` : ''}
 
       <form class="stack" data-action="perfil:guardar">
         <div class="card">
@@ -54,24 +62,79 @@ window.Vistas = window.Vistas || {};
 
         <div class="card">
           <h2 style="font-size:1.05rem">Mis habilidades</h2>
-          <p class="small muted">Indica tu nivel real del 1 al 5. Esto define a qué retos puedes postular y tu porcentaje de compatibilidad.</p>
+          <p class="small muted">El nivel no es cuánto crees que sabes: es qué puedes sostener con algo.
+            Declarar Intermedio o Avanzado sin respaldo no te bloquea, pero coordinación lo verá al
+            compararte, y si la habilidad es indispensable para el reto te pediremos una prueba corta.</p>
+
+          <div class="niveles-ref">
+            ${[1, 2, 3].map(function (n) {
+              return h`<div class="niveles-ref__i">
+                <b>${CFG.NIVELES[n].label}</b>
+                <span>${CFG.NIVELES[n].afirma}</span>
+                <em>${CFG.NIVELES[n].respaldo}</em>
+              </div>`;
+            })}
+          </div>
+
+          ${pendientes.length ? h`<div class="mt-sm">${C.aviso('warn', '⚠️',
+            raw('Sin respaldo: <b>' + U.esc(pendientes.map(function (x) { return M.habilidadNombre(x.skill); }).join(', ')) +
+            '</b>. Agrega un certificado o un trabajo tuyo más abajo.'))}</div>` : ''}
+
           ${Object.keys(porCat).map(function (cat) {
-            return h`<div class="mt-sm">
+            return h`<div class="mt">
               <p class="eyebrow">${M.categoria(cat).icono} ${M.categoria(cat).label}</p>
-              <div class="checkgrid">
+              <div class="stack" style="gap:.5rem">
                 ${porCat[cat].map(function (k) {
-                  return h`<div class="row row--between" style="gap:.5rem;border:1px solid var(--border);border-radius:var(--r-md);padding:.4rem .6rem">
-                    <label class="small" for="hab_${k}" class="hcol">${CFG.HABILIDADES[k].nombre}</label>
-                    <select class="select" id="hab_${k}" name="hab_${k}" style="width:auto;min-width:104px;min-height:38px;padding:.25rem 1.8rem .25rem .5rem">
-                      ${[['', 'No la tengo'], ['1', 'Nivel 1'], ['2', 'Nivel 2'], ['3', 'Nivel 3'], ['4', 'Nivel 4'], ['5', 'Nivel 5']].map(function (o) {
-                        return raw('<option value="' + o[0] + '"' + (String(mapa[k] || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
-                      })}
-                    </select>
+                  var hab = mapa[k];
+                  var nivel = hab ? hab.nivel : 0;
+                  var estado = hab ? M.estadoHabilidad(hab) : 'declarado';
+                  return h`<div class="habrow ${nivel >= 2 ? 'habrow--alto' : ''}">
+                    <div class="habrow__top">
+                      <label class="habrow__n" for="hab_${k}">${CFG.HABILIDADES[k].nombre}</label>
+                      ${nivel && estado !== 'declarado'
+                        ? h`<span class="chip ${CFG.RESPALDOS[estado].chip} tiny">${CFG.RESPALDOS[estado].label}${estado === 'verificado' ? ' ✓' : ''}</span>`
+                        : ''}
+                      <select class="select habrow__s" id="hab_${k}" name="hab_${k}"
+                        data-action="perfil:nivel" data-skill="${k}">
+                        ${[['', 'No la tengo'], ['1', 'Básico'], ['2', 'Intermedio'], ['3', 'Avanzado']].map(function (o) {
+                          return raw('<option value="' + o[0] + '"' + (String(nivel || '') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
+                        })}
+                      </select>
+                    </div>
+
+                    <div class="habrow__resp" id="resp_${k}" ${raw(nivel >= 2 ? '' : 'hidden')}>
+                      ${estado === 'verificado'
+                        ? h`<p class="tiny mb0" style="color:var(--ok)">Verificada por ${M.nombre(hab.verificadoPorId)}${hab.verificadoVia === 'prueba' ? ' tras tu prueba práctica' : ' en un microproyecto'}. Ya no necesitas sustentarla.</p>`
+                        : h`
+                        <div class="field-row field-row--2" style="gap:.5rem">
+                          <div class="field" style="margin:0">
+                            <label class="tiny" for="tipo_${k}">¿Con qué lo sustentas?</label>
+                            <select class="select" id="tipo_${k}" name="tipo_${k}">
+                              ${[['ninguno', 'Todavía con nada'], ['certificado', 'Un certificado'], ['trabajo', 'Un trabajo mío']].map(function (o) {
+                                return raw('<option value="' + o[0] + '"' + ((hab && hab.respaldoTipo) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>');
+                              })}
+                            </select>
+                          </div>
+                          <div class="field" style="margin:0">
+                            <label class="tiny" for="det_${k}">Nombre del certificado o del trabajo</label>
+                            <input class="input" id="det_${k}" name="det_${k}" data-action="perfil:certificado" data-skill="${k}"
+                              list="lista-certificados" placeholder="Ej.: Microsoft Office Specialist: Excel Associate"
+                              value="${hab && hab.respaldoDetalle ? hab.respaldoDetalle : ''}">
+                          </div>
+                        </div>
+                        <input class="input mt-sm" name="url_${k}" placeholder="Enlace al certificado o al trabajo (opcional)"
+                          value="${hab && hab.respaldoUrl ? hab.respaldoUrl : ''}">
+                        <p class="tiny muted mb0" id="sug_${k}"></p>`}
+                    </div>
                   </div>`;
                 })}
               </div>
             </div>`;
           })}
+
+          <datalist id="lista-certificados">
+            ${CFG.CERTIFICADOS.map(function (c) { return raw('<option value="' + U.esc(c.nombre) + '">'); })}
+          </datalist>
         </div>
 
         <button class="btn btn--primary btn--lg" type="submit">Guardar cambios</button>
@@ -213,9 +276,13 @@ window.Vistas = window.Vistas || {};
             <h2 style="font-size:1.05rem">Habilidades declaradas</h2>
             ${(persona.habilidades || []).length ? h`<ul class="list">
               ${U.sortBy(persona.habilidades || [], function (s) { return s.nivel; }, true).map(function (s) {
-                return h`<li style="padding:.4rem 0"><div class="row row--between">
-                  <span class="small">${M.habilidadNombre(s.skill)}</span>
-                  <span style="width:110px">${C.progreso(s.nivel * 20)}</span></div></li>`;
+                return h`<li style="padding:.4rem 0">
+                  <div class="row row--between">
+                    <span class="small">${M.habilidadNombre(s.skill)}</span>
+                    <span class="chip ${CFG.RESPALDOS[M.estadoHabilidad(s)].chip} tiny">${M.nivelLabel(s.nivel)}${M.estadoHabilidad(s) === 'verificado' ? ' ✓' : ''}</span>
+                  </div>
+                  ${s.respaldoDetalle ? h`<p class="tiny muted mb0">${s.respaldoDetalle}</p>` : ''}
+                </li>`;
               })}</ul>` : h`<p class="small muted">Sin habilidades registradas.</p>`}
           </div>
           <div class="card">

@@ -53,7 +53,7 @@ window.Vistas = window.Vistas || {};
             <p class="tiny muted">Habilidades declaradas</p>
             ${(u.habilidades || []).length
               ? h`<div class="chips">${(u.habilidades || []).slice(0, 6).map(function (s) {
-                  return h`<span class="chip chip--brand">${M.habilidadNombre(s.skill)} · ${s.nivel}/5</span>`; })}</div>`
+                  return C.chipHabilidad(s); })}</div>`
               : h`<p class="small muted">Aún no registras habilidades.</p>`}
             <a class="btn btn--ghost btn--sm btn--block mt-sm" href="#/perfil">Editar perfil y portafolio</a>
           </div>
@@ -104,9 +104,46 @@ window.Vistas = window.Vistas || {};
     var etiqueta = { postulada: ['chip--info', 'En revisión'], preseleccionada: ['chip--warn', 'Preseleccionado'],
       seleccionada: ['chip--ok', 'Seleccionado'], no_seleccionada: ['', 'No seleccionado'] };
 
+    var pruebas = M.pruebasDe(u.id);
+    var abiertas = pruebas.filter(function (pr) { return pr.estado === 'solicitada' || pr.estado === 'observada'; });
+
     return h`
       ${C.pageHead('Mis postulaciones', lista.length + ' ' + U.plural(lista.length, 'postulación', 'postulaciones') + ' enviadas',
         h`<a class="btn btn--primary" href="#/retos">Buscar más retos</a>`)}
+
+      ${abiertas.length ? h`<section class="stack" style="margin-bottom:1.2rem">
+        ${abiertas.map(function (pr) {
+          var r = M.reto(pr.retoId);
+          return h`<div class="card card--accent">
+            <div class="row row--between">
+              <h2 style="font-size:1.05rem;margin:0">Prueba práctica: ${M.habilidadNombre(pr.skill)}</h2>
+              <span class="chip chip--warn">${pr.estado === 'observada' ? 'Con observaciones' : 'Pendiente'}</span>
+            </div>
+            <p class="small muted">Declaraste <b>${M.nivelLabel(pr.nivelPretendido)}</b> en esta habilidad
+              y el reto ${r ? '“' + U.truncar(r.titulo, 40) + '”' : ''} la pide como indispensable.
+              Como todavía no tiene respaldo, te pedimos mostrar lo que sabes hacer. Toma entre 30 y 45 minutos
+              y la revisa un docente del área.</p>
+            <div class="notice notice--brand"><span class="notice__ico">📝</span><p>${pr.encargo}</p></div>
+            ${pr.estado === 'observada' && pr.comentario
+              ? h`<div class="mt-sm">${C.aviso('warn', '💬', raw('<b>Qué corregir:</b> ' + U.esc(pr.comentario)))}</div>` : ''}
+            <form class="mt-sm" data-action="prueba:entregar">
+              <input type="hidden" name="pruebaId" value="${pr.id}">
+              ${C.campo({ name: 'evidenciaUrl', label: 'Enlace a tu trabajo', required: true,
+                placeholder: 'https://drive.google.com/…', valor: pr.evidenciaUrl,
+                ayuda: 'Drive, Canva, Figma, un repositorio: lo que uses.' })}
+              <button class="btn btn--primary btn--block" type="submit">Enviar mi prueba</button>
+            </form>
+          </div>`;
+        })}
+      </section>` : ''}
+
+      ${pruebas.filter(function (pr) { return pr.estado === 'entregada' || pr.estado === 'aprobada'; }).map(function (pr) {
+        return h`<div style="margin-bottom:.7rem">${C.aviso(pr.estado === 'aprobada' ? 'ok' : 'info',
+          pr.estado === 'aprobada' ? '✅' : '⏳',
+          pr.estado === 'aprobada'
+            ? 'Tu prueba de ' + M.habilidadNombre(pr.skill) + ' fue aprobada: esa habilidad quedó verificada.'
+            : 'Tu prueba de ' + M.habilidadNombre(pr.skill) + ' está en revisión.')}</div>`;
+      })}
       ${lista.length ? h`<div class="panel"><ul class="list">
         ${lista.map(function (p) {
           var r = M.reto(p.retoId);

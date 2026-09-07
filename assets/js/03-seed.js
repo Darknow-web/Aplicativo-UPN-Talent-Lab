@@ -59,70 +59,130 @@ window.SEED = (function () {
       { id: 'u_est1', rol: 'estudiante', nombre: 'Camila Rojas Peña', email: 'camila.rojas@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00218745', carrera: 'Administración y Marketing', ciclo: 8, campus: 'Trujillo San Isidro',
         horasSemana: 15, modalidad: 'hibrido', distrito: 'Trujillo',
-        habilidades: [{ skill: 'community', nivel: 5 }, { skill: 'contenido', nivel: 4 }, { skill: 'metaads', nivel: 4 },
-                      { skill: 'canva', nivel: 4 }, { skill: 'copy', nivel: 3 }],
+        habilidades: [
+          { skill: 'community', nivel: 3, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'contenido', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'metaads', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Meta Certified Digital Marketing Associate', respaldoUrl: 'https://credentials.meta.com/ejemplo' },
+          { skill: 'canva', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'copy', nivel: 1 }
+        ],
         intereses: ['marketing', 'comunicacion'],
         bio: 'Me apasiona el marketing para negocios pequeños. Llevo dos años administrando redes de emprendimientos familiares.',
         portafolioPublico: true },
       { id: 'u_est2', rol: 'estudiante', nombre: 'Sebastián Torres Ludeña', email: 'sebastian.torres@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00241130', carrera: 'Ciencias de la Comunicación', ciclo: 6, campus: 'Lima Los Olivos',
         horasSemana: 12, modalidad: 'remoto', distrito: 'Los Olivos, Lima',
-        habilidades: [{ skill: 'contenido', nivel: 4 }, { skill: 'video', nivel: 5 }, { skill: 'fotografia', nivel: 4 },
-                      { skill: 'community', nivel: 3 }, { skill: 'copy', nivel: 4 }],
+        habilidades: [
+          { skill: 'video', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Adobe Certified Professional: Premiere Pro', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'fotografia', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Portafolio de fotografía de producto para tres marcas locales', respaldoUrl: 'https://behance.net/ejemplo' },
+          { skill: 'contenido', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Reels producidos para una cafetería de Los Olivos', respaldoUrl: 'https://instagram.com/ejemplo' },
+          { skill: 'copy', nivel: 2 },
+          { skill: 'community', nivel: 1 }
+        ],
         intereses: ['comunicacion', 'marketing', 'diseno'],
         bio: 'Editor de video y creador de contenido. Manejo Premiere, CapCut y produzco reels para marcas locales.',
         portafolioPublico: true },
       { id: 'u_est3', rol: 'estudiante', nombre: 'Valeria Quispe Mamani', email: 'valeria.quispe@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00205562', carrera: 'Ingeniería de Sistemas', ciclo: 9, campus: 'Lima San Juan de Lurigancho',
         horasSemana: 18, modalidad: 'remoto', distrito: 'San Juan de Lurigancho, Lima',
-        habilidades: [{ skill: 'frontend', nivel: 4 }, { skill: 'wordpress', nivel: 5 }, { skill: 'ecommerce', nivel: 4 },
-                      { skill: 'automatiza', nivel: 3 }, { skill: 'sql', nivel: 3 }],
+        habilidades: [
+          { skill: 'wordpress', nivel: 3, respaldoTipo: 'trabajo', respaldoDetalle: 'Cuatro tiendas montadas en WooCommerce, con documentación', respaldoUrl: 'https://github.com/ejemplo' },
+          { skill: 'frontend', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Repositorio con tres proyectos web propios', respaldoUrl: 'https://github.com/ejemplo' },
+          { skill: 'ecommerce', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Tienda en línea de una distribuidora de abarrotes' },
+          { skill: 'automatiza', nivel: 1 },
+          { skill: 'sql', nivel: 1 }
+        ],
         intereses: ['tecnologia', 'datos'],
         bio: 'Desarrolladora web. He montado cuatro tiendas en WooCommerce y me gusta dejar todo documentado.',
         portafolioPublico: true },
       { id: 'u_est4', rol: 'estudiante', nombre: 'Diego Alarcón Vega', email: 'diego.alarcon@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00223918', carrera: 'Ingeniería Industrial', ciclo: 9, campus: 'Trujillo El Molino',
         horasSemana: 14, modalidad: 'presencial', distrito: 'Trujillo',
-        habilidades: [{ skill: 'procesos', nivel: 4 }, { skill: 'inventarios', nivel: 4 }, { skill: 'excel', nivel: 5 },
-                      { skill: 'logistica', nivel: 3 }, { skill: 'seguridad', nivel: 3 }],
+        habilidades: [
+          { skill: 'excel', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft Office Specialist: Excel Expert', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'procesos', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Lean Six Sigma Yellow Belt' },
+          { skill: 'inventarios', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Control de almacén en prácticas de verano en una distribuidora' },
+          { skill: 'logistica', nivel: 1 },
+          { skill: 'seguridad', nivel: 1 }
+        ],
         intereses: ['operaciones', 'datos'],
         bio: 'Me interesa ordenar operaciones de negocios pequeños: inventarios, tiempos y costos.',
         portafolioPublico: true },
       { id: 'u_est5', rol: 'estudiante', nombre: 'Fernanda Núñez Silva', email: 'fernanda.nunez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00234407', carrera: 'Contabilidad y Finanzas', ciclo: 7, campus: 'Cajamarca',
         horasSemana: 10, modalidad: 'hibrido', distrito: 'Cajamarca',
-        habilidades: [{ skill: 'excel', nivel: 5 }, { skill: 'costos', nivel: 4 }, { skill: 'finanzas', nivel: 4 },
-                      { skill: 'powerbi', nivel: 3 }],
+        habilidades: [
+          { skill: 'excel', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft Office Specialist: Excel Associate', respaldoUrl: 'https://credly.com/ejemplo' },
+          { skill: 'costos', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Certificado de Excel Financiero' },
+          { skill: 'powerbi', nivel: 2 },
+          { skill: 'finanzas', nivel: 1 }
+        ],
         intereses: ['negocios', 'datos'],
-        bio: 'Quiero especializarme en costos para pymes. Manejo Excel a nivel avanzado y estoy aprendiendo Power BI.',
+        bio: 'Quiero especializarme en costos para pymes. Manejo Excel a nivel intermedio con certificación y estoy aprendiendo Power BI.',
         portafolioPublico: true },
       { id: 'u_est6', rol: 'estudiante', nombre: 'Mateo Ibáñez Cruz', email: 'mateo.ibanez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00247781', carrera: 'Diseño Gráfico', ciclo: 6, campus: 'Trujillo San Isidro',
         horasSemana: 16, modalidad: 'hibrido', distrito: 'Trujillo',
-        habilidades: [{ skill: 'canva', nivel: 5 }, { skill: 'illustrator', nivel: 4 }, { skill: 'branding', nivel: 4 },
-                      { skill: 'fotografia', nivel: 4 }],
+        habilidades: [
+          { skill: 'canva', nivel: 3, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'branding', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'fotografia', nivel: 2, respaldoTipo: 'proyecto', respaldoDetalle: 'Microproyecto Talent Lab con Panadería Delicia Norteña' },
+          { skill: 'illustrator', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Adobe Certified Professional: Illustrator', respaldoUrl: 'https://credly.com/ejemplo' }
+        ],
         intereses: ['diseno', 'marketing'],
         bio: 'Diseñador enfocado en identidad visual. Me gusta trabajar marcas de barrio y darles carácter.',
         portafolioPublico: true },
       { id: 'u_est7', rol: 'estudiante', nombre: 'Lucía Paredes Gonzales', email: 'lucia.paredes@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00239054', carrera: 'Administración de Empresas', ciclo: 6, campus: 'Lima Breña',
         horasSemana: 12, modalidad: 'presencial', distrito: 'Breña, Lima',
-        habilidades: [{ skill: 'ventas', nivel: 4 }, { skill: 'atencion', nivel: 5 }, { skill: 'encuestas', nivel: 3 },
-                      { skill: 'excel', nivel: 3 }],
+        habilidades: [
+          { skill: 'atencion', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Dos años atendiendo en tienda de retail, medio tiempo' },
+          { skill: 'ventas', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Dos años atendiendo en tienda de retail, medio tiempo' },
+          { skill: 'excel', nivel: 1 },
+          { skill: 'encuestas', nivel: 1 }
+        ],
         intereses: ['negocios', 'marketing'],
         bio: 'Trabajo medio tiempo en retail. Me interesa la experiencia del cliente y los estudios de mercado.',
         portafolioPublico: true },
       { id: 'u_est8', rol: 'estudiante', nombre: 'Andrés Vílchez Mori', email: 'andres.vilchez@upn.demo', pass: 'demo1234',
         codigoUPN: 'N00251236', carrera: 'Ingeniería de Sistemas', ciclo: 7, campus: 'Lima Los Olivos',
         horasSemana: 20, modalidad: 'remoto', distrito: 'Comas, Lima',
-        habilidades: [{ skill: 'analitica', nivel: 4 }, { skill: 'sql', nivel: 4 }, { skill: 'powerbi', nivel: 4 },
-                      { skill: 'automatiza', nivel: 4 }, { skill: 'excel', nivel: 4 }],
+        habilidades: [
+          { skill: 'powerbi', nivel: 3, respaldoTipo: 'certificado', respaldoDetalle: 'Microsoft PL-300: Power BI Data Analyst', respaldoUrl: 'https://learn.microsoft.com/ejemplo' },
+          { skill: 'analitica', nivel: 2, respaldoTipo: 'certificado', respaldoDetalle: 'Google Analytics Individual Qualification' },
+          { skill: 'sql', nivel: 2, respaldoTipo: 'trabajo', respaldoDetalle: 'Consultas y reportes para el negocio familiar' },
+          { skill: 'automatiza', nivel: 2 },
+          { skill: 'excel', nivel: 2 }
+        ],
         intereses: ['datos', 'tecnologia'],
         bio: 'Me gusta convertir datos desordenados en tableros que la gente sí usa.',
         portafolioPublico: true }
     ];
 
     users.forEach(function (u) { if (u.rol === 'estudiante') u.slug = U.slugify(u.nombre) + '-' + u.codigoUPN.slice(-4); });
+
+    /* Camila y Mateo ya cerraron un microproyecto: su mentor confirmó allí qué
+       habilidades demostraron de verdad, así que esas quedan verificadas. */
+    ['u_est1', 'u_est6'].forEach(function (id) {
+      var u = users.filter(function (x) { return x.id === id; })[0];
+      (u.habilidades || []).forEach(function (h) {
+        if (h.respaldoTipo !== 'proyecto') return;
+        h.verificadoPorId = 'u_men1';
+        h.verificadoProyectoId = 'pr1';
+        h.verificadoVia = 'proyecto';
+        h.verificadoAt = iso(-34);
+      });
+    });
+
+    /* Fernanda subió Power BI de Básico a Intermedio dos días después de que se
+       publicara el reto del tablero, y sin respaldo alguno. El sistema no la
+       bloquea: registra el cambio, se lo muestra a coordinación al comparar
+       candidatos y le pide una prueba corta. Es el caso que conviene discutir. */
+    var fernanda = users.filter(function (x) { return x.id === 'u_est5'; })[0];
+    fernanda.historialHabilidades = [
+      { at: iso(-12), skill: 'powerbi', de: 1, a: 2 },
+      { at: iso(-95), skill: 'excel', de: 1, a: 2 }
+    ];
 
     /* ---------------- Retos ---------------- */
     function reto(o) {
@@ -140,8 +200,8 @@ window.SEED = (function () {
         problema: 'Nuestro Facebook e Instagram están abandonados hace más de un año. Publicamos cuando nos acordamos, no tenemos fotos decentes de los productos y los clientes nuevos no nos encuentran. Vendemos casi todo en el mostrador y queremos empezar a recibir pedidos por WhatsApp.',
         resultado: 'Redes activas con publicaciones constantes, fotos propias de nuestros productos y un flujo claro para que la gente pida por WhatsApp.',
         entregables: ['Plan de contenido para 4 semanas', 'Banco de 30 fotos de productos', '12 publicaciones diseñadas y programadas', 'Guía corta para que el personal siga publicando'],
-        habilidadesRequeridas: [{ skill: 'community', peso: 3, nivelMin: 3 }, { skill: 'contenido', peso: 3, nivelMin: 3 },
-                                { skill: 'canva', peso: 2, nivelMin: 3 }, { skill: 'fotografia', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'community', peso: 3, nivelMin: 2 }, { skill: 'contenido', peso: 3, nivelMin: 2 },
+                                { skill: 'canva', peso: 2, nivelMin: 2 }, { skill: 'fotografia', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['copy', 'metaads'],
         semanas: 4, horasSemana: 10, tamanoEquipo: 2, modalidad: 'hibrido',
         fechaLimitePostulacion: d(-70), creado: iso(-80), publicado: iso(-75)
@@ -152,8 +212,8 @@ window.SEED = (function () {
         problema: 'Los dueños de mascotas nos escriben por WhatsApp a cualquier hora para preguntar precios y pedir cita. Se nos cruzan las citas y perdemos tiempo respondiendo lo mismo. No tenemos ninguna página propia.',
         resultado: 'Una web sencilla con nuestros servicios, precios y un formulario de reserva de citas que llegue ordenado a un correo o planilla.',
         entregables: ['Sitio web con 4 secciones', 'Formulario de reserva conectado a una hoja de cálculo', 'Manual de administración', 'Capacitación al personal'],
-        habilidadesRequeridas: [{ skill: 'wordpress', peso: 3, nivelMin: 3 }, { skill: 'frontend', peso: 2, nivelMin: 3 },
-                                { skill: 'automatiza', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'wordpress', peso: 3, nivelMin: 2 }, { skill: 'frontend', peso: 2, nivelMin: 2 },
+                                { skill: 'automatiza', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['ecommerce', 'analitica'],
         semanas: 4, horasSemana: 12, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-14), creado: iso(-30), publicado: iso(-25)
@@ -164,8 +224,8 @@ window.SEED = (function () {
         problema: 'Nuestros tejidos son de muy buena calidad pero la presentación no acompaña: la etiqueta está impresa en casa, no tenemos logo consistente y cada vendedora usa un diseño distinto en sus fotos.',
         resultado: 'Una identidad visual clara (logo, colores, tipografías) con etiquetas listas para imprimir y plantillas para redes.',
         entregables: ['Manual de marca básico (10 páginas)', 'Logo en versiones digitales e imprimibles', 'Diseño de etiqueta colgante y adhesiva', '6 plantillas editables para redes'],
-        habilidadesRequeridas: [{ skill: 'branding', peso: 3, nivelMin: 3 }, { skill: 'illustrator', peso: 3, nivelMin: 3 },
-                                { skill: 'canva', peso: 1, nivelMin: 2 }],
+        habilidadesRequeridas: [{ skill: 'branding', peso: 3, nivelMin: 2 }, { skill: 'illustrator', peso: 3, nivelMin: 2 },
+                                { skill: 'canva', peso: 1, nivelMin: 1 }],
         habilidadesDeseables: ['fotografia', 'copy'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(9), creado: iso(-9), publicado: iso(-7)
@@ -176,8 +236,8 @@ window.SEED = (function () {
         problema: 'Llevamos el stock en cuadernos. No sabemos qué se vende más ni cuándo reponer, y cada semana perdemos ventas porque algo se acabó sin que nos diéramos cuenta. Tenemos más de 900 productos.',
         resultado: 'Un sistema simple en Excel o Google Sheets con catálogo codificado, control de entradas y salidas, y alertas de reposición.',
         entregables: ['Catálogo codificado de productos', 'Archivo de control de inventario con alertas', 'Procedimiento de conteo semanal', 'Capacitación a 3 trabajadores'],
-        habilidadesRequeridas: [{ skill: 'inventarios', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 4 },
-                                { skill: 'procesos', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'inventarios', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 3 },
+                                { skill: 'procesos', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['logistica', 'powerbi'],
         semanas: 4, horasSemana: 12, tamanoEquipo: 2, modalidad: 'presencial',
         fechaLimitePostulacion: d(12), creado: iso(-6), publicado: iso(-5)
@@ -188,8 +248,8 @@ window.SEED = (function () {
         problema: 'Ponemos los precios mirando a la competencia. No sabemos cuánto nos cuesta realmente cada producto ni cuál nos deja más ganancia. Sospechamos que algunos los vendemos casi al costo.',
         resultado: 'Una estructura de costos por producto y una propuesta de precios sustentada.',
         entregables: ['Hoja de costeo por producto', 'Análisis de margen de los 15 productos principales', 'Propuesta de lista de precios', 'Explicación al equipo'],
-        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'finanzas', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'finanzas', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['powerbi'],
         semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'remoto',
         fechaLimitePostulacion: d(6), creado: iso(-4), publicado: iso(-3)
@@ -200,8 +260,8 @@ window.SEED = (function () {
         problema: 'Registramos las ventas en un Excel largo que nadie mira. Queremos ver de un vistazo qué modelos y talles se venden, en qué meses y a qué tipo de cliente, para decidir qué producir.',
         resultado: 'Un tablero visual actualizable que responda esas preguntas sin que tengamos que armar el reporte a mano.',
         entregables: ['Limpieza y estructura de la base de ventas', 'Tablero en Power BI o Looker Studio', 'Manual de actualización mensual', 'Sesión de lectura del tablero'],
-        habilidadesRequeridas: [{ skill: 'powerbi', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'analitica', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'powerbi', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'analitica', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['sql'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-1), creado: iso(-16), publicado: iso(-14)
@@ -212,8 +272,8 @@ window.SEED = (function () {
         problema: 'Todos nuestros clientes llegan por recomendación. No tenemos presencia en internet y cuando alguien busca "servicio de limpieza Trujillo" no aparecemos por ningún lado.',
         resultado: 'Presencia básica en internet que genere consultas: ficha de Google, perfil profesional y un mensaje de venta claro.',
         entregables: ['Ficha de Google Empresa optimizada', 'Perfil de Instagram y Facebook con 8 publicaciones', 'Guion de venta por WhatsApp', 'Lista de 30 empresas objetivo'],
-        habilidadesRequeridas: [{ skill: 'seo', peso: 3, nivelMin: 2 }, { skill: 'community', peso: 2, nivelMin: 3 },
-                                { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'seo', peso: 3, nivelMin: 1 }, { skill: 'community', peso: 2, nivelMin: 2 },
+                                { skill: 'copy', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['ventas', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
         fechaLimitePostulacion: d(15), creado: iso(-2)
@@ -224,7 +284,7 @@ window.SEED = (function () {
         problema: 'Los clientes llegan con dudas repetidas sobre vacunas y alimentación. Queremos educarlos y de paso mostrar que sabemos del tema.',
         resultado: 'Una serie de contenidos cortos que respondan las 10 dudas más frecuentes.',
         entregables: ['10 piezas de contenido', 'Calendario de publicación', '3 videos cortos'],
-        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'video', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 2 }, { skill: 'video', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['copy', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(20), creado: iso(-1)
@@ -235,8 +295,8 @@ window.SEED = (function () {
         problema: 'Cuando una tienda de Lima nos pide precios les mandamos fotos sueltas por WhatsApp y una lista en Word. Se ve improvisado y varias veces nos han dicho que no entienden qué modelos y talles tenemos.',
         resultado: 'Un catálogo en PDF ordenado, con fotos, códigos, talles y precios mayoristas, que podamos enviar por correo o WhatsApp.',
         entregables: ['Catálogo en PDF de 20 páginas', 'Fichas de 40 productos con código', 'Plantilla editable para actualizarlo', 'Guion de presentación para vendedoras'],
-        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'canva', peso: 3, nivelMin: 3 },
-                                { skill: 'fotografia', peso: 2, nivelMin: 3 }, { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 2 }, { skill: 'canva', peso: 3, nivelMin: 2 },
+                                { skill: 'fotografia', peso: 2, nivelMin: 2 }, { skill: 'copy', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['branding', 'ventas'],
         semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(-24), creado: iso(-40), publicado: iso(-38)
@@ -247,8 +307,8 @@ window.SEED = (function () {
         problema: 'Tenemos más de 900 productos y ponemos los precios por costumbre. Sospechamos que en algunos de los que más vendemos casi no ganamos, pero nunca lo hemos calculado.',
         resultado: 'Saber cuánto deja realmente cada producto de los que más rotan y tener una propuesta de precios sustentada.',
         entregables: ['Análisis de margen de los 40 productos más vendidos', 'Propuesta de nueva lista de precios', 'Hoja de cálculo para mantenerlo'],
-        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
-                                { skill: 'ventas', peso: 2, nivelMin: 3 }],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 2 }, { skill: 'excel', peso: 3, nivelMin: 2 },
+                                { skill: 'ventas', peso: 2, nivelMin: 2 }],
         habilidadesDeseables: ['finanzas', 'atencion'],
         semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
         fechaLimitePostulacion: d(-30), creado: iso(-46), publicado: iso(-44)
@@ -276,11 +336,11 @@ window.SEED = (function () {
         motivacion: 'Puedo encargarme de la automatización de las reservas y de dejar medición instalada para ver cuántas citas entran.' }),
       /* r6 (en selección) — el coordinador puede armar el equipo ahora mismo */
       post({ id: 'p6', retoId: 'r6', estudianteId: 'u_est5', creado: iso(-10),
-        motivacion: 'Llevo dos ciclos trabajando con Excel avanzado y estoy terminando un curso de Power BI. Vivo en Cajamarca, así que puedo ir al taller a levantar la información.' }),
+        motivacion: 'Tengo la certificación de Excel de Microsoft y estoy terminando un curso de Power BI. Vivo en Cajamarca, así que puedo ir al taller a levantar la información.' }),
       post({ id: 'p7', retoId: 'r6', estudianteId: 'u_est8', creado: iso(-9),
         motivacion: 'Armo tableros desde hace dos años. Puedo limpiar la base de ventas y dejar el tablero actualizable sin depender de mí.' }),
       post({ id: 'p8', retoId: 'r6', estudianteId: 'u_est4', creado: iso(-8),
-        motivacion: 'Manejo Excel avanzado y análisis de rotación. Me interesa el cruce entre producción y ventas.' }),
+        motivacion: 'Tengo Excel a nivel avanzado certificado y experiencia en análisis de rotación. Me interesa el cruce entre producción y ventas.' }),
       post({ id: 'p9', retoId: 'r6', estudianteId: 'u_est7', creado: iso(-7),
         motivacion: 'Quiero aprender análisis de datos aplicado a ventas y puedo apoyar en el levantamiento con las vendedoras.' }),
       /* r3 y r4 con postulantes */
@@ -502,10 +562,19 @@ window.SEED = (function () {
       });
     });
 
+    /* ---------------- Pruebas prácticas ---------------- */
+    var pruebas = [{
+      id: 'pru1', estudianteId: 'u_est5', skill: 'powerbi', retoId: 'r6',
+      nivelPretendido: 2, encargo: CFG.PRUEBAS_POR_HABILIDAD.powerbi,
+      estado: 'solicitada', evidenciaUrl: '', comentario: '', revisorId: null,
+      solicitadaAt: iso(-10), entregadaAt: null, revisadaAt: null
+    }];
+
     /* ---------------- Notificaciones ---------------- */
     var notificaciones = [
       { id: U.uid('n'), userId: 'u_coord1', tipo: 'reto', titulo: 'Nuevo reto para revisar', cuerpo: 'EcoLimpio Servicios envió “Conseguir los primeros clientes de oficinas por internet”.', link: '#/reto/r7', leida: false, at: iso(-2) },
       { id: U.uid('n'), userId: 'u_coord1', tipo: 'seleccion', titulo: '4 postulaciones esperando selección', cuerpo: 'El reto “Tablero de ventas” cerró postulaciones. Falta conformar el equipo.', link: '#/matching/r6', leida: false, at: iso(-1) },
+      { id: U.uid('n'), userId: 'u_est5', tipo: 'prueba', titulo: 'Te pedimos una prueba corta', cuerpo: 'Declaraste Intermedio en Power BI, que ese reto pide como indispensable, y aún no tiene respaldo.', link: '#/postulaciones', leida: false, at: iso(-10) },
       { id: U.uid('n'), userId: 'u_men3', tipo: 'hito', titulo: 'Hito entregado para revisión', cuerpo: 'Valeria Quispe entregó “Propuesta” del proyecto PRY-2026-0002.', link: '#/proyecto/pr2?tab=hitos', leida: false, at: iso(-1) },
       { id: U.uid('n'), userId: 'u_est3', tipo: 'hito', titulo: 'Hito 1 aprobado', cuerpo: 'Tu mentor aprobó el hito “Diagnóstico”.', link: '#/proyecto/pr2?tab=hitos', leida: true, at: iso(-4) },
       { id: U.uid('n'), userId: 'u_est8', tipo: 'hito', titulo: 'Hito 1 aprobado', cuerpo: 'Tu mentor aprobó el hito “Diagnóstico”.', link: '#/proyecto/pr2?tab=hitos', leida: true, at: iso(-4) },
@@ -518,7 +587,7 @@ window.SEED = (function () {
     return {
       meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 10, proyecto: 4, constancia: 2 } },
       users: users, retos: retos, postulaciones: postulaciones, proyectos: proyectos,
-      constancias: constancias, notificaciones: notificaciones, auditoria: []
+      constancias: constancias, pruebas: pruebas, notificaciones: notificaciones, auditoria: []
     };
   }
 

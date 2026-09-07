@@ -590,6 +590,36 @@ table.tbl tr:last-child td{border-bottom:0}
 .ciclo>li b{display:block;font-size:.9rem}
 .ciclo>li span{display:block;font-size:.83rem;color:var(--text-soft);line-height:1.4}
 
+
+/* ---------- Habilidades: nivel y respaldo ---------- */
+.niveles-ref{display:grid;gap:.5rem;grid-template-columns:1fr;margin-top:.7rem}
+@media (min-width:760px){ .niveles-ref{grid-template-columns:repeat(3,1fr)} }
+.niveles-ref__i{
+  background:var(--crema-soft); border:1px solid var(--crema);
+  border-radius:var(--r-md); padding:.6rem .7rem;
+}
+.niveles-ref__i b{display:block;font-size:.88rem;color:var(--bronce)}
+.niveles-ref__i span{display:block;font-size:.8rem;line-height:1.4}
+.niveles-ref__i em{display:block;font-style:normal;font-size:.74rem;color:var(--text-soft);margin-top:.25rem}
+
+.habrow{border:1px solid var(--border);border-radius:var(--r-md);padding:.55rem .7rem;background:var(--surface)}
+.habrow--alto{border-color:var(--border-strong);background:var(--surface-2)}
+.habrow__top{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.habrow__n{flex:1;min-width:120px;font-size:.9rem;font-weight:500;margin:0}
+.habrow__s{width:auto;min-width:132px;min-height:38px;padding:.25rem 1.9rem .25rem .55rem;flex:none}
+.habrow__resp{margin-top:.55rem;padding-top:.55rem;border-top:1px dashed var(--border)}
+.habrow__resp[hidden]{display:none}
+.habrow__resp .field label{font-weight:600}
+
+/* Señales que ve la coordinación al comparar candidatos */
+.senales{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.senal{
+  font-size:.72rem;font-weight:600;padding:.15rem .45rem;border-radius:5px;
+  background:var(--warn-bg);color:var(--warn);
+}
+.senal--ojo{background:var(--danger-bg);color:var(--danger)}
+.senal--ok{background:var(--ok-bg);color:var(--ok)}
+
 /* ---------- 9. Toast y modal ---------- */
 .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 12px);z-index:90;display:flex;flex-direction:column;gap:.5rem;width:min(94vw,420px);pointer-events:none}
 @media (min-width:900px){.toasts{bottom:20px;left:auto;right:20px;transform:none}}
