@@ -247,7 +247,13 @@ hr{border:0;border-top:1px solid var(--border);margin:1.25rem 0}
 /* En pantallas angostas la etiqueta de estado baja a su propia línea
    para que el título use todo el ancho disponible. */
 @media (max-width:559px){
-  .card__head>.chip,.card__head>.match{flex:1 0 100%;order:3;margin-top:-.2rem}
+  /* La etiqueta de estado baja a su propia línea para que el título use todo el
+     ancho. El salto lo produce un ::after de ancho completo y altura cero,
+     colocado por `order` entre el texto y la etiqueta. Solo se genera cuando
+     hay etiqueta; si el navegador no soporta :has(), la regla se ignora y la
+     etiqueta simplemente queda en línea, como antes. */
+  .card__head:has(> .chip, > .match)::after{content:"";flex-basis:100%;height:0;order:2}
+  .card__head>.chip,.card__head>.match{order:3;margin-top:-.25rem}
 }
 .card__title{font-size:1.02rem;font-weight:700;margin:0;letter-spacing:-.01em}
 .card__body{padding:1.05rem}
@@ -508,6 +514,81 @@ table.tbl tr:last-child td{border-bottom:0}
 .demobtn:hover{border-color:var(--lucuma);background:var(--crema-soft)}
 .demobtn b{display:block;font-size:.9rem}
 .demobtn span{display:block;font-size:.76rem;color:var(--text-soft)}
+
+
+/* ---------- Próximas acciones ----------
+   La primera cosa que ve cada rol al entrar: qué puede hacer ahora mismo. */
+.acciones{
+  background:linear-gradient(150deg, var(--crema-soft), var(--surface) 70%);
+  border:1px solid var(--crema); border-radius:var(--r-lg);
+  padding:.9rem; margin-bottom:1.1rem;
+}
+.acciones__t{
+  display:flex; align-items:center; gap:.45rem;
+  font-size:.9rem; margin:0 0 .65rem; color:var(--bronce);
+}
+.acciones__l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+.accion{
+  display:flex; align-items:center; gap:.7rem; text-decoration:none; color:inherit;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:.7rem .8rem; min-height:56px;
+  transition:border-color .15s, transform .1s, box-shadow .15s;
+}
+.accion:hover{border-color:var(--bronce); transform:translateX(2px)}
+.accion:active{transform:translateX(0)}
+.accion--on{border-color:var(--lucuma); box-shadow:0 2px 12px rgba(249,178,41,.2)}
+.accion__n{font-size:1.2rem;line-height:1;flex:none}
+.accion__t{flex:1;min-width:0;font-size:.89rem;font-weight:600;line-height:1.35}
+.accion__b{
+  display:block; margin-top:.15rem; font-size:.76rem; font-weight:700;
+  color:var(--bronce); text-transform:uppercase; letter-spacing:.05em;
+}
+.accion__v{flex:none;color:var(--text-soft);transform:rotate(180deg);display:flex}
+@media (min-width:600px){ .acciones{padding:1.1rem} }
+.demobtn .tiny{color:var(--text-soft);margin-top:.1rem}
+
+/* ---------- Ajustes de densidad en pantallas pequeñas ----------
+   Menos aire y tipografías algo más contenidas para que quepa más
+   información útil sin que se sienta apretado. */
+@media (max-width:599px){
+  .card{padding:.9rem}
+  .panel__body{padding:.9rem}
+  .panel__head{padding:.75rem .9rem}
+  .listitem{padding:.7rem .9rem}
+  .page-head{margin-bottom:.9rem}
+  .page-head__txt p{font-size:.88rem}
+  .grid{gap:.75rem}
+  .stack{gap:.75rem}
+  .stat{padding:.75rem}
+  .stat__v{font-size:1.45rem}
+  .stat__k{font-size:.68rem;letter-spacing:.04em}
+  .chips{gap:.3rem}
+  .chip{font-size:.74rem;padding:.2rem .5rem}
+  h2{margin-bottom:.35rem}
+  .hero{padding:1.25rem 1.1rem;border-radius:var(--r-lg)}
+  .hero__kpis{gap:1rem;margin-top:1.1rem;padding-top:.9rem}
+  .hero__kpi b{font-size:1.2rem}
+  .steps{gap:.7rem}
+  .step{padding:.9rem}
+  .timeline>li{padding-bottom:.9rem}
+}
+
+
+/* ---------- Ciclo numerado (guía) ---------- */
+.ciclo{counter-reset:c;list-style:none;margin:.6rem 0 0;padding:0;display:grid;gap:.55rem}
+@media (min-width:760px){ .ciclo{grid-template-columns:1fr 1fr} }
+.ciclo--simple{grid-template-columns:1fr!important}
+.ciclo>li{
+  counter-increment:c; position:relative; padding:.7rem .85rem .7rem 2.9rem;
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+}
+.ciclo>li::before{
+  content:counter(c); position:absolute; left:.7rem; top:.7rem;
+  width:26px; height:26px; border-radius:9px; display:grid; place-items:center;
+  background:var(--crema); color:var(--grafito-900); font-weight:800; font-size:.8rem;
+}
+.ciclo>li b{display:block;font-size:.9rem}
+.ciclo>li span{display:block;font-size:.83rem;color:var(--text-soft);line-height:1.4}
 
 /* ---------- 9. Toast y modal ---------- */
 .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 12px);z-index:90;display:flex;flex-direction:column;gap:.5rem;width:min(94vw,420px);pointer-events:none}

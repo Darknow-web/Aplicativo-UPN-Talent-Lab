@@ -17,9 +17,7 @@ window.Vistas = window.Vistas || {};
         u.carrera + ' · Ciclo ' + u.ciclo + ' · ' + u.campus,
         h`<a class="btn btn--primary" href="#/retos">${C.icono('brujula', 18)} Ver oportunidades</a>`)}
 
-      ${!perfilCompleto ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '✨',
-        raw('Agrega tus habilidades al perfil para que el sistema te recomiende los retos donde encajas mejor. ' +
-        '<a href="#/perfil"><b>Completar mi perfil</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Proyectos', proys.length, U.plural(proys.length, 'microproyecto'), true)}

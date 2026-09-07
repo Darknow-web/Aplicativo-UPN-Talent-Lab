@@ -29,20 +29,27 @@ node tools/empaquetar.js
 
 ## Cuentas de demostración
 
-En la pantalla de ingreso hay botones de acceso rápido (un clic, sin escribir nada).
-Si prefieres escribir el correo, la contraseña de todas es `demo1234`.
+En la pantalla de ingreso hay botones de acceso rápido: un clic y entras, sin escribir nada.
+Cada cuenta está sembrada con **una acción del ciclo esperando**, de modo que recorriéndolas en
+orden se ve el programa completo sin tener que construir el estado a mano. Si prefieres escribir el
+correo, la contraseña de todas es `demo1234`.
 
-| Rol | Correo | Qué puedes ver desde ahí |
-|---|---|---|
-| Estudiante | `camila.rojas@upn.demo` | Proyecto terminado, constancia y portafolio |
-| Estudiante | `valeria.quispe@upn.demo` | Proyecto en ejecución con hitos por entregar |
-| Empresa | `diego@patasana.demo` | Proyecto activo y seguimiento del avance |
-| Empresa | `karina@ecolimpio.demo` | Reto esperando revisión de la universidad |
-| Docente / mentor | `jorge.melendez@upn.demo` | Hito entregado esperando revisión |
-| Coordinación UPN | `coordinacion@upn.demo` | Revisar retos, armar equipos, emitir constancias |
+| # | Qué puedes hacer | Cuenta | Correo |
+|---|---|---|---|
+| 1 | Enviar un reto a la UPN | EcoLimpio Servicios | `karina@ecolimpio.demo` |
+| 2 | Revisar, publicar o devolver ese reto | Coordinación UPN | `coordinacion@upn.demo` |
+| 3 | Postular a un reto | Camila Rojas | `camila.rojas@upn.demo` |
+| 4 | Armar el equipo con el ranking de compatibilidad | Coordinación UPN | `coordinacion@upn.demo` |
+| 5 | Entregar un hito y escribir la bitácora | Valeria Quispe | `valeria.quispe@upn.demo` |
+| 6 | Revisar un hito y aprobarlo u observarlo | Jorge Meléndez | `jorge.melendez@upn.demo` |
+| 7 | Evaluar la entrega final (empresa) | Textiles Kuntur | `elena@kuntur.demo` |
+| 8 | Evaluar la entrega final (docente) | Rocío Alvarado | `rocio.alvarado@upn.demo` |
+| 9 | Emitir las constancias y cerrar | Coordinación UPN | `coordinacion@upn.demo` |
 
 Para probar el verificador público sin iniciar sesión, usa el código `UTL-2026-9F4K-2QMD`
 en **Verificar constancia**.
+
+Dentro de la app, **Guía de uso** explica el ciclo, lo que hace cada rol y este mismo recorrido.
 
 ## El recorrido completo
 

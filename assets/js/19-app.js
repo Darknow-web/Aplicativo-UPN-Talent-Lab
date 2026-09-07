@@ -19,7 +19,7 @@
     Router.add('/', { view: Vistas.inicio, roles: ['*'], titulo: 'Inicio' });
     Router.add('/ingresar', { view: Vistas.ingresar, roles: ['*'], titulo: 'Ingresar' });
     Router.add('/registro', { view: Vistas.registro, roles: ['*'], titulo: 'Crear cuenta' });
-    Router.add('/ayuda', { view: Vistas.ayuda, roles: ['*'], titulo: 'Cómo funciona' });
+    Router.add('/ayuda', { view: Vistas.ayuda, roles: ['*'], titulo: 'Guía de uso' });
     Router.add('/verificar', { view: Vistas.verificar, roles: ['*'], titulo: 'Verificar constancia' });
     Router.add('/verificar/:codigo', { view: Vistas.verificar, roles: ['*'], titulo: 'Verificar constancia' });
     Router.add('/portafolio/:slug', { view: Vistas.portafolio, roles: ['*'], titulo: 'Portafolio' });
@@ -53,6 +53,11 @@
     definirRutas();
     Actions.iniciar();
     Router.start();
+
+    /* Primera visita sin sesión: una bienvenida breve. Solo una vez por navegador. */
+    if (!Auth.autenticado() && !Store.lsGet('utl.bienvenida')) {
+      setTimeout(function () { Actions.ejecutar('ui:bienvenida', {}); }, 700);
+    }
 
     /* Sincronización entre pestañas del mismo navegador */
     window.addEventListener('storage', function (e) {

@@ -15,12 +15,7 @@ window.Vistas = window.Vistas || {};
       ${C.pageHead('Hola, ' + u.nombre.split(' ')[0] + ' 👋', (u.razonSocial || '') + ' · ' + u.distrito,
         h`<a class="btn btn--primary" href="#/reto/nuevo">${C.icono('mas', 18)} Publicar un reto</a>`)}
 
-      ${porEvaluar.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '⭐',
-        raw('Tienes ' + porEvaluar.length + ' ' + U.plural(porEvaluar.length, 'entrega') + ' esperando tu evaluación. ' +
-        '<a href="#/proyecto/' + U.esc(porEvaluar[0].id) + '?tab=evaluacion"><b>Evaluar ahora</b></a>'))}</div>` : ''}
-      ${borradores.length ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '📝',
-        raw('Tienes ' + borradores.length + ' ' + U.plural(borradores.length, 'reto') + ' sin enviar a revisión. ' +
-        '<a href="#/reto/' + U.esc(borradores[0].id) + '"><b>Continuar</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Retos publicados', mios.filter(function (r) { return ['publicado', 'en_seleccion'].indexOf(r.estado) !== -1; }).length, 'recibiendo postulaciones', true)}

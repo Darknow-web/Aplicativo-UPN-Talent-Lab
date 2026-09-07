@@ -228,6 +228,30 @@ window.SEED = (function () {
         habilidadesDeseables: ['copy', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(20), creado: iso(-1)
+      }),
+      reto({
+        id: 'r9', codigo: 'RET-2026-0009', empresaId: 'u_emp3', estado: 'en_ejecucion', categoria: 'comunicacion',
+        titulo: 'Catálogo digital para vender a tiendas mayoristas',
+        problema: 'Cuando una tienda de Lima nos pide precios les mandamos fotos sueltas por WhatsApp y una lista en Word. Se ve improvisado y varias veces nos han dicho que no entienden qué modelos y talles tenemos.',
+        resultado: 'Un catálogo en PDF ordenado, con fotos, códigos, talles y precios mayoristas, que podamos enviar por correo o WhatsApp.',
+        entregables: ['Catálogo en PDF de 20 páginas', 'Fichas de 40 productos con código', 'Plantilla editable para actualizarlo', 'Guion de presentación para vendedoras'],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'canva', peso: 3, nivelMin: 3 },
+                                { skill: 'fotografia', peso: 2, nivelMin: 3 }, { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesDeseables: ['branding', 'ventas'],
+        semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
+        fechaLimitePostulacion: d(-24), creado: iso(-40), publicado: iso(-38)
+      }),
+      reto({
+        id: 'r10', codigo: 'RET-2026-0010', empresaId: 'u_emp4', estado: 'en_ejecucion', categoria: 'negocios',
+        titulo: 'Revisar precios y márgenes de los productos más vendidos',
+        problema: 'Tenemos más de 900 productos y ponemos los precios por costumbre. Sospechamos que en algunos de los que más vendemos casi no ganamos, pero nunca lo hemos calculado.',
+        resultado: 'Saber cuánto deja realmente cada producto de los que más rotan y tener una propuesta de precios sustentada.',
+        entregables: ['Análisis de margen de los 40 productos más vendidos', 'Propuesta de nueva lista de precios', 'Hoja de cálculo para mantenerlo'],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
+                                { skill: 'ventas', peso: 2, nivelMin: 3 }],
+        habilidadesDeseables: ['finanzas', 'atencion'],
+        semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
+        fechaLimitePostulacion: d(-30), creado: iso(-46), publicado: iso(-44)
       })
     ];
 
@@ -354,7 +378,85 @@ window.SEED = (function () {
       evaluaciones: []
     };
 
-    var proyectos = [pr1, pr2];
+    /* pr3: la entrega final ya llegó y está esperando las dos evaluaciones.
+       Permite probar "evaluar" desde la empresa y desde el mentor sin pasos previos. */
+    var inicio3 = d(-24), fin3 = d(-3);
+    var pr3 = {
+      id: 'pr3', codigo: 'PRY-2026-0003', retoId: 'r9', empresaId: 'u_emp3', mentorId: 'u_men2',
+      estudianteIds: ['u_est6', 'u_est2'], liderId: 'u_est6', coordinadorId: 'u_coord1',
+      inicio: inicio3, fin: fin3, semanas: 3, estado: 'en_validacion', creado: iso(-25),
+      hitos: hitos(3, inicio3, [
+        { estado: 'aprobado', at: iso(-17), evidencia: 'https://drive.google.com/kuntur-diagnostico',
+          feedback: 'Buen inventario de modelos. Ordenen los talles con el mismo criterio en todas las fichas.' },
+        { estado: 'aprobado', at: iso(-10), evidencia: 'https://figma.com/kuntur-catalogo-propuesta',
+          feedback: 'La diagramación quedó clara y la marca se lee bien. Aprobado.' },
+        { estado: 'aprobado', at: iso(-3), evidencia: 'https://drive.google.com/kuntur-catalogo-final',
+          feedback: 'Entrega completa. Buen trabajo con las fotos sobre fondo neutro.' }
+      ]),
+      bitacora: [
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'reunion', semana: 1, horas: 2, at: iso(-23), visibleEmpresa: true,
+          texto: 'Reunión de arranque con Elena. Definimos que el catálogo va dirigido a tiendas mayoristas de Lima, no a clientes finales, así que los precios que van son los de por mayor.' },
+        { id: U.uid('b'), autorId: 'u_est2', tipo: 'avance', semana: 2, horas: 7, at: iso(-14), visibleEmpresa: true,
+          texto: 'Sesión de fotos de 40 prendas sobre fondo neutro. Usamos luz natural junto a la ventana del taller y una tabla de madera prestada. 118 tomas, 40 seleccionadas.' },
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'decision', semana: 2, horas: 3, at: iso(-12), visibleEmpresa: true,
+          texto: 'Acordamos codificar los productos por línea y talla (KUN-CH-01) para que la ficha coincida con lo que ya usan en el cuaderno de producción.' },
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'entrega', semana: 3, horas: 4, at: iso(-3), visibleEmpresa: true,
+          texto: 'Entregamos el catálogo en PDF, las 40 fichas y la plantilla editable. Capacitamos a las dos vendedoras en cómo actualizarlo cuando salga un modelo nuevo.' }
+      ],
+      entregaFinal: {
+        titulo: 'Catálogo mayorista + fichas de 40 productos',
+        resumen: 'Se produjo un catálogo de 20 páginas con fotografía propia, códigos por línea y talla, y precios mayoristas. Se entregó además la plantilla editable y se capacitó a las vendedoras para mantenerlo actualizado sin depender del equipo.',
+        enlaces: [
+          { label: 'Catálogo en PDF', url: 'https://drive.google.com/kuntur-catalogo-final' },
+          { label: 'Fichas de producto', url: 'https://drive.google.com/kuntur-fichas' },
+          { label: 'Plantilla editable', url: 'https://canva.com/kuntur-plantilla' }
+        ],
+        at: iso(-3), porId: 'u_est6'
+      },
+      evaluaciones: []
+    };
+
+    /* pr4: mentor y empresa ya aprobaron. Solo falta que la coordinación
+       emita las constancias, que es el último paso del ciclo. */
+    var inicio4 = d(-30), fin4 = d(-16);
+    var pr4 = {
+      id: 'pr4', codigo: 'PRY-2026-0004', retoId: 'r10', empresaId: 'u_emp4', mentorId: 'u_men1',
+      estudianteIds: ['u_est7'], liderId: 'u_est7', coordinadorId: 'u_coord1',
+      inicio: inicio4, fin: fin4, semanas: 2, estado: 'aprobado', creado: iso(-31),
+      hitos: hitos(2, inicio4, [
+        { estado: 'aprobado', at: iso(-23), evidencia: 'https://docs.google.com/ferretero-diagnostico',
+          feedback: 'Buen levantamiento de costos. Confirmen con Óscar el flete que no estaba considerado.' },
+        { estado: 'aprobado', at: iso(-16), evidencia: 'https://docs.google.com/ferretero-precios',
+          feedback: 'Análisis sólido y bien explicado para alguien sin formación contable.' }
+      ]),
+      bitacora: [
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'reunion', semana: 1, horas: 3, at: iso(-29), visibleEmpresa: true,
+          texto: 'Visita a la tienda de San Juan de Lurigancho. Óscar me pasó las facturas de compra de los últimos tres meses y la lista de los productos que más salen.' },
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'bloqueo', semana: 1, horas: 2, at: iso(-26), visibleEmpresa: false,
+          texto: 'Las facturas no incluían el flete, que se paga aparte. Sin eso el margen salía inflado. Lo resolvimos estimándolo por viaje según el volumen.' },
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'entrega', semana: 2, horas: 5, at: iso(-16), visibleEmpresa: true,
+          texto: 'Entregué el análisis de los 40 productos que más rotan. Cuatro de ellos se estaban vendiendo por debajo del costo real una vez incluido el flete.' }
+      ],
+      entregaFinal: {
+        titulo: 'Análisis de márgenes y propuesta de precios',
+        resumen: 'Se calculó el costo real de los 40 productos de mayor rotación incluyendo el flete, que no se estaba considerando. Se detectaron cuatro productos vendidos por debajo del costo y se entregó una propuesta de precios con la hoja de cálculo para mantenerla.',
+        enlaces: [
+          { label: 'Análisis de márgenes', url: 'https://docs.google.com/ferretero-precios' },
+          { label: 'Propuesta de lista de precios', url: 'https://docs.google.com/ferretero-lista' }
+        ],
+        at: iso(-16), porId: 'u_est7'
+      },
+      evaluaciones: [
+        { id: U.uid('ev'), rol: 'mentor', evaluadorId: 'u_men1', at: iso(-15), decision: 'aprobado',
+          criterios: { cumplimiento: 5, calidad: 4, comunicacion: 5, autonomia: 5, impacto: 5 },
+          comentario: 'Lucía trabajó con mucha autonomía y supo explicarle los números al dueño en su lenguaje, que es lo más difícil de este tipo de encargos.' },
+        { id: U.uid('ev'), rol: 'empresa', evaluadorId: 'u_emp4', at: iso(-14), decision: 'aprobado',
+          criterios: { cumplimiento: 5, calidad: 5, comunicacion: 4, autonomia: 5, impacto: 5 },
+          comentario: 'No sabíamos que había productos que vendíamos perdiendo plata. Ya subimos esos cuatro precios y nadie se quejó. Muy útil.' }
+      ]
+    };
+
+    var proyectos = [pr1, pr2, pr3, pr4];
 
     /* ---------------- Constancias ---------------- */
     function constancia(o) { return o; }
@@ -414,7 +516,7 @@ window.SEED = (function () {
     ];
 
     return {
-      meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 8, proyecto: 2, constancia: 2 } },
+      meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 10, proyecto: 4, constancia: 2 } },
       users: users, retos: retos, postulaciones: postulaciones, proyectos: proyectos,
       constancias: constancias, notificaciones: notificaciones, auditoria: []
     };

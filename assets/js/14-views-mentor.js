@@ -26,11 +26,7 @@ window.Vistas = window.Vistas || {};
     return h`
       ${C.pageHead('Hola, ' + u.nombre.split(' ')[0] + ' 👋', u.especialidad + ' · Facultad de ' + u.facultad)}
 
-      ${porRevisar.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '📥',
-        raw('Tienes <b>' + porRevisar.length + '</b> ' + U.plural(porRevisar.length, 'hito') + ' esperando tu revisión.'))}</div>` : ''}
-      ${porEvaluar.length ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '⭐',
-        raw('Hay <b>' + porEvaluar.length + '</b> ' + U.plural(porEvaluar.length, 'entrega') + ' final por evaluar. ' +
-        '<a href="#/proyecto/' + U.esc(porEvaluar[0].id) + '?tab=evaluacion"><b>Evaluar</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Proyectos activos', activos.length, 'de ' + (u.maxProyectos || 3) + ' posibles', true)}

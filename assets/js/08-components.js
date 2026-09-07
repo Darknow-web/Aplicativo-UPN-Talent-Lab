@@ -260,6 +260,124 @@ window.C = (function () {
     </a>`;
   }
 
+
+  /* ---------- Próximas acciones ----------
+     Calcula qué puede hacer AHORA el usuario según el estado real de sus datos
+     y lo muestra como pasos con botón directo. Es lo que evita que alguien
+     entre y no sepa por dónde empezar. */
+  function proximasAcciones(u) {
+    var a = [];
+    if (!u) return a;
+
+    if (u.rol === 'estudiante') {
+      var proys = M.proyectosDe(u.id);
+      var activo = proys.filter(function (p) { return p.estado === 'en_curso'; })[0];
+      if (activo) {
+        var hito = (activo.hitos || []).filter(function (h) {
+          return h.estado === 'pendiente' || h.estado === 'observado';
+        })[0];
+        if (hito) {
+          a.push({ ico: '📤', txt: hito.estado === 'observado'
+              ? 'Corregir el hito “' + hito.titulo + '”, tu mentor pidió cambios'
+              : 'Entregar el hito “' + hito.titulo + '”',
+            btn: 'Ir al hito', href: '#/proyecto/' + activo.id + '?tab=hitos', destacado: true });
+        } else if (!activo.entregaFinal) {
+          a.push({ ico: '📦', txt: 'Todos tus hitos están aprobados: envía la entrega final',
+            btn: 'Enviar entrega', href: '#/proyecto/' + activo.id + '?tab=entrega', destacado: true });
+        }
+        a.push({ ico: '📓', txt: 'Registra tus horas y avances en la bitácora',
+          btn: 'Escribir', href: '#/proyecto/' + activo.id + '?tab=bitacora' });
+      } else {
+        var mejor = Matching.retosPara(u.id)[0];
+        if (mejor) {
+          a.push({ ico: '🎯', txt: 'Postula al reto que mejor calza contigo: “' +
+              U.truncar(mejor.reto.titulo, 42) + '” (' + mejor.match.total + '% de compatibilidad)',
+            btn: 'Ver el reto', href: '#/reto/' + mejor.reto.id, destacado: true });
+        }
+      }
+      if ((u.habilidades || []).length < 3) {
+        a.push({ ico: '✨', txt: 'Agrega tus habilidades para recibir mejores recomendaciones',
+          btn: 'Completar perfil', href: '#/perfil' });
+      }
+      if (M.constanciasDe(u.id).filter(function (c) { return c.estado === 'vigente'; }).length) {
+        a.push({ ico: '🏅', txt: 'Descarga tu constancia o comparte tu portafolio',
+          btn: 'Ver constancias', href: '#/constancias' });
+      }
+    }
+
+    if (u.rol === 'empresa') {
+      var mios = Store.where('retos', function (r) { return r.empresaId === u.id; });
+      var borrador = mios.filter(function (r) { return ['borrador', 'observado'].indexOf(r.estado) !== -1; })[0];
+      var porEvaluar = M.proyectosDe(u.id).filter(function (p) { return Auth.can('evaluar:empresa', p); })[0];
+      var enCurso = M.proyectosDe(u.id).filter(function (p) { return p.estado === 'en_curso'; })[0];
+
+      if (porEvaluar) a.push({ ico: '⭐', txt: 'Recibiste una entrega: revísala y evalúala',
+        btn: 'Evaluar', href: '#/proyecto/' + porEvaluar.id + '?tab=evaluacion', destacado: true });
+      if (borrador) a.push({ ico: '📝', txt: borrador.estado === 'observado'
+          ? 'La UPN dejó observaciones en “' + U.truncar(borrador.titulo, 34) + '”'
+          : 'Tienes un reto sin enviar a revisión',
+        btn: 'Continuar', href: '#/reto/' + borrador.id, destacado: !porEvaluar });
+      if (!mios.length) a.push({ ico: '🚀', txt: 'Publica tu primera necesidad y la UPN te propondrá un equipo',
+        btn: 'Publicar reto', href: '#/reto/nuevo', destacado: true });
+      if (enCurso) a.push({ ico: '📈', txt: 'Sigue el avance del equipo que trabaja para ti',
+        btn: 'Ver avance', href: '#/proyecto/' + enCurso.id });
+      if (!borrador && mios.length) a.push({ ico: '➕', txt: 'Publica otra necesidad',
+        btn: 'Nuevo reto', href: '#/reto/nuevo' });
+    }
+
+    if (u.rol === 'mentor') {
+      var asignados = M.proyectosDe(u.id);
+      var conHito = null, hitoPend = null;
+      asignados.forEach(function (p) {
+        (p.hitos || []).forEach(function (h) {
+          if (h.estado === 'entregado' && !conHito) { conHito = p; hitoPend = h; }
+        });
+      });
+      var evaluar = asignados.filter(function (p) { return Auth.can('evaluar:mentor', p); })[0];
+      if (conHito) a.push({ ico: '🔍', txt: 'Un equipo entregó “' + hitoPend.titulo + '”: apruébalo o pide cambios',
+        btn: 'Revisar', href: '#/proyecto/' + conHito.id + '?tab=hitos', destacado: true });
+      if (evaluar) a.push({ ico: '⭐', txt: 'Hay una entrega final esperando tu evaluación',
+        btn: 'Evaluar', href: '#/proyecto/' + evaluar.id + '?tab=evaluacion', destacado: !conHito });
+      if (!conHito && !evaluar) a.push({ ico: '✅', txt: 'No tienes pendientes. Revisa cómo van tus equipos',
+        btn: 'Ver proyectos', href: '#/proyectos' });
+    }
+
+    if (u.rol === 'coordinador') {
+      var revisar = Store.where('retos', function (r) { return r.estado === 'en_revision'; })[0];
+      var armar = Store.where('retos', function (r) { return r.estado === 'en_seleccion'; })[0];
+      var certificar = Store.where('proyectos', function (p) { return p.estado === 'aprobado'; })[0];
+      if (revisar) a.push({ ico: '📋', txt: 'Una empresa envió “' + U.truncar(revisar.titulo, 36) + '” para revisión',
+        btn: 'Revisar', href: '#/reto/' + revisar.id, destacado: true });
+      if (armar) a.push({ ico: '🎯', txt: 'Un reto cerró postulaciones: arma el equipo',
+        btn: 'Conformar', href: '#/matching/' + armar.id, destacado: !revisar });
+      if (certificar) a.push({ ico: '🏅', txt: 'Un proyecto fue aprobado: emite las constancias',
+        btn: 'Emitir', href: '#/proyecto/' + certificar.id + '?tab=evaluacion', destacado: !revisar && !armar });
+      if (!revisar && !armar && !certificar) a.push({ ico: '✅', txt: 'Bandeja al día. Revisa los proyectos en marcha',
+        btn: 'Ver proyectos', href: '#/proyectos' });
+    }
+
+    return a;
+  }
+
+  function tarjetaAcciones(u) {
+    var acc = proximasAcciones(u);
+    if (!acc.length) return h``;
+    return h`<section class="acciones" aria-label="Qué puedes hacer ahora">
+      <h2 class="acciones__t">${icono('brujula', 18)} ¿Qué puedes hacer ahora?</h2>
+      <ol class="acciones__l">
+        ${acc.slice(0, 4).map(function (x) {
+          return h`<li>
+            <a class="accion ${x.destacado ? 'accion--on' : ''}" href="${x.href}">
+              <span class="accion__n" aria-hidden="true">${x.ico}</span>
+              <span class="accion__t">${x.txt}<span class="accion__b">${x.btn}</span></span>
+              <span class="accion__v" aria-hidden="true">${icono('volver', 16)}</span>
+            </a>
+          </li>`;
+        })}
+      </ol>
+    </section>`;
+  }
+
   return {
     icono: icono, avatar: avatar, persona: persona, chipRol: chipRol,
     chipReto: chipReto, chipProyecto: chipProyecto, chipHito: chipHito,
@@ -267,6 +385,7 @@ window.C = (function () {
     progreso: progreso, medidor: medidor, anilloMatch: anilloMatch, desgloseMatch: desgloseMatch,
     estrellas: estrellas, vacio: vacio, stat: stat, aviso: aviso, volver: volver, pageHead: pageHead,
     campo: campo, checkHabilidades: checkHabilidades, selectorEstrellas: selectorEstrellas,
-    cardReto: cardReto, cardProyecto: cardProyecto
+    cardReto: cardReto, cardProyecto: cardProyecto,
+    proximasAcciones: proximasAcciones, tarjetaAcciones: tarjetaAcciones
   };
 })();

@@ -17,14 +17,13 @@ window.Vistas = window.Vistas || {};
         h`<a class="btn btn--ghost" href="#/reportes">${C.icono('grafico', 18)} Reportes</a>
           <a class="btn btn--primary" href="#/reto/nuevo">${C.icono('mas', 18)} Nuevo reto</a>`)}
 
-      ${pendientes ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '📌',
-        raw('Tienes <b>' + pendientes + '</b> ' + U.plural(pendientes, 'tarea') + ' pendiente' + (pendientes === 1 ? '' : 's') + ' en tu bandeja.'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
-        ${C.stat('Retos por revisar', porRevisar.length, 'esperando aprobación', porRevisar.length > 0)}
-        ${C.stat('Equipos por armar', porSeleccionar.length, 'postulaciones cerradas')}
-        ${C.stat('Proyectos activos', activos.length, 'en ejecución')}
-        ${C.stat('Constancias por emitir', porCertificar.length, 'proyectos aprobados')}
+        ${C.stat('Empresas aliadas', mt.empresas, 'con retos publicados', true)}
+        ${C.stat('Estudiantes', mt.estudiantes, 'inscritos en el programa')}
+        ${C.stat('Proyectos activos', activos.length, 'en ejecución ahora')}
+        ${C.stat('Constancias', mt.constancias, 'emitidas y vigentes')}
       </div>
 
       <div class="split mt">

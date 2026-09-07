@@ -15,6 +15,34 @@ window.Actions = (function () {
   on('ui:cerrar-modal', function () { UI.cerrarModal(); });
   on('ui:copiar', function (d) { UI.copiar(d.texto || ''); });
   on('ui:imprimir', function () { window.print(); });
+  /* Bienvenida: se muestra una sola vez por navegador, para que quien recibe
+     el enlace sepa en 10 segundos qué es esto y por dónde empezar. */
+  on('ui:bienvenida', function () {
+    UI.abrirModal('Bienvenido a UPN Talent Lab', U.html`
+      <p class="small">Este es el aplicativo del programa que conecta a <b>estudiantes de la UPN</b>
+        con <b>pequeñas y medianas empresas</b>: la empresa plantea una necesidad concreta, la
+        universidad elige a los estudiantes según sus habilidades y en <b>2 a 4 semanas</b>, con un
+        docente acompañando, se entrega el resultado.</p>
+      <div class="steps" style="grid-template-columns:1fr;gap:.5rem;margin:.8rem 0">
+        <div class="accion"><span class="accion__n">🏪</span><span class="accion__t">La empresa plantea su necesidad</span></div>
+        <div class="accion"><span class="accion__n">🎓</span><span class="accion__t">La UPN arma el equipo por habilidades</span></div>
+        <div class="accion"><span class="accion__n">🧭</span><span class="accion__t">Un docente acompaña el trabajo</span></div>
+        <div class="accion"><span class="accion__n">🏅</span><span class="accion__t">Constancia verificable para el estudiante</span></div>
+      </div>
+      ${C.aviso('brand', '💡', 'Puedes probarlo entero sin registrarte: hay cuentas de demostración, una por cada paso del ciclo.')}
+      <div class="btnrow mt-sm">
+        <button class="btn btn--primary" data-action="ui:bienvenida-cerrar" data-ir="/ingresar">Probar con una cuenta demo</button>
+        <button class="btn btn--ghost" data-action="ui:bienvenida-cerrar" data-ir="/ayuda">Ver la guía de uso</button>
+      </div>
+      <p class="tiny muted center mt-sm mb0">
+        <button class="btn btn--ghost btn--sm" data-action="ui:bienvenida-cerrar">Explorar por mi cuenta</button></p>`);
+  });
+  on('ui:bienvenida-cerrar', function (d) {
+    Store.lsSet('utl.bienvenida', '1');
+    UI.cerrarModal();
+    if (d.ir) Router.go('#' + d.ir);
+  });
+
   on('ui:tema', function (d) {
     var actual = UI.temaActual();
     var siguiente = d.tema || (actual === 'oscuro' ? 'claro' : 'oscuro');

@@ -90,6 +90,24 @@ window.Vistas = window.Vistas || {};
         ${C.pageHead('Ingresar a Talent Lab', 'Usa una cuenta de demostración o entra con tu correo.')}
         <div class="split">
           <div class="card">
+            <h2 style="font-size:1.05rem">Probar sin registrarse</h2>
+            <p class="small muted">Un clic y entras. Cada cuenta tiene una acción del ciclo lista para probar;
+              entre todas se recorre el programa completo.</p>
+            <div class="demogrid">
+              ${cuentas.map(function (c) {
+                return h`<button class="demobtn" data-action="auth:demo" data-id="${c.user.id}">
+                  ${C.avatar(c.user)}
+                  <span style="min-width:0">
+                    <b>${c.accion}</b>
+                    <span>${CFG.ROLES[c.user.rol].icono} ${c.user.rol === 'empresa' ? (c.user.razonSocial || c.user.nombre) : c.user.nombre}</span>
+                    <span class="tiny">${c.detalle}</span>
+                  </span>
+                </button>`;
+              })}
+            </div>
+            <p class="tiny muted mt-sm mb0">Contraseña de todas las cuentas demo: <code>demo1234</code></p>
+          </div>
+          <div class="card">
             <h2 style="font-size:1.05rem">Entrar con mi cuenta</h2>
             <form data-action="auth:login">
               <input type="hidden" name="next" value="${q.next || '/'}">
@@ -98,22 +116,6 @@ window.Vistas = window.Vistas || {};
               <button class="btn btn--primary btn--block" type="submit">Ingresar</button>
             </form>
             <p class="small muted mt-sm mb0">¿No tienes cuenta? <a href="#/registro">Créala aquí</a>.</p>
-          </div>
-          <div class="card">
-            <h2 style="font-size:1.05rem">Cuentas de demostración</h2>
-            <p class="small muted">Un clic y entras. Cada una muestra el sistema desde un rol distinto.</p>
-            <div class="demogrid">
-              ${cuentas.map(function (c) {
-                return h`<button class="demobtn" data-action="auth:demo" data-id="${c.user.id}">
-                  ${C.avatar(c.user)}
-                  <span style="min-width:0">
-                    <b>${c.user.rol === 'empresa' ? (c.user.razonSocial || c.user.nombre) : c.user.nombre}</b>
-                    <span>${CFG.ROLES[c.user.rol].icono} ${c.desc}</span>
-                  </span>
-                </button>`;
-              })}
-            </div>
-            <p class="tiny muted mt-sm mb0">Contraseña de todas las cuentas demo: <code>demo1234</code></p>
           </div>
         </div>
       </div>`;
@@ -279,35 +281,140 @@ window.Vistas = window.Vistas || {};
     return { reto: '📋', postulacion: '📨', seleccion: '🎯', proyecto: '🚀', hito: '✅', evaluacion: '⭐', constancia: '🏅' }[t] || '🔔';
   }
 
-  /* ---------------- Ayuda ---------------- */
-  Vistas.ayuda = function () {
-    return h`<div style="max-width:860px;margin:0 auto">
-      ${C.pageHead('Cómo funciona UPN Talent Lab', 'El recorrido completo, explicado por rol.')}
-      <div class="steps">
-        <div class="step"><h3>1. La empresa plantea</h3><p>Describe su necesidad en lenguaje simple, indica qué espera recibir y cuántas semanas puede acompañar.</p></div>
-        <div class="step"><h3>2. La UPN revisa</h3><p>La coordinación verifica que el reto sea realizable en 2 a 4 semanas y lo publica, o pide ajustes.</p></div>
-        <div class="step"><h3>3. Los estudiantes postulan</h3><p>Ven su porcentaje de compatibilidad y postulan explicando por qué quieren participar.</p></div>
-        <div class="step"><h3>4. Se conforma el equipo</h3><p>La coordinación usa el ranking de compatibilidad, arma un equipo que cubra todas las habilidades y asigna un docente mentor.</p></div>
+  /* ---------------- Guía de uso ---------------- */
+  var GUIA_ROLES = [
+    {
+      rol: 'empresa', titulo: 'Si eres una empresa',
+      resumen: 'Planteas una necesidad concreta y recibes un resultado, sin costo y sin contratar a nadie.',
+      pasos: [
+        ['Publicar un reto', 'Describe tu problema en lenguaje simple, qué te gustaría recibir y cuántas semanas puedes acompañar. Un asistente de 3 pasos te guía.'],
+        ['Esperar la revisión', 'La coordinación de la UPN revisa que sea realizable en 2 a 4 semanas. Puede publicarlo o devolvértelo con observaciones para ajustarlo.'],
+        ['Recibir tu equipo', 'La universidad elige a los estudiantes y les asigna un docente. Te avisamos cuándo empieza.'],
+        ['Seguir el avance', 'Ves los hitos semana a semana y la bitácora del equipo, sin tener que estar pidiendo reportes.'],
+        ['Evaluar el resultado', 'Cuando llega la entrega final, la calificas con 5 criterios y decides si la apruebas o pides correcciones.']
+      ],
+      donde: ['Mi panel', 'Mis retos', 'Publicar reto', 'Mis proyectos', 'Talento UPN']
+    },
+    {
+      rol: 'estudiante', titulo: 'Si eres estudiante UPN',
+      resumen: 'Ganas experiencia real con una empresa y te llevas una constancia que cualquiera puede verificar.',
+      pasos: [
+        ['Completar tu perfil', 'Registra tus habilidades con su nivel del 1 al 5. De eso depende qué retos te recomendamos y a cuáles puedes postular.'],
+        ['Explorar oportunidades', 'Cada reto te muestra tu porcentaje de compatibilidad y por qué: qué habilidades cubres, tu disponibilidad, tu carrera.'],
+        ['Postular', 'Explicas en pocas líneas por qué quieres participar. Solo puedes tener un microproyecto a la vez.'],
+        ['Trabajar el proyecto', 'Entregas un hito por semana con el enlace a tu evidencia, y registras tus horas y avances en la bitácora.'],
+        ['Entregar y cerrar', 'Envías la entrega final. Cuando el mentor y la empresa aprueban, recibes tu constancia y se suma a tu portafolio.']
+      ],
+      donde: ['Mi panel', 'Oportunidades', 'Mis postulaciones', 'Mis proyectos', 'Constancias', 'Mi perfil y portafolio']
+    },
+    {
+      rol: 'mentor', titulo: 'Si eres docente o mentor',
+      resumen: 'Acompañas al equipo y respondes por la calidad académica del trabajo.',
+      pasos: [
+        ['Recibir la asignación', 'La coordinación te asigna según tu especialidad y tu carga actual de proyectos.'],
+        ['Revisar cada hito', 'El equipo entrega semanalmente. Apruebas o devuelves con un comentario concreto de qué corregir.'],
+        ['Acompañar en la bitácora', 'Dejas decisiones y orientaciones escritas, que quedan como respaldo del trabajo.'],
+        ['Evaluar la entrega final', 'Calificas con la rúbrica de 5 criterios y decides si el proyecto queda aprobado.']
+      ],
+      donde: ['Mi panel', 'Proyectos que acompaño', 'Estudiantes', 'Retos del programa']
+    },
+    {
+      rol: 'coordinador', titulo: 'Si eres de la coordinación UPN',
+      resumen: 'Controlas la calidad del programa de punta a punta.',
+      pasos: [
+        ['Revisar los retos', 'Publicas, devuelves con observaciones o rechazas lo que las empresas proponen.'],
+        ['Cerrar postulaciones', 'Cuando hay suficientes candidatos, cierras el reto y pasas a selección.'],
+        ['Conformar el equipo', 'Ves el ranking de compatibilidad con el detalle de cada puntaje, y el sistema te sugiere un equipo que cubra todas las habilidades del reto.'],
+        ['Asignar al docente', 'Con su afinidad al área y su carga actual a la vista.'],
+        ['Emitir constancias', 'Cuando mentor y empresa aprobaron, generas las constancias con código verificable y el proyecto queda cerrado.']
+      ],
+      donde: ['Panel de coordinación', 'Retos', 'Proyectos', 'Talento', 'Constancias', 'Reportes']
+    }
+  ];
+
+  Vistas.ayuda = function (p, q) {
+    var rolSel = q.rol || (Auth.actual() ? Auth.actual().rol : 'empresa');
+    var bloque = GUIA_ROLES.filter(function (g) { return g.rol === rolSel; })[0] || GUIA_ROLES[0];
+
+    return h`<div style="max-width:900px;margin:0 auto">
+      ${C.pageHead('Guía de uso', 'Qué hay dentro de la aplicación y cómo se usa, explicado por rol.')}
+
+      <section class="card card--accent">
+        <h2 style="font-size:1.05rem;margin-bottom:.3rem">En una frase</h2>
+        <p class="mb0">Una empresa plantea una necesidad concreta, la UPN elige a los estudiantes según sus
+          habilidades y en <b>2 a 4 semanas</b>, con un docente acompañando, el reto queda resuelto:
+          la empresa recibe el resultado y el estudiante una <b>constancia verificable</b> para su CV.</p>
+      </section>
+
+      <h2 class="mt">El ciclo completo</h2>
+      <p class="muted small">Ocho pasos, del problema a la constancia.</p>
+      <ol class="ciclo">
+        ${[
+          ['La empresa plantea', 'Describe su necesidad y la envía a la UPN.'],
+          ['La UPN revisa', 'Publica el reto, o lo devuelve con observaciones.'],
+          ['Los estudiantes postulan', 'Con su porcentaje de compatibilidad a la vista.'],
+          ['Se arma el equipo', 'Por ranking de habilidades, cubriendo todo lo que el reto pide.'],
+          ['Se asigna un mentor', 'Un docente del área, con cupo disponible.'],
+          ['Se ejecuta', 'Hitos semanales, bitácora y revisión del mentor.'],
+          ['Se evalúa', 'Mentor y empresa califican con la misma rúbrica.'],
+          ['Se emite la constancia', 'Con código único que cualquiera puede verificar.']
+        ].map(function (x) {
+          return h`<li><b>${x[0]}</b><span>${x[1]}</span></li>`;
+        })}
+      </ol>
+
+      <h2 class="mt">Según tu rol</h2>
+      <div class="tabs">
+        ${GUIA_ROLES.map(function (g) {
+          return h`<a class="tab ${rolSel === g.rol ? 'is-on' : ''}" href="#/ayuda?rol=${g.rol}">
+            ${CFG.ROLES[g.rol].icono} ${CFG.ROLES[g.rol].label}</a>`;
+        })}
       </div>
-      <div class="steps mt">
-        <div class="step"><h3>5. Ejecución</h3><p>Hitos semanales, bitácora de horas y avances, y revisión del mentor en cada entrega parcial.</p></div>
-        <div class="step"><h3>6. Entrega final</h3><p>El equipo entrega el resultado con sus enlaces y documentación.</p></div>
-        <div class="step"><h3>7. Evaluación doble</h3><p>El mentor evalúa el proceso y la empresa el resultado, ambos con la misma rúbrica de 5 criterios.</p></div>
-        <div class="step"><h3>8. Constancia</h3><p>Con ambas aprobaciones, la coordinación emite la constancia con código verificable y se suma al portafolio.</p></div>
+
+      <div class="card">
+        <h3 style="margin-bottom:.2rem">${bloque.titulo}</h3>
+        <p class="small muted">${bloque.resumen}</p>
+        <ol class="ciclo ciclo--simple mt-sm">
+          ${bloque.pasos.map(function (x) { return h`<li><b>${x[0]}</b><span>${x[1]}</span></li>`; })}
+        </ol>
+        <p class="small mt"><b>Dónde lo encuentras:</b></p>
+        <div class="chips">${bloque.donde.map(function (d) { return h`<span class="chip chip--brand">${d}</span>`; })}</div>
       </div>
+
+      <h2 class="mt">Probar la demostración</h2>
+      <p class="muted small">Cada cuenta entra con una acción del ciclo esperando. Recorriéndolas en
+        orden se ve el programa completo, de principio a fin.</p>
+      <div class="panel"><ul class="list">
+        ${Auth.cuentasDemo().map(function (c, i) {
+          return h`<li><div class="listitem">
+            <span class="avatar avatar--sm" aria-hidden="true">${i + 1}</span>
+            <span class="listitem__main">
+              <span class="listitem__t">${c.accion}</span>
+              <span class="listitem__s">${CFG.ROLES[c.user.rol].icono} ${c.detalle}</span>
+            </span>
+            <span class="listitem__end"><button class="btn btn--ghost btn--sm" data-action="auth:demo" data-id="${c.user.id}">Entrar</button></span>
+          </div></li>`;
+        })}
+      </ul></div>
 
       <h2 class="mt">Preguntas frecuentes</h2>
       <div class="stack">
         ${[
-          { q: '¿Cuánto cuesta para la empresa?', a: 'Nada. Es parte de la vinculación de la UPN con su entorno. La empresa aporta su tiempo para las reuniones y la información que el equipo necesita.' },
+          { q: '¿Cuánto le cuesta a la empresa?', a: 'Nada. Es parte de la vinculación de la UPN con su entorno. La empresa aporta su tiempo para las reuniones y la información que el equipo necesita.' },
           { q: '¿Cuántas horas dedica el estudiante?', a: 'Entre 8 y 12 horas por semana según el reto, durante 2 a 4 semanas. Cada reto lo indica antes de postular.' },
-          { q: '¿Puedo tener dos microproyectos a la vez?', a: 'No. Solo se permite uno activo por estudiante, para asegurar que el compromiso con la empresa se cumpla.' },
+          { q: '¿Puedo tener dos microproyectos a la vez?', a: 'No. Solo uno activo por estudiante, para asegurar que el compromiso con la empresa se cumpla.' },
+          { q: '¿Cómo se elige a los estudiantes?', a: 'Por un puntaje de 0 a 100 que pesa habilidades, nivel declarado, disponibilidad, afinidad con la carrera, ciclo y desempeño previo. El puntaje siempre se muestra desglosado: nadie queda seleccionado sin que se vea por qué.' },
           { q: '¿Qué pasa si la entrega no cumple?', a: 'El mentor o la empresa pueden observarla. El proyecto vuelve a ejecución y el equipo corrige antes de volver a enviarla.' },
-          { q: '¿La constancia sirve para mi CV?', a: 'Sí. Incluye la empresa, el periodo, las horas, las competencias acreditadas y un código que cualquier reclutador puede verificar en línea.' },
-          { q: '¿Quién es el docente mentor?', a: 'Un docente UPN del área del reto. Revisa cada hito, orienta al equipo y responde por la calidad académica del trabajo.' }
+          { q: '¿La constancia sirve para mi CV?', a: 'Sí. Incluye la empresa, el periodo, las horas, las competencias acreditadas y un código que cualquier reclutador puede verificar en línea, sin cuenta.' },
+          { q: '¿Los datos son reales?', a: 'No. Es una demostración con empresas y estudiantes de ejemplo, y todo se guarda solo en tu navegador. Puedes crear, modificar y borrar sin miedo: en Ajustes se restauran los datos originales.' }
         ].map(function (f) {
           return h`<div class="card"><h3 style="margin-bottom:.25rem">${f.q}</h3><p class="small muted mb0">${f.a}</p></div>`;
         })}
+      </div>
+
+      <div class="card mt center">
+        <h3>¿Listo para probarlo?</h3>
+        <a class="btn btn--primary btn--lg" href="#/ingresar">Entrar con una cuenta demo</a>
       </div>
     </div>`;
   };

@@ -65,7 +65,7 @@ window.Router = (function () {
           { href: '#/', icono: 'inicio', label: 'Inicio', corto: 'Inicio' },
           { href: '#/retos', icono: 'retos', label: 'Retos abiertos', corto: 'Retos' },
           { href: '#/verificar', icono: 'escudo', label: 'Verificar constancia', corto: 'Verificar' },
-          { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona', corto: 'Ayuda' }
+          { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso', corto: 'Guía' }
         ], secundaria: []
       };
     }
@@ -79,7 +79,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil y portafolio' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     if (rol === 'empresa') return {
@@ -92,7 +92,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'edificio', label: 'Datos de la empresa' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     if (rol === 'mentor') return {
@@ -104,7 +104,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     return {
@@ -118,7 +118,7 @@ window.Router = (function () {
       secundaria: comun.concat([
         { href: '#/reportes', icono: 'grafico', label: 'Reportes' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
   }
@@ -235,6 +235,15 @@ window.Router = (function () {
     window.scrollTo(0, 0);
     var h1 = cont.querySelector('h1');
     if (h1) { h1.setAttribute('tabindex', '-1'); }
+
+    /* En móvil las pestañas se desplazan; si la activa quedó fuera de vista,
+       la persona cree que está en otra sección. */
+    cont.querySelectorAll('.tabs').forEach(function (tabs) {
+      var activa = tabs.querySelector('.is-on, [aria-current="page"]');
+      if (!activa) return;
+      var dx = activa.offsetLeft - tabs.clientWidth / 2 + activa.offsetWidth / 2;
+      if (dx > 0) tabs.scrollLeft = dx;
+    });
   }
 
   function start() {

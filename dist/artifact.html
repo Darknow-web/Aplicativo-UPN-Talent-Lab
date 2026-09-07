@@ -250,7 +250,13 @@ hr{border:0;border-top:1px solid var(--border);margin:1.25rem 0}
 /* En pantallas angostas la etiqueta de estado baja a su propia línea
    para que el título use todo el ancho disponible. */
 @media (max-width:559px){
-  .card__head>.chip,.card__head>.match{flex:1 0 100%;order:3;margin-top:-.2rem}
+  /* La etiqueta de estado baja a su propia línea para que el título use todo el
+     ancho. El salto lo produce un ::after de ancho completo y altura cero,
+     colocado por `order` entre el texto y la etiqueta. Solo se genera cuando
+     hay etiqueta; si el navegador no soporta :has(), la regla se ignora y la
+     etiqueta simplemente queda en línea, como antes. */
+  .card__head:has(> .chip, > .match)::after{content:"";flex-basis:100%;height:0;order:2}
+  .card__head>.chip,.card__head>.match{order:3;margin-top:-.25rem}
 }
 .card__title{font-size:1.02rem;font-weight:700;margin:0;letter-spacing:-.01em}
 .card__body{padding:1.05rem}
@@ -511,6 +517,81 @@ table.tbl tr:last-child td{border-bottom:0}
 .demobtn:hover{border-color:var(--lucuma);background:var(--crema-soft)}
 .demobtn b{display:block;font-size:.9rem}
 .demobtn span{display:block;font-size:.76rem;color:var(--text-soft)}
+
+
+/* ---------- Próximas acciones ----------
+   La primera cosa que ve cada rol al entrar: qué puede hacer ahora mismo. */
+.acciones{
+  background:linear-gradient(150deg, var(--crema-soft), var(--surface) 70%);
+  border:1px solid var(--crema); border-radius:var(--r-lg);
+  padding:.9rem; margin-bottom:1.1rem;
+}
+.acciones__t{
+  display:flex; align-items:center; gap:.45rem;
+  font-size:.9rem; margin:0 0 .65rem; color:var(--bronce);
+}
+.acciones__l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+.accion{
+  display:flex; align-items:center; gap:.7rem; text-decoration:none; color:inherit;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:.7rem .8rem; min-height:56px;
+  transition:border-color .15s, transform .1s, box-shadow .15s;
+}
+.accion:hover{border-color:var(--bronce); transform:translateX(2px)}
+.accion:active{transform:translateX(0)}
+.accion--on{border-color:var(--lucuma); box-shadow:0 2px 12px rgba(249,178,41,.2)}
+.accion__n{font-size:1.2rem;line-height:1;flex:none}
+.accion__t{flex:1;min-width:0;font-size:.89rem;font-weight:600;line-height:1.35}
+.accion__b{
+  display:block; margin-top:.15rem; font-size:.76rem; font-weight:700;
+  color:var(--bronce); text-transform:uppercase; letter-spacing:.05em;
+}
+.accion__v{flex:none;color:var(--text-soft);transform:rotate(180deg);display:flex}
+@media (min-width:600px){ .acciones{padding:1.1rem} }
+.demobtn .tiny{color:var(--text-soft);margin-top:.1rem}
+
+/* ---------- Ajustes de densidad en pantallas pequeñas ----------
+   Menos aire y tipografías algo más contenidas para que quepa más
+   información útil sin que se sienta apretado. */
+@media (max-width:599px){
+  .card{padding:.9rem}
+  .panel__body{padding:.9rem}
+  .panel__head{padding:.75rem .9rem}
+  .listitem{padding:.7rem .9rem}
+  .page-head{margin-bottom:.9rem}
+  .page-head__txt p{font-size:.88rem}
+  .grid{gap:.75rem}
+  .stack{gap:.75rem}
+  .stat{padding:.75rem}
+  .stat__v{font-size:1.45rem}
+  .stat__k{font-size:.68rem;letter-spacing:.04em}
+  .chips{gap:.3rem}
+  .chip{font-size:.74rem;padding:.2rem .5rem}
+  h2{margin-bottom:.35rem}
+  .hero{padding:1.25rem 1.1rem;border-radius:var(--r-lg)}
+  .hero__kpis{gap:1rem;margin-top:1.1rem;padding-top:.9rem}
+  .hero__kpi b{font-size:1.2rem}
+  .steps{gap:.7rem}
+  .step{padding:.9rem}
+  .timeline>li{padding-bottom:.9rem}
+}
+
+
+/* ---------- Ciclo numerado (guía) ---------- */
+.ciclo{counter-reset:c;list-style:none;margin:.6rem 0 0;padding:0;display:grid;gap:.55rem}
+@media (min-width:760px){ .ciclo{grid-template-columns:1fr 1fr} }
+.ciclo--simple{grid-template-columns:1fr!important}
+.ciclo>li{
+  counter-increment:c; position:relative; padding:.7rem .85rem .7rem 2.9rem;
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md);
+}
+.ciclo>li::before{
+  content:counter(c); position:absolute; left:.7rem; top:.7rem;
+  width:26px; height:26px; border-radius:9px; display:grid; place-items:center;
+  background:var(--crema); color:var(--grafito-900); font-weight:800; font-size:.8rem;
+}
+.ciclo>li b{display:block;font-size:.9rem}
+.ciclo>li span{display:block;font-size:.83rem;color:var(--text-soft);line-height:1.4}
 
 /* ---------- 9. Toast y modal ---------- */
 .toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 12px);z-index:90;display:flex;flex-direction:column;gap:.5rem;width:min(94vw,420px);pointer-events:none}
@@ -1397,6 +1478,30 @@ window.SEED = (function () {
         habilidadesDeseables: ['copy', 'canva'],
         semanas: 3, horasSemana: 8, tamanoEquipo: 2, modalidad: 'remoto',
         fechaLimitePostulacion: d(20), creado: iso(-1)
+      }),
+      reto({
+        id: 'r9', codigo: 'RET-2026-0009', empresaId: 'u_emp3', estado: 'en_ejecucion', categoria: 'comunicacion',
+        titulo: 'Catálogo digital para vender a tiendas mayoristas',
+        problema: 'Cuando una tienda de Lima nos pide precios les mandamos fotos sueltas por WhatsApp y una lista en Word. Se ve improvisado y varias veces nos han dicho que no entienden qué modelos y talles tenemos.',
+        resultado: 'Un catálogo en PDF ordenado, con fotos, códigos, talles y precios mayoristas, que podamos enviar por correo o WhatsApp.',
+        entregables: ['Catálogo en PDF de 20 páginas', 'Fichas de 40 productos con código', 'Plantilla editable para actualizarlo', 'Guion de presentación para vendedoras'],
+        habilidadesRequeridas: [{ skill: 'contenido', peso: 3, nivelMin: 3 }, { skill: 'canva', peso: 3, nivelMin: 3 },
+                                { skill: 'fotografia', peso: 2, nivelMin: 3 }, { skill: 'copy', peso: 2, nivelMin: 3 }],
+        habilidadesDeseables: ['branding', 'ventas'],
+        semanas: 3, horasSemana: 10, tamanoEquipo: 2, modalidad: 'remoto',
+        fechaLimitePostulacion: d(-24), creado: iso(-40), publicado: iso(-38)
+      }),
+      reto({
+        id: 'r10', codigo: 'RET-2026-0010', empresaId: 'u_emp4', estado: 'en_ejecucion', categoria: 'negocios',
+        titulo: 'Revisar precios y márgenes de los productos más vendidos',
+        problema: 'Tenemos más de 900 productos y ponemos los precios por costumbre. Sospechamos que en algunos de los que más vendemos casi no ganamos, pero nunca lo hemos calculado.',
+        resultado: 'Saber cuánto deja realmente cada producto de los que más rotan y tener una propuesta de precios sustentada.',
+        entregables: ['Análisis de margen de los 40 productos más vendidos', 'Propuesta de nueva lista de precios', 'Hoja de cálculo para mantenerlo'],
+        habilidadesRequeridas: [{ skill: 'costos', peso: 3, nivelMin: 3 }, { skill: 'excel', peso: 3, nivelMin: 3 },
+                                { skill: 'ventas', peso: 2, nivelMin: 3 }],
+        habilidadesDeseables: ['finanzas', 'atencion'],
+        semanas: 2, horasSemana: 8, tamanoEquipo: 1, modalidad: 'hibrido',
+        fechaLimitePostulacion: d(-30), creado: iso(-46), publicado: iso(-44)
       })
     ];
 
@@ -1523,7 +1628,85 @@ window.SEED = (function () {
       evaluaciones: []
     };
 
-    var proyectos = [pr1, pr2];
+    /* pr3: la entrega final ya llegó y está esperando las dos evaluaciones.
+       Permite probar "evaluar" desde la empresa y desde el mentor sin pasos previos. */
+    var inicio3 = d(-24), fin3 = d(-3);
+    var pr3 = {
+      id: 'pr3', codigo: 'PRY-2026-0003', retoId: 'r9', empresaId: 'u_emp3', mentorId: 'u_men2',
+      estudianteIds: ['u_est6', 'u_est2'], liderId: 'u_est6', coordinadorId: 'u_coord1',
+      inicio: inicio3, fin: fin3, semanas: 3, estado: 'en_validacion', creado: iso(-25),
+      hitos: hitos(3, inicio3, [
+        { estado: 'aprobado', at: iso(-17), evidencia: 'https://drive.google.com/kuntur-diagnostico',
+          feedback: 'Buen inventario de modelos. Ordenen los talles con el mismo criterio en todas las fichas.' },
+        { estado: 'aprobado', at: iso(-10), evidencia: 'https://figma.com/kuntur-catalogo-propuesta',
+          feedback: 'La diagramación quedó clara y la marca se lee bien. Aprobado.' },
+        { estado: 'aprobado', at: iso(-3), evidencia: 'https://drive.google.com/kuntur-catalogo-final',
+          feedback: 'Entrega completa. Buen trabajo con las fotos sobre fondo neutro.' }
+      ]),
+      bitacora: [
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'reunion', semana: 1, horas: 2, at: iso(-23), visibleEmpresa: true,
+          texto: 'Reunión de arranque con Elena. Definimos que el catálogo va dirigido a tiendas mayoristas de Lima, no a clientes finales, así que los precios que van son los de por mayor.' },
+        { id: U.uid('b'), autorId: 'u_est2', tipo: 'avance', semana: 2, horas: 7, at: iso(-14), visibleEmpresa: true,
+          texto: 'Sesión de fotos de 40 prendas sobre fondo neutro. Usamos luz natural junto a la ventana del taller y una tabla de madera prestada. 118 tomas, 40 seleccionadas.' },
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'decision', semana: 2, horas: 3, at: iso(-12), visibleEmpresa: true,
+          texto: 'Acordamos codificar los productos por línea y talla (KUN-CH-01) para que la ficha coincida con lo que ya usan en el cuaderno de producción.' },
+        { id: U.uid('b'), autorId: 'u_est6', tipo: 'entrega', semana: 3, horas: 4, at: iso(-3), visibleEmpresa: true,
+          texto: 'Entregamos el catálogo en PDF, las 40 fichas y la plantilla editable. Capacitamos a las dos vendedoras en cómo actualizarlo cuando salga un modelo nuevo.' }
+      ],
+      entregaFinal: {
+        titulo: 'Catálogo mayorista + fichas de 40 productos',
+        resumen: 'Se produjo un catálogo de 20 páginas con fotografía propia, códigos por línea y talla, y precios mayoristas. Se entregó además la plantilla editable y se capacitó a las vendedoras para mantenerlo actualizado sin depender del equipo.',
+        enlaces: [
+          { label: 'Catálogo en PDF', url: 'https://drive.google.com/kuntur-catalogo-final' },
+          { label: 'Fichas de producto', url: 'https://drive.google.com/kuntur-fichas' },
+          { label: 'Plantilla editable', url: 'https://canva.com/kuntur-plantilla' }
+        ],
+        at: iso(-3), porId: 'u_est6'
+      },
+      evaluaciones: []
+    };
+
+    /* pr4: mentor y empresa ya aprobaron. Solo falta que la coordinación
+       emita las constancias, que es el último paso del ciclo. */
+    var inicio4 = d(-30), fin4 = d(-16);
+    var pr4 = {
+      id: 'pr4', codigo: 'PRY-2026-0004', retoId: 'r10', empresaId: 'u_emp4', mentorId: 'u_men1',
+      estudianteIds: ['u_est7'], liderId: 'u_est7', coordinadorId: 'u_coord1',
+      inicio: inicio4, fin: fin4, semanas: 2, estado: 'aprobado', creado: iso(-31),
+      hitos: hitos(2, inicio4, [
+        { estado: 'aprobado', at: iso(-23), evidencia: 'https://docs.google.com/ferretero-diagnostico',
+          feedback: 'Buen levantamiento de costos. Confirmen con Óscar el flete que no estaba considerado.' },
+        { estado: 'aprobado', at: iso(-16), evidencia: 'https://docs.google.com/ferretero-precios',
+          feedback: 'Análisis sólido y bien explicado para alguien sin formación contable.' }
+      ]),
+      bitacora: [
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'reunion', semana: 1, horas: 3, at: iso(-29), visibleEmpresa: true,
+          texto: 'Visita a la tienda de San Juan de Lurigancho. Óscar me pasó las facturas de compra de los últimos tres meses y la lista de los productos que más salen.' },
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'bloqueo', semana: 1, horas: 2, at: iso(-26), visibleEmpresa: false,
+          texto: 'Las facturas no incluían el flete, que se paga aparte. Sin eso el margen salía inflado. Lo resolvimos estimándolo por viaje según el volumen.' },
+        { id: U.uid('b'), autorId: 'u_est7', tipo: 'entrega', semana: 2, horas: 5, at: iso(-16), visibleEmpresa: true,
+          texto: 'Entregué el análisis de los 40 productos que más rotan. Cuatro de ellos se estaban vendiendo por debajo del costo real una vez incluido el flete.' }
+      ],
+      entregaFinal: {
+        titulo: 'Análisis de márgenes y propuesta de precios',
+        resumen: 'Se calculó el costo real de los 40 productos de mayor rotación incluyendo el flete, que no se estaba considerando. Se detectaron cuatro productos vendidos por debajo del costo y se entregó una propuesta de precios con la hoja de cálculo para mantenerla.',
+        enlaces: [
+          { label: 'Análisis de márgenes', url: 'https://docs.google.com/ferretero-precios' },
+          { label: 'Propuesta de lista de precios', url: 'https://docs.google.com/ferretero-lista' }
+        ],
+        at: iso(-16), porId: 'u_est7'
+      },
+      evaluaciones: [
+        { id: U.uid('ev'), rol: 'mentor', evaluadorId: 'u_men1', at: iso(-15), decision: 'aprobado',
+          criterios: { cumplimiento: 5, calidad: 4, comunicacion: 5, autonomia: 5, impacto: 5 },
+          comentario: 'Lucía trabajó con mucha autonomía y supo explicarle los números al dueño en su lenguaje, que es lo más difícil de este tipo de encargos.' },
+        { id: U.uid('ev'), rol: 'empresa', evaluadorId: 'u_emp4', at: iso(-14), decision: 'aprobado',
+          criterios: { cumplimiento: 5, calidad: 5, comunicacion: 4, autonomia: 5, impacto: 5 },
+          comentario: 'No sabíamos que había productos que vendíamos perdiendo plata. Ya subimos esos cuatro precios y nadie se quejó. Muy útil.' }
+      ]
+    };
+
+    var proyectos = [pr1, pr2, pr3, pr4];
 
     /* ---------------- Constancias ---------------- */
     function constancia(o) { return o; }
@@ -1583,7 +1766,7 @@ window.SEED = (function () {
     ];
 
     return {
-      meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 8, proyecto: 2, constancia: 2 } },
+      meta: { schema: CFG.SCHEMA, creada: new Date().toISOString(), contadores: { reto: 10, proyecto: 4, constancia: 2 } },
       users: users, retos: retos, postulaciones: postulaciones, proyectos: proyectos,
       constancias: constancias, notificaciones: notificaciones, auditoria: []
     };
@@ -1761,17 +1944,20 @@ window.Auth = (function () {
     }
   }
 
+  /* Cada cuenta demo está elegida para que, al entrar, haya una acción
+     concreta del ciclo esperando. Entre todas se recorre el flujo completo. */
   function cuentasDemo() {
     return [
-      { id: 'u_est1', desc: 'Estudiante con proyecto terminado y constancia' },
-      { id: 'u_est3', desc: 'Estudiante con proyecto en ejecución' },
-      { id: 'u_emp2', desc: 'Empresa con proyecto activo' },
-      { id: 'u_emp5', desc: 'Empresa con reto en revisión' },
-      { id: 'u_men3', desc: 'Mentor con un hito por revisar' },
-      { id: 'u_coord1', desc: 'Coordinación: revisar retos y armar equipos' }
+      { id: 'u_est1', accion: 'Postular a un reto',        detalle: 'Estudiante libre, ya tiene una constancia' },
+      { id: 'u_est3', accion: 'Entregar un hito',          detalle: 'Estudiante con proyecto en marcha' },
+      { id: 'u_emp5', accion: 'Enviar un reto a la UPN',   detalle: 'Empresa con un reto en revisión' },
+      { id: 'u_emp3', accion: 'Evaluar el resultado',      detalle: 'Empresa que ya recibió su entrega' },
+      { id: 'u_men3', accion: 'Revisar un hito',           detalle: 'Docente con trabajo por revisar' },
+      { id: 'u_men2', accion: 'Evaluar una entrega final', detalle: 'Docente que acompañó un proyecto' },
+      { id: 'u_coord1', accion: 'Armar equipo y emitir constancias', detalle: 'Coordinación UPN' }
     ].map(function (c) {
       var u = Store.find('users', c.id);
-      return u ? { user: u, desc: c.desc } : null;
+      return u ? { user: u, accion: c.accion, detalle: c.detalle } : null;
     }).filter(Boolean);
   }
 
@@ -2969,6 +3155,124 @@ window.C = (function () {
     </a>`;
   }
 
+
+  /* ---------- Próximas acciones ----------
+     Calcula qué puede hacer AHORA el usuario según el estado real de sus datos
+     y lo muestra como pasos con botón directo. Es lo que evita que alguien
+     entre y no sepa por dónde empezar. */
+  function proximasAcciones(u) {
+    var a = [];
+    if (!u) return a;
+
+    if (u.rol === 'estudiante') {
+      var proys = M.proyectosDe(u.id);
+      var activo = proys.filter(function (p) { return p.estado === 'en_curso'; })[0];
+      if (activo) {
+        var hito = (activo.hitos || []).filter(function (h) {
+          return h.estado === 'pendiente' || h.estado === 'observado';
+        })[0];
+        if (hito) {
+          a.push({ ico: '📤', txt: hito.estado === 'observado'
+              ? 'Corregir el hito “' + hito.titulo + '”, tu mentor pidió cambios'
+              : 'Entregar el hito “' + hito.titulo + '”',
+            btn: 'Ir al hito', href: '#/proyecto/' + activo.id + '?tab=hitos', destacado: true });
+        } else if (!activo.entregaFinal) {
+          a.push({ ico: '📦', txt: 'Todos tus hitos están aprobados: envía la entrega final',
+            btn: 'Enviar entrega', href: '#/proyecto/' + activo.id + '?tab=entrega', destacado: true });
+        }
+        a.push({ ico: '📓', txt: 'Registra tus horas y avances en la bitácora',
+          btn: 'Escribir', href: '#/proyecto/' + activo.id + '?tab=bitacora' });
+      } else {
+        var mejor = Matching.retosPara(u.id)[0];
+        if (mejor) {
+          a.push({ ico: '🎯', txt: 'Postula al reto que mejor calza contigo: “' +
+              U.truncar(mejor.reto.titulo, 42) + '” (' + mejor.match.total + '% de compatibilidad)',
+            btn: 'Ver el reto', href: '#/reto/' + mejor.reto.id, destacado: true });
+        }
+      }
+      if ((u.habilidades || []).length < 3) {
+        a.push({ ico: '✨', txt: 'Agrega tus habilidades para recibir mejores recomendaciones',
+          btn: 'Completar perfil', href: '#/perfil' });
+      }
+      if (M.constanciasDe(u.id).filter(function (c) { return c.estado === 'vigente'; }).length) {
+        a.push({ ico: '🏅', txt: 'Descarga tu constancia o comparte tu portafolio',
+          btn: 'Ver constancias', href: '#/constancias' });
+      }
+    }
+
+    if (u.rol === 'empresa') {
+      var mios = Store.where('retos', function (r) { return r.empresaId === u.id; });
+      var borrador = mios.filter(function (r) { return ['borrador', 'observado'].indexOf(r.estado) !== -1; })[0];
+      var porEvaluar = M.proyectosDe(u.id).filter(function (p) { return Auth.can('evaluar:empresa', p); })[0];
+      var enCurso = M.proyectosDe(u.id).filter(function (p) { return p.estado === 'en_curso'; })[0];
+
+      if (porEvaluar) a.push({ ico: '⭐', txt: 'Recibiste una entrega: revísala y evalúala',
+        btn: 'Evaluar', href: '#/proyecto/' + porEvaluar.id + '?tab=evaluacion', destacado: true });
+      if (borrador) a.push({ ico: '📝', txt: borrador.estado === 'observado'
+          ? 'La UPN dejó observaciones en “' + U.truncar(borrador.titulo, 34) + '”'
+          : 'Tienes un reto sin enviar a revisión',
+        btn: 'Continuar', href: '#/reto/' + borrador.id, destacado: !porEvaluar });
+      if (!mios.length) a.push({ ico: '🚀', txt: 'Publica tu primera necesidad y la UPN te propondrá un equipo',
+        btn: 'Publicar reto', href: '#/reto/nuevo', destacado: true });
+      if (enCurso) a.push({ ico: '📈', txt: 'Sigue el avance del equipo que trabaja para ti',
+        btn: 'Ver avance', href: '#/proyecto/' + enCurso.id });
+      if (!borrador && mios.length) a.push({ ico: '➕', txt: 'Publica otra necesidad',
+        btn: 'Nuevo reto', href: '#/reto/nuevo' });
+    }
+
+    if (u.rol === 'mentor') {
+      var asignados = M.proyectosDe(u.id);
+      var conHito = null, hitoPend = null;
+      asignados.forEach(function (p) {
+        (p.hitos || []).forEach(function (h) {
+          if (h.estado === 'entregado' && !conHito) { conHito = p; hitoPend = h; }
+        });
+      });
+      var evaluar = asignados.filter(function (p) { return Auth.can('evaluar:mentor', p); })[0];
+      if (conHito) a.push({ ico: '🔍', txt: 'Un equipo entregó “' + hitoPend.titulo + '”: apruébalo o pide cambios',
+        btn: 'Revisar', href: '#/proyecto/' + conHito.id + '?tab=hitos', destacado: true });
+      if (evaluar) a.push({ ico: '⭐', txt: 'Hay una entrega final esperando tu evaluación',
+        btn: 'Evaluar', href: '#/proyecto/' + evaluar.id + '?tab=evaluacion', destacado: !conHito });
+      if (!conHito && !evaluar) a.push({ ico: '✅', txt: 'No tienes pendientes. Revisa cómo van tus equipos',
+        btn: 'Ver proyectos', href: '#/proyectos' });
+    }
+
+    if (u.rol === 'coordinador') {
+      var revisar = Store.where('retos', function (r) { return r.estado === 'en_revision'; })[0];
+      var armar = Store.where('retos', function (r) { return r.estado === 'en_seleccion'; })[0];
+      var certificar = Store.where('proyectos', function (p) { return p.estado === 'aprobado'; })[0];
+      if (revisar) a.push({ ico: '📋', txt: 'Una empresa envió “' + U.truncar(revisar.titulo, 36) + '” para revisión',
+        btn: 'Revisar', href: '#/reto/' + revisar.id, destacado: true });
+      if (armar) a.push({ ico: '🎯', txt: 'Un reto cerró postulaciones: arma el equipo',
+        btn: 'Conformar', href: '#/matching/' + armar.id, destacado: !revisar });
+      if (certificar) a.push({ ico: '🏅', txt: 'Un proyecto fue aprobado: emite las constancias',
+        btn: 'Emitir', href: '#/proyecto/' + certificar.id + '?tab=evaluacion', destacado: !revisar && !armar });
+      if (!revisar && !armar && !certificar) a.push({ ico: '✅', txt: 'Bandeja al día. Revisa los proyectos en marcha',
+        btn: 'Ver proyectos', href: '#/proyectos' });
+    }
+
+    return a;
+  }
+
+  function tarjetaAcciones(u) {
+    var acc = proximasAcciones(u);
+    if (!acc.length) return h``;
+    return h`<section class="acciones" aria-label="Qué puedes hacer ahora">
+      <h2 class="acciones__t">${icono('brujula', 18)} ¿Qué puedes hacer ahora?</h2>
+      <ol class="acciones__l">
+        ${acc.slice(0, 4).map(function (x) {
+          return h`<li>
+            <a class="accion ${x.destacado ? 'accion--on' : ''}" href="${x.href}">
+              <span class="accion__n" aria-hidden="true">${x.ico}</span>
+              <span class="accion__t">${x.txt}<span class="accion__b">${x.btn}</span></span>
+              <span class="accion__v" aria-hidden="true">${icono('volver', 16)}</span>
+            </a>
+          </li>`;
+        })}
+      </ol>
+    </section>`;
+  }
+
   return {
     icono: icono, avatar: avatar, persona: persona, chipRol: chipRol,
     chipReto: chipReto, chipProyecto: chipProyecto, chipHito: chipHito,
@@ -2976,7 +3280,8 @@ window.C = (function () {
     progreso: progreso, medidor: medidor, anilloMatch: anilloMatch, desgloseMatch: desgloseMatch,
     estrellas: estrellas, vacio: vacio, stat: stat, aviso: aviso, volver: volver, pageHead: pageHead,
     campo: campo, checkHabilidades: checkHabilidades, selectorEstrellas: selectorEstrellas,
-    cardReto: cardReto, cardProyecto: cardProyecto
+    cardReto: cardReto, cardProyecto: cardProyecto,
+    proximasAcciones: proximasAcciones, tarjetaAcciones: tarjetaAcciones
   };
 })();
 
@@ -3048,7 +3353,7 @@ window.Router = (function () {
           { href: '#/', icono: 'inicio', label: 'Inicio', corto: 'Inicio' },
           { href: '#/retos', icono: 'retos', label: 'Retos abiertos', corto: 'Retos' },
           { href: '#/verificar', icono: 'escudo', label: 'Verificar constancia', corto: 'Verificar' },
-          { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona', corto: 'Ayuda' }
+          { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso', corto: 'Guía' }
         ], secundaria: []
       };
     }
@@ -3062,7 +3367,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil y portafolio' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     if (rol === 'empresa') return {
@@ -3075,7 +3380,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'edificio', label: 'Datos de la empresa' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     if (rol === 'mentor') return {
@@ -3087,7 +3392,7 @@ window.Router = (function () {
       ],
       secundaria: comun.concat([
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
     return {
@@ -3101,7 +3406,7 @@ window.Router = (function () {
       secundaria: comun.concat([
         { href: '#/reportes', icono: 'grafico', label: 'Reportes' },
         { href: '#/perfil', icono: 'usuario', label: 'Mi perfil' },
-        { href: '#/ayuda', icono: 'ayuda', label: 'Cómo funciona' }
+        { href: '#/ayuda', icono: 'ayuda', label: 'Guía de uso' }
       ])
     };
   }
@@ -3218,6 +3523,15 @@ window.Router = (function () {
     window.scrollTo(0, 0);
     var h1 = cont.querySelector('h1');
     if (h1) { h1.setAttribute('tabindex', '-1'); }
+
+    /* En móvil las pestañas se desplazan; si la activa quedó fuera de vista,
+       la persona cree que está en otra sección. */
+    cont.querySelectorAll('.tabs').forEach(function (tabs) {
+      var activa = tabs.querySelector('.is-on, [aria-current="page"]');
+      if (!activa) return;
+      var dx = activa.offsetLeft - tabs.clientWidth / 2 + activa.offsetWidth / 2;
+      if (dx > 0) tabs.scrollLeft = dx;
+    });
   }
 
   function start() {
@@ -3321,6 +3635,24 @@ window.Vistas = window.Vistas || {};
         ${C.pageHead('Ingresar a Talent Lab', 'Usa una cuenta de demostración o entra con tu correo.')}
         <div class="split">
           <div class="card">
+            <h2 style="font-size:1.05rem">Probar sin registrarse</h2>
+            <p class="small muted">Un clic y entras. Cada cuenta tiene una acción del ciclo lista para probar;
+              entre todas se recorre el programa completo.</p>
+            <div class="demogrid">
+              ${cuentas.map(function (c) {
+                return h`<button class="demobtn" data-action="auth:demo" data-id="${c.user.id}">
+                  ${C.avatar(c.user)}
+                  <span style="min-width:0">
+                    <b>${c.accion}</b>
+                    <span>${CFG.ROLES[c.user.rol].icono} ${c.user.rol === 'empresa' ? (c.user.razonSocial || c.user.nombre) : c.user.nombre}</span>
+                    <span class="tiny">${c.detalle}</span>
+                  </span>
+                </button>`;
+              })}
+            </div>
+            <p class="tiny muted mt-sm mb0">Contraseña de todas las cuentas demo: <code>demo1234</code></p>
+          </div>
+          <div class="card">
             <h2 style="font-size:1.05rem">Entrar con mi cuenta</h2>
             <form data-action="auth:login">
               <input type="hidden" name="next" value="${q.next || '/'}">
@@ -3329,22 +3661,6 @@ window.Vistas = window.Vistas || {};
               <button class="btn btn--primary btn--block" type="submit">Ingresar</button>
             </form>
             <p class="small muted mt-sm mb0">¿No tienes cuenta? <a href="#/registro">Créala aquí</a>.</p>
-          </div>
-          <div class="card">
-            <h2 style="font-size:1.05rem">Cuentas de demostración</h2>
-            <p class="small muted">Un clic y entras. Cada una muestra el sistema desde un rol distinto.</p>
-            <div class="demogrid">
-              ${cuentas.map(function (c) {
-                return h`<button class="demobtn" data-action="auth:demo" data-id="${c.user.id}">
-                  ${C.avatar(c.user)}
-                  <span style="min-width:0">
-                    <b>${c.user.rol === 'empresa' ? (c.user.razonSocial || c.user.nombre) : c.user.nombre}</b>
-                    <span>${CFG.ROLES[c.user.rol].icono} ${c.desc}</span>
-                  </span>
-                </button>`;
-              })}
-            </div>
-            <p class="tiny muted mt-sm mb0">Contraseña de todas las cuentas demo: <code>demo1234</code></p>
           </div>
         </div>
       </div>`;
@@ -3510,35 +3826,140 @@ window.Vistas = window.Vistas || {};
     return { reto: '📋', postulacion: '📨', seleccion: '🎯', proyecto: '🚀', hito: '✅', evaluacion: '⭐', constancia: '🏅' }[t] || '🔔';
   }
 
-  /* ---------------- Ayuda ---------------- */
-  Vistas.ayuda = function () {
-    return h`<div style="max-width:860px;margin:0 auto">
-      ${C.pageHead('Cómo funciona UPN Talent Lab', 'El recorrido completo, explicado por rol.')}
-      <div class="steps">
-        <div class="step"><h3>1. La empresa plantea</h3><p>Describe su necesidad en lenguaje simple, indica qué espera recibir y cuántas semanas puede acompañar.</p></div>
-        <div class="step"><h3>2. La UPN revisa</h3><p>La coordinación verifica que el reto sea realizable en 2 a 4 semanas y lo publica, o pide ajustes.</p></div>
-        <div class="step"><h3>3. Los estudiantes postulan</h3><p>Ven su porcentaje de compatibilidad y postulan explicando por qué quieren participar.</p></div>
-        <div class="step"><h3>4. Se conforma el equipo</h3><p>La coordinación usa el ranking de compatibilidad, arma un equipo que cubra todas las habilidades y asigna un docente mentor.</p></div>
+  /* ---------------- Guía de uso ---------------- */
+  var GUIA_ROLES = [
+    {
+      rol: 'empresa', titulo: 'Si eres una empresa',
+      resumen: 'Planteas una necesidad concreta y recibes un resultado, sin costo y sin contratar a nadie.',
+      pasos: [
+        ['Publicar un reto', 'Describe tu problema en lenguaje simple, qué te gustaría recibir y cuántas semanas puedes acompañar. Un asistente de 3 pasos te guía.'],
+        ['Esperar la revisión', 'La coordinación de la UPN revisa que sea realizable en 2 a 4 semanas. Puede publicarlo o devolvértelo con observaciones para ajustarlo.'],
+        ['Recibir tu equipo', 'La universidad elige a los estudiantes y les asigna un docente. Te avisamos cuándo empieza.'],
+        ['Seguir el avance', 'Ves los hitos semana a semana y la bitácora del equipo, sin tener que estar pidiendo reportes.'],
+        ['Evaluar el resultado', 'Cuando llega la entrega final, la calificas con 5 criterios y decides si la apruebas o pides correcciones.']
+      ],
+      donde: ['Mi panel', 'Mis retos', 'Publicar reto', 'Mis proyectos', 'Talento UPN']
+    },
+    {
+      rol: 'estudiante', titulo: 'Si eres estudiante UPN',
+      resumen: 'Ganas experiencia real con una empresa y te llevas una constancia que cualquiera puede verificar.',
+      pasos: [
+        ['Completar tu perfil', 'Registra tus habilidades con su nivel del 1 al 5. De eso depende qué retos te recomendamos y a cuáles puedes postular.'],
+        ['Explorar oportunidades', 'Cada reto te muestra tu porcentaje de compatibilidad y por qué: qué habilidades cubres, tu disponibilidad, tu carrera.'],
+        ['Postular', 'Explicas en pocas líneas por qué quieres participar. Solo puedes tener un microproyecto a la vez.'],
+        ['Trabajar el proyecto', 'Entregas un hito por semana con el enlace a tu evidencia, y registras tus horas y avances en la bitácora.'],
+        ['Entregar y cerrar', 'Envías la entrega final. Cuando el mentor y la empresa aprueban, recibes tu constancia y se suma a tu portafolio.']
+      ],
+      donde: ['Mi panel', 'Oportunidades', 'Mis postulaciones', 'Mis proyectos', 'Constancias', 'Mi perfil y portafolio']
+    },
+    {
+      rol: 'mentor', titulo: 'Si eres docente o mentor',
+      resumen: 'Acompañas al equipo y respondes por la calidad académica del trabajo.',
+      pasos: [
+        ['Recibir la asignación', 'La coordinación te asigna según tu especialidad y tu carga actual de proyectos.'],
+        ['Revisar cada hito', 'El equipo entrega semanalmente. Apruebas o devuelves con un comentario concreto de qué corregir.'],
+        ['Acompañar en la bitácora', 'Dejas decisiones y orientaciones escritas, que quedan como respaldo del trabajo.'],
+        ['Evaluar la entrega final', 'Calificas con la rúbrica de 5 criterios y decides si el proyecto queda aprobado.']
+      ],
+      donde: ['Mi panel', 'Proyectos que acompaño', 'Estudiantes', 'Retos del programa']
+    },
+    {
+      rol: 'coordinador', titulo: 'Si eres de la coordinación UPN',
+      resumen: 'Controlas la calidad del programa de punta a punta.',
+      pasos: [
+        ['Revisar los retos', 'Publicas, devuelves con observaciones o rechazas lo que las empresas proponen.'],
+        ['Cerrar postulaciones', 'Cuando hay suficientes candidatos, cierras el reto y pasas a selección.'],
+        ['Conformar el equipo', 'Ves el ranking de compatibilidad con el detalle de cada puntaje, y el sistema te sugiere un equipo que cubra todas las habilidades del reto.'],
+        ['Asignar al docente', 'Con su afinidad al área y su carga actual a la vista.'],
+        ['Emitir constancias', 'Cuando mentor y empresa aprobaron, generas las constancias con código verificable y el proyecto queda cerrado.']
+      ],
+      donde: ['Panel de coordinación', 'Retos', 'Proyectos', 'Talento', 'Constancias', 'Reportes']
+    }
+  ];
+
+  Vistas.ayuda = function (p, q) {
+    var rolSel = q.rol || (Auth.actual() ? Auth.actual().rol : 'empresa');
+    var bloque = GUIA_ROLES.filter(function (g) { return g.rol === rolSel; })[0] || GUIA_ROLES[0];
+
+    return h`<div style="max-width:900px;margin:0 auto">
+      ${C.pageHead('Guía de uso', 'Qué hay dentro de la aplicación y cómo se usa, explicado por rol.')}
+
+      <section class="card card--accent">
+        <h2 style="font-size:1.05rem;margin-bottom:.3rem">En una frase</h2>
+        <p class="mb0">Una empresa plantea una necesidad concreta, la UPN elige a los estudiantes según sus
+          habilidades y en <b>2 a 4 semanas</b>, con un docente acompañando, el reto queda resuelto:
+          la empresa recibe el resultado y el estudiante una <b>constancia verificable</b> para su CV.</p>
+      </section>
+
+      <h2 class="mt">El ciclo completo</h2>
+      <p class="muted small">Ocho pasos, del problema a la constancia.</p>
+      <ol class="ciclo">
+        ${[
+          ['La empresa plantea', 'Describe su necesidad y la envía a la UPN.'],
+          ['La UPN revisa', 'Publica el reto, o lo devuelve con observaciones.'],
+          ['Los estudiantes postulan', 'Con su porcentaje de compatibilidad a la vista.'],
+          ['Se arma el equipo', 'Por ranking de habilidades, cubriendo todo lo que el reto pide.'],
+          ['Se asigna un mentor', 'Un docente del área, con cupo disponible.'],
+          ['Se ejecuta', 'Hitos semanales, bitácora y revisión del mentor.'],
+          ['Se evalúa', 'Mentor y empresa califican con la misma rúbrica.'],
+          ['Se emite la constancia', 'Con código único que cualquiera puede verificar.']
+        ].map(function (x) {
+          return h`<li><b>${x[0]}</b><span>${x[1]}</span></li>`;
+        })}
+      </ol>
+
+      <h2 class="mt">Según tu rol</h2>
+      <div class="tabs">
+        ${GUIA_ROLES.map(function (g) {
+          return h`<a class="tab ${rolSel === g.rol ? 'is-on' : ''}" href="#/ayuda?rol=${g.rol}">
+            ${CFG.ROLES[g.rol].icono} ${CFG.ROLES[g.rol].label}</a>`;
+        })}
       </div>
-      <div class="steps mt">
-        <div class="step"><h3>5. Ejecución</h3><p>Hitos semanales, bitácora de horas y avances, y revisión del mentor en cada entrega parcial.</p></div>
-        <div class="step"><h3>6. Entrega final</h3><p>El equipo entrega el resultado con sus enlaces y documentación.</p></div>
-        <div class="step"><h3>7. Evaluación doble</h3><p>El mentor evalúa el proceso y la empresa el resultado, ambos con la misma rúbrica de 5 criterios.</p></div>
-        <div class="step"><h3>8. Constancia</h3><p>Con ambas aprobaciones, la coordinación emite la constancia con código verificable y se suma al portafolio.</p></div>
+
+      <div class="card">
+        <h3 style="margin-bottom:.2rem">${bloque.titulo}</h3>
+        <p class="small muted">${bloque.resumen}</p>
+        <ol class="ciclo ciclo--simple mt-sm">
+          ${bloque.pasos.map(function (x) { return h`<li><b>${x[0]}</b><span>${x[1]}</span></li>`; })}
+        </ol>
+        <p class="small mt"><b>Dónde lo encuentras:</b></p>
+        <div class="chips">${bloque.donde.map(function (d) { return h`<span class="chip chip--brand">${d}</span>`; })}</div>
       </div>
+
+      <h2 class="mt">Probar la demostración</h2>
+      <p class="muted small">Cada cuenta entra con una acción del ciclo esperando. Recorriéndolas en
+        orden se ve el programa completo, de principio a fin.</p>
+      <div class="panel"><ul class="list">
+        ${Auth.cuentasDemo().map(function (c, i) {
+          return h`<li><div class="listitem">
+            <span class="avatar avatar--sm" aria-hidden="true">${i + 1}</span>
+            <span class="listitem__main">
+              <span class="listitem__t">${c.accion}</span>
+              <span class="listitem__s">${CFG.ROLES[c.user.rol].icono} ${c.detalle}</span>
+            </span>
+            <span class="listitem__end"><button class="btn btn--ghost btn--sm" data-action="auth:demo" data-id="${c.user.id}">Entrar</button></span>
+          </div></li>`;
+        })}
+      </ul></div>
 
       <h2 class="mt">Preguntas frecuentes</h2>
       <div class="stack">
         ${[
-          { q: '¿Cuánto cuesta para la empresa?', a: 'Nada. Es parte de la vinculación de la UPN con su entorno. La empresa aporta su tiempo para las reuniones y la información que el equipo necesita.' },
+          { q: '¿Cuánto le cuesta a la empresa?', a: 'Nada. Es parte de la vinculación de la UPN con su entorno. La empresa aporta su tiempo para las reuniones y la información que el equipo necesita.' },
           { q: '¿Cuántas horas dedica el estudiante?', a: 'Entre 8 y 12 horas por semana según el reto, durante 2 a 4 semanas. Cada reto lo indica antes de postular.' },
-          { q: '¿Puedo tener dos microproyectos a la vez?', a: 'No. Solo se permite uno activo por estudiante, para asegurar que el compromiso con la empresa se cumpla.' },
+          { q: '¿Puedo tener dos microproyectos a la vez?', a: 'No. Solo uno activo por estudiante, para asegurar que el compromiso con la empresa se cumpla.' },
+          { q: '¿Cómo se elige a los estudiantes?', a: 'Por un puntaje de 0 a 100 que pesa habilidades, nivel declarado, disponibilidad, afinidad con la carrera, ciclo y desempeño previo. El puntaje siempre se muestra desglosado: nadie queda seleccionado sin que se vea por qué.' },
           { q: '¿Qué pasa si la entrega no cumple?', a: 'El mentor o la empresa pueden observarla. El proyecto vuelve a ejecución y el equipo corrige antes de volver a enviarla.' },
-          { q: '¿La constancia sirve para mi CV?', a: 'Sí. Incluye la empresa, el periodo, las horas, las competencias acreditadas y un código que cualquier reclutador puede verificar en línea.' },
-          { q: '¿Quién es el docente mentor?', a: 'Un docente UPN del área del reto. Revisa cada hito, orienta al equipo y responde por la calidad académica del trabajo.' }
+          { q: '¿La constancia sirve para mi CV?', a: 'Sí. Incluye la empresa, el periodo, las horas, las competencias acreditadas y un código que cualquier reclutador puede verificar en línea, sin cuenta.' },
+          { q: '¿Los datos son reales?', a: 'No. Es una demostración con empresas y estudiantes de ejemplo, y todo se guarda solo en tu navegador. Puedes crear, modificar y borrar sin miedo: en Ajustes se restauran los datos originales.' }
         ].map(function (f) {
           return h`<div class="card"><h3 style="margin-bottom:.25rem">${f.q}</h3><p class="small muted mb0">${f.a}</p></div>`;
         })}
+      </div>
+
+      <div class="card mt center">
+        <h3>¿Listo para probarlo?</h3>
+        <a class="btn btn--primary btn--lg" href="#/ingresar">Entrar con una cuenta demo</a>
       </div>
     </div>`;
   };
@@ -3576,12 +3997,7 @@ window.Vistas = window.Vistas || {};
       ${C.pageHead('Hola, ' + u.nombre.split(' ')[0] + ' 👋', (u.razonSocial || '') + ' · ' + u.distrito,
         h`<a class="btn btn--primary" href="#/reto/nuevo">${C.icono('mas', 18)} Publicar un reto</a>`)}
 
-      ${porEvaluar.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '⭐',
-        raw('Tienes ' + porEvaluar.length + ' ' + U.plural(porEvaluar.length, 'entrega') + ' esperando tu evaluación. ' +
-        '<a href="#/proyecto/' + U.esc(porEvaluar[0].id) + '?tab=evaluacion"><b>Evaluar ahora</b></a>'))}</div>` : ''}
-      ${borradores.length ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '📝',
-        raw('Tienes ' + borradores.length + ' ' + U.plural(borradores.length, 'reto') + ' sin enviar a revisión. ' +
-        '<a href="#/reto/' + U.esc(borradores[0].id) + '"><b>Continuar</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Retos publicados', mios.filter(function (r) { return ['publicado', 'en_seleccion'].indexOf(r.estado) !== -1; }).length, 'recibiendo postulaciones', true)}
@@ -4053,9 +4469,7 @@ window.Vistas = window.Vistas || {};
         u.carrera + ' · Ciclo ' + u.ciclo + ' · ' + u.campus,
         h`<a class="btn btn--primary" href="#/retos">${C.icono('brujula', 18)} Ver oportunidades</a>`)}
 
-      ${!perfilCompleto ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '✨',
-        raw('Agrega tus habilidades al perfil para que el sistema te recomiende los retos donde encajas mejor. ' +
-        '<a href="#/perfil"><b>Completar mi perfil</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Proyectos', proys.length, U.plural(proys.length, 'microproyecto'), true)}
@@ -4242,14 +4656,13 @@ window.Vistas = window.Vistas || {};
         h`<a class="btn btn--ghost" href="#/reportes">${C.icono('grafico', 18)} Reportes</a>
           <a class="btn btn--primary" href="#/reto/nuevo">${C.icono('mas', 18)} Nuevo reto</a>`)}
 
-      ${pendientes ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '📌',
-        raw('Tienes <b>' + pendientes + '</b> ' + U.plural(pendientes, 'tarea') + ' pendiente' + (pendientes === 1 ? '' : 's') + ' en tu bandeja.'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
-        ${C.stat('Retos por revisar', porRevisar.length, 'esperando aprobación', porRevisar.length > 0)}
-        ${C.stat('Equipos por armar', porSeleccionar.length, 'postulaciones cerradas')}
-        ${C.stat('Proyectos activos', activos.length, 'en ejecución')}
-        ${C.stat('Constancias por emitir', porCertificar.length, 'proyectos aprobados')}
+        ${C.stat('Empresas aliadas', mt.empresas, 'con retos publicados', true)}
+        ${C.stat('Estudiantes', mt.estudiantes, 'inscritos en el programa')}
+        ${C.stat('Proyectos activos', activos.length, 'en ejecución ahora')}
+        ${C.stat('Constancias', mt.constancias, 'emitidas y vigentes')}
       </div>
 
       <div class="split mt">
@@ -4612,11 +5025,7 @@ window.Vistas = window.Vistas || {};
     return h`
       ${C.pageHead('Hola, ' + u.nombre.split(' ')[0] + ' 👋', u.especialidad + ' · Facultad de ' + u.facultad)}
 
-      ${porRevisar.length ? h`<div style="margin-bottom:1rem">${C.aviso('warn', '📥',
-        raw('Tienes <b>' + porRevisar.length + '</b> ' + U.plural(porRevisar.length, 'hito') + ' esperando tu revisión.'))}</div>` : ''}
-      ${porEvaluar.length ? h`<div style="margin-bottom:1rem">${C.aviso('brand', '⭐',
-        raw('Hay <b>' + porEvaluar.length + '</b> ' + U.plural(porEvaluar.length, 'entrega') + ' final por evaluar. ' +
-        '<a href="#/proyecto/' + U.esc(porEvaluar[0].id) + '?tab=evaluacion"><b>Evaluar</b></a>'))}</div>` : ''}
+      ${C.tarjetaAcciones(u)}
 
       <div class="grid grid--stats">
         ${C.stat('Proyectos activos', activos.length, 'de ' + (u.maxProyectos || 3) + ' posibles', true)}
@@ -5638,6 +6047,34 @@ window.Actions = (function () {
   on('ui:cerrar-modal', function () { UI.cerrarModal(); });
   on('ui:copiar', function (d) { UI.copiar(d.texto || ''); });
   on('ui:imprimir', function () { window.print(); });
+  /* Bienvenida: se muestra una sola vez por navegador, para que quien recibe
+     el enlace sepa en 10 segundos qué es esto y por dónde empezar. */
+  on('ui:bienvenida', function () {
+    UI.abrirModal('Bienvenido a UPN Talent Lab', U.html`
+      <p class="small">Este es el aplicativo del programa que conecta a <b>estudiantes de la UPN</b>
+        con <b>pequeñas y medianas empresas</b>: la empresa plantea una necesidad concreta, la
+        universidad elige a los estudiantes según sus habilidades y en <b>2 a 4 semanas</b>, con un
+        docente acompañando, se entrega el resultado.</p>
+      <div class="steps" style="grid-template-columns:1fr;gap:.5rem;margin:.8rem 0">
+        <div class="accion"><span class="accion__n">🏪</span><span class="accion__t">La empresa plantea su necesidad</span></div>
+        <div class="accion"><span class="accion__n">🎓</span><span class="accion__t">La UPN arma el equipo por habilidades</span></div>
+        <div class="accion"><span class="accion__n">🧭</span><span class="accion__t">Un docente acompaña el trabajo</span></div>
+        <div class="accion"><span class="accion__n">🏅</span><span class="accion__t">Constancia verificable para el estudiante</span></div>
+      </div>
+      ${C.aviso('brand', '💡', 'Puedes probarlo entero sin registrarte: hay cuentas de demostración, una por cada paso del ciclo.')}
+      <div class="btnrow mt-sm">
+        <button class="btn btn--primary" data-action="ui:bienvenida-cerrar" data-ir="/ingresar">Probar con una cuenta demo</button>
+        <button class="btn btn--ghost" data-action="ui:bienvenida-cerrar" data-ir="/ayuda">Ver la guía de uso</button>
+      </div>
+      <p class="tiny muted center mt-sm mb0">
+        <button class="btn btn--ghost btn--sm" data-action="ui:bienvenida-cerrar">Explorar por mi cuenta</button></p>`);
+  });
+  on('ui:bienvenida-cerrar', function (d) {
+    Store.lsSet('utl.bienvenida', '1');
+    UI.cerrarModal();
+    if (d.ir) Router.go('#' + d.ir);
+  });
+
   on('ui:tema', function (d) {
     var actual = UI.temaActual();
     var siguiente = d.tema || (actual === 'oscuro' ? 'claro' : 'oscuro');
@@ -6060,7 +6497,7 @@ window.Actions = (function () {
     Router.add('/', { view: Vistas.inicio, roles: ['*'], titulo: 'Inicio' });
     Router.add('/ingresar', { view: Vistas.ingresar, roles: ['*'], titulo: 'Ingresar' });
     Router.add('/registro', { view: Vistas.registro, roles: ['*'], titulo: 'Crear cuenta' });
-    Router.add('/ayuda', { view: Vistas.ayuda, roles: ['*'], titulo: 'Cómo funciona' });
+    Router.add('/ayuda', { view: Vistas.ayuda, roles: ['*'], titulo: 'Guía de uso' });
     Router.add('/verificar', { view: Vistas.verificar, roles: ['*'], titulo: 'Verificar constancia' });
     Router.add('/verificar/:codigo', { view: Vistas.verificar, roles: ['*'], titulo: 'Verificar constancia' });
     Router.add('/portafolio/:slug', { view: Vistas.portafolio, roles: ['*'], titulo: 'Portafolio' });
@@ -6094,6 +6531,11 @@ window.Actions = (function () {
     definirRutas();
     Actions.iniciar();
     Router.start();
+
+    /* Primera visita sin sesión: una bienvenida breve. Solo una vez por navegador. */
+    if (!Auth.autenticado() && !Store.lsGet('utl.bienvenida')) {
+      setTimeout(function () { Actions.ejecutar('ui:bienvenida', {}); }, 700);
+    }
 
     /* Sincronización entre pestañas del mismo navegador */
     window.addEventListener('storage', function (e) {

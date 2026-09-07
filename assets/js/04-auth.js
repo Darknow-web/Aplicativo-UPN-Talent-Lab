@@ -166,17 +166,20 @@ window.Auth = (function () {
     }
   }
 
+  /* Cada cuenta demo está elegida para que, al entrar, haya una acción
+     concreta del ciclo esperando. Entre todas se recorre el flujo completo. */
   function cuentasDemo() {
     return [
-      { id: 'u_est1', desc: 'Estudiante con proyecto terminado y constancia' },
-      { id: 'u_est3', desc: 'Estudiante con proyecto en ejecución' },
-      { id: 'u_emp2', desc: 'Empresa con proyecto activo' },
-      { id: 'u_emp5', desc: 'Empresa con reto en revisión' },
-      { id: 'u_men3', desc: 'Mentor con un hito por revisar' },
-      { id: 'u_coord1', desc: 'Coordinación: revisar retos y armar equipos' }
+      { id: 'u_est1', accion: 'Postular a un reto',        detalle: 'Estudiante libre, ya tiene una constancia' },
+      { id: 'u_est3', accion: 'Entregar un hito',          detalle: 'Estudiante con proyecto en marcha' },
+      { id: 'u_emp5', accion: 'Enviar un reto a la UPN',   detalle: 'Empresa con un reto en revisión' },
+      { id: 'u_emp3', accion: 'Evaluar el resultado',      detalle: 'Empresa que ya recibió su entrega' },
+      { id: 'u_men3', accion: 'Revisar un hito',           detalle: 'Docente con trabajo por revisar' },
+      { id: 'u_men2', accion: 'Evaluar una entrega final', detalle: 'Docente que acompañó un proyecto' },
+      { id: 'u_coord1', accion: 'Armar equipo y emitir constancias', detalle: 'Coordinación UPN' }
     ].map(function (c) {
       var u = Store.find('users', c.id);
-      return u ? { user: u, desc: c.desc } : null;
+      return u ? { user: u, accion: c.accion, detalle: c.detalle } : null;
     }).filter(Boolean);
   }
 
