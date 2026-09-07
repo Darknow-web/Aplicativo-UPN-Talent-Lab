@@ -71,6 +71,12 @@ function resolver(pathname) {
 function cabeceras(tipo, longitud, cache) {
   return {
     'Content-Type': tipo || 'text/plain; charset=utf-8',
+    /* Declarar la longitud no es opcional: sin ella la respuesta va troceada y,
+       si un proxy la corta a la mitad, el navegador la da por completa. Un .js
+       cortado no se puede interpretar, se descarta entero y su global nunca se
+       define -> la app arranca creyendo que falta un módulo. Con Content-Length
+       el corte falla a la vista en vez de colarse en silencio. No quitar. */
+    'Content-Length': longitud,
     'Cache-Control': cache || 'no-cache',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin'
