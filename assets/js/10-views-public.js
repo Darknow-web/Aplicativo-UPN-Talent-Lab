@@ -17,66 +17,59 @@ window.Vistas = window.Vistas || {};
     var mt = M.metricas();
     var destacados = Store.where('retos', function (r) { return r.estado === 'publicado'; }).slice(0, 3);
     return h`
-      <section class="hero">
-        <span class="eyebrow" style="color:#5B4715">Universidad Privada del Norte</span>
-        <h1>Talento universitario resolviendo retos reales de pequeñas empresas</h1>
-        <p>Las empresas plantean una necesidad concreta. La UPN selecciona a los estudiantes según sus habilidades.
-           En 2 a 4 semanas, con acompañamiento de un docente, el reto queda resuelto y el estudiante se lleva
-           experiencia verificable para su CV.</p>
-        <div class="hero__cta">
-          <a class="btn btn--dark btn--lg" href="#/registro?rol=empresa">Soy una empresa</a>
-          <a class="btn btn--lg" style="background:#fff" href="#/registro?rol=estudiante">Soy estudiante UPN</a>
+      <section class="hero" style="text-align:center; padding: 4rem 1.5rem; background: var(--crema-soft); border-radius: var(--r-xl); margin-bottom: 3rem;">
+        <span class="eyebrow" style="color:var(--bronce); font-weight:700;">Universidad Privada del Norte</span>
+        <h1 style="font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin: 1rem auto; max-width: 800px;">
+          Conecta talento universitario con retos reales
+        </h1>
+        <p style="font-size: 1.15rem; color: var(--text-soft); max-width: 600px; margin: 0 auto 2.5rem;">
+          Las empresas resuelven necesidades. Los estudiantes ganan experiencia verificable.
+          Todo en microproyectos de 2 a 4 semanas.
+        </p>
+        <div class="hero__cta" style="justify-content:center; margin-bottom: 2.5rem;">
+          <a class="btn btn--dark btn--lg" href="#/registro?rol=empresa" style="border-radius: var(--r-pill); padding: 0 2rem;">Soy una empresa</a>
+          <a class="btn btn--lg" href="#/registro?rol=estudiante" style="background:var(--surface); border-radius: var(--r-pill); border: 1px solid var(--border); padding: 0 2rem;">Soy estudiante UPN</a>
         </div>
-        <div class="hero__kpis">
-          <div class="hero__kpi"><b>${mt.retosPublicados}</b><span>retos abiertos hoy</span></div>
-          <div class="hero__kpi"><b>${mt.estudiantes}</b><span>estudiantes inscritos</span></div>
-          <div class="hero__kpi"><b>${mt.empresas}</b><span>empresas aliadas</span></div>
-          <div class="hero__kpi"><b>${mt.constancias}</b><span>constancias emitidas</span></div>
+        <div class="hero__kpis" style="justify-content:center; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1.5rem;">
+          <div class="hero__kpi"><b>${mt.retosPublicados}</b><span>retos abiertos</span></div>
+          <div class="hero__kpi"><b>${mt.estudiantes}</b><span>estudiantes</span></div>
+          <div class="hero__kpi"><b>${mt.empresas}</b><span>empresas</span></div>
+          <div class="hero__kpi"><b>${mt.constancias}</b><span>constancias</span></div>
         </div>
       </section>
 
-      <h2>Cómo funciona</h2>
-      <p class="muted small">Un microproyecto de 2 a 4 semanas, de principio a fin.</p>
-      <div class="steps mt">
-        <div class="step"><h3>La empresa plantea su necesidad</h3><p>Un problema concreto y acotado: “necesito ordenar mi inventario”, “quiero reactivar mis redes”. Sin tecnicismos.</p></div>
-        <div class="step"><h3>La UPN selecciona al equipo</h3><p>La coordinación revisa el reto, compara habilidades declaradas y arma el equipo con un docente mentor.</p></div>
-        <div class="step"><h3>2 a 4 semanas de trabajo</h3><p>Hitos semanales, bitácora de avances y revisión del mentor. La empresa ve el progreso en todo momento.</p></div>
-        <div class="step"><h3>Resultado y constancia</h3><p>La empresa recibe el entregable. El estudiante obtiene una constancia con código verificable y su portafolio.</p></div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 4rem; text-align: center;">
+        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏢</div>
+          <h3 style="font-size: 1.15rem;">1. Plantea un reto</h3>
+          <p class="small muted mb0">Publica una necesidad acotada y concreta.</p>
+        </div>
+        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
+          <h3 style="font-size: 1.15rem;">2. Selección UPN</h3>
+          <p class="small muted mb0">Te asignamos el equipo ideal y un mentor.</p>
+        </div>
+        <div class="card" style="padding: 2rem 1.5rem; border: none; background: transparent; box-shadow: none;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚀</div>
+          <h3 style="font-size: 1.15rem;">3. Desarrollo</h3>
+          <p class="small muted mb0">2 a 4 semanas de trabajo con seguimiento.</p>
+        </div>
       </div>
 
-      <h2 class="mt">Retos abiertos ahora</h2>
-      ${destacados.length ? h`<div class="grid grid--auto mt-sm">${destacados.map(function (r) { return C.cardReto(r); })}</div>
-        <p class="mt center"><a class="btn btn--ghost" href="#/retos">Ver todos los retos</a></p>`
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+        <h2 style="margin: 0; font-size: 1.4rem;">Retos destacados</h2>
+        <a class="btn btn--ghost btn--sm" href="#/retos" style="color: var(--text-soft);">Ver todos &rarr;</a>
+      </div>
+      ${destacados.length ? h`<div class="grid grid--auto">${destacados.map(function (r) { return C.cardReto(r); })}</div>`
         : C.vacio('📭', 'Todavía no hay retos publicados', 'Vuelve pronto o publica el primero desde tu cuenta de empresa.',
             h`<a class="btn btn--primary" href="#/registro?rol=empresa">Publicar un reto</a>`)}
 
-      <div class="split mt">
-        <div class="card">
-          <h2>Para las empresas</h2>
-          <ul class="small">
-            <li>Resuelves algo que tienes pendiente hace meses, sin contratar personal.</li>
-            <li>Trabajas con estudiantes seleccionados por sus habilidades, no al azar.</li>
-            <li>Un docente de la UPN supervisa el trabajo y responde por la calidad.</li>
-            <li>Ves el avance semana a semana y recibes entregables concretos.</li>
-          </ul>
-          <a class="btn btn--primary btn--block mt-sm" href="#/registro?rol=empresa">Plantear mi necesidad</a>
+      <div class="card mt" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; background: var(--surface-2); padding: 2rem; border-radius: var(--r-xl); margin-top: 4rem; border: none;">
+        <div>
+          <h2 style="margin-bottom: 0.25rem; font-size: 1.4rem;">Validación transparente</h2>
+          <p class="muted small mb0">Verifica la autenticidad de las constancias con su código único.</p>
         </div>
-        <div class="card">
-          <h2>Para los estudiantes</h2>
-          <ul class="small">
-            <li>Experiencia real con una empresa, no un caso de clase.</li>
-            <li>Constancia con código verificable que cualquiera puede validar en línea.</li>
-            <li>Un portafolio público con lo que hiciste y para quién.</li>
-            <li>Acompañamiento de un docente durante todo el microproyecto.</li>
-          </ul>
-          <a class="btn btn--primary btn--block mt-sm" href="#/registro?rol=estudiante">Postular a un reto</a>
-        </div>
-      </div>
-
-      <div class="card mt center">
-        <h2>¿Te mostraron una constancia?</h2>
-        <p class="muted small">Verifica en segundos si es auténtica con su código.</p>
-        <a class="btn btn--dark" href="#/verificar">${C.icono('escudo', 18)} Verificar una constancia</a>
+        <a class="btn btn--dark" href="#/verificar" style="border-radius: var(--r-pill); padding: 0 1.5rem;">${C.icono('escudo', 18)} Verificar constancia</a>
       </div>
     `;
   }

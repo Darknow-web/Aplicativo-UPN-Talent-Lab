@@ -8,7 +8,7 @@ const path = require('path');
 const { URL } = require('url');
 
 const RAIZ = __dirname;
-const PUERTO = parseInt(process.env.PORT, 10) || 8080;
+const PUERTO = 3000;
 
 const TIPOS = {
   '.html': 'text/html; charset=utf-8',
