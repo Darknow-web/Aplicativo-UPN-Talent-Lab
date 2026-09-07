@@ -119,6 +119,20 @@ dist/upn-talent-lab.html   Resultado: la app completa en un solo archivo
 - **La constancia guarda una copia congelada** de los datos del momento de emisión, así no cambia si
   después se edita el reto o el perfil.
 
+## Desplegar desde Google AI Studio
+
+El repositorio está configurado para importarse en **AI Studio → Build → Import from GitHub** y
+desplegarse a **Cloud Run** con un botón: incluye `package.json`, un servidor Node sin dependencias
+(`server.js`) que escucha en `$PORT`, y un `Dockerfile` para que la construcción sea determinista.
+
+Los pasos exactos y qué hacer si algo falla están en **[DESPLIEGUE.md](DESPLIEGUE.md)**.
+
+Para correr en local exactamente lo mismo que correrá en Cloud Run:
+
+```
+npm start        # http://localhost:8080
+```
+
 ## Publicar en GitHub Pages
 
 El workflow `.github/workflows/pages.yml` publica el sitio en cada push. Solo hay que activarlo

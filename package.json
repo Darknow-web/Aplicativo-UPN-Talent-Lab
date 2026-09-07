@@ -1,0 +1,19 @@
+{
+  "name": "upn-talent-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicativo del programa UPN Talent Lab: conecta estudiantes de la Universidad Privada del Norte con pequeñas y medianas empresas mediante microproyectos de 2 a 4 semanas con acompañamiento docente.",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "preview": "node server.js",
+    "build": "node tools/empaquetar.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": ["upn", "talent-lab", "microproyectos", "vinculacion-empresarial"],
+  "license": "MIT"
+}
