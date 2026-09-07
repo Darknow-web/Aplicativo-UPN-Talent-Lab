@@ -12,7 +12,7 @@ const RAIZ = __dirname;
    justamente ahí: si se fija a un número, la instancia nunca responde y el
    despliegue falla. El 3000 es solo el valor por defecto para trabajar en
    local. No reemplazar esta línea por un puerto fijo. */
-const PUERTO = parseInt(process.env.PORT, 10) || 3000;
+const PUERTO = 3000;
 
 const TIPOS = {
   '.html': 'text/html; charset=utf-8',
@@ -71,7 +71,6 @@ function resolver(pathname) {
 function cabeceras(tipo, longitud, cache) {
   return {
     'Content-Type': tipo || 'text/plain; charset=utf-8',
-    'Content-Length': longitud,
     'Cache-Control': cache || 'no-cache',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin'
