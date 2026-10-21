@@ -19,3 +19,17 @@
 - **Qué:** Los datos críticos (capital y horas de cada socio) están registrados. Se cierra la entrevista con una ambigüedad abierta (S-04, pérdida tolerable de Indira) que no bloquea la Fase 1 porque se usa la cifra más conservadora.
 - **Por qué:** Cuatro bloques respondidos; repreguntar más retrasa sin cambiar los filtros.
 - **Alternativas descartadas:** seguir preguntando hasta resolver S-04.
+
+## 2026-10-21 — Fase 1: filtros eliminatorios y pesos (fijados antes de ver ideas)
+- **Quién decidió:** Carlos e Indira, sobre propuesta del Director.
+- **Filtros eliminatorios (una idea que no pasa uno, se descarta por escrito):**
+  - F1. Inversión inicial ≤ S/ 400 y gasto mensual ≤ S/ 150 hasta la primera venta. **Sin préstamo en la Etapa 1** (un préstamo solo se evalúa en la Etapa 2 con ventas validadas).
+  - F2. Operable con ≤ 34 h/semana entre los dos, fuera de lunes a viernes de 9:00 a 18:30. Nada que exija atención presencial o inmediata en horario de oficina.
+  - F3. Nada que exija dejar el empleo antes de que el negocio reemplace el sueldo.
+  - F4. Nada cuyo canal principal sea venta puerta a puerta o llamadas en frío.
+  - F5. Nada ilegal ni que exija licencias, registro sanitario o permisos que no se puedan obtener con el presupuesto de F1.
+  - F6. Primera venta pagada posible en ≤ 90 días.
+- **Criterios y pesos (suman 100):** demanda comprobable en Lima 20 · tiempo hasta la primera venta 15 · ventaja concreta de los socios 15 · inversión y riesgo 15 · encaje con horas y horarios 10 · margen por venta 10 · potencial de reemplazar un sueldo 10 · interés de ambos socios 5.
+- **Regla para "tiempo hasta la primera venta":** se puntúa en dos bandas, a pedido de los socios: venta posible antes del **2026-12-01** (puntaje máximo) y venta posible antes del **2027-01-31** (puntaje intermedio). Más allá del 31 de enero puntúa bajo; más allá de 90 días no pasa F6.
+- **Por qué:** se fijan antes de generar ideas para que no se ajusten a favor de una favorita. La pérdida tolerable combinada (S/ 1 300) permite que una validación de la Fase 4 use hasta S/ 300 adicionales si Indira los aporta; la inversión inicial de F1 se mantiene en S/ 400 porque es el capital que existe hoy.
+- **Alternativas descartadas:** préstamo pequeño en la Etapa 1 (propuesto por los socios, descartado por la agencia y aceptado por ellos); el 1 de diciembre como filtro eliminatorio (se dejó como banda de puntaje).
