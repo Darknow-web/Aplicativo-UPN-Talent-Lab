@@ -45,3 +45,9 @@
 - **Qué:** Resumen del estado (Fases 0 a 2), recursos registrados, filtros y pesos, las 14 ideas, la posición de la agencia y la propuesta de lista corta de 5, con las preguntas pendientes para Indira. Documento compartible: https://claude.ai/artifact/URuqNpurKv8k4WJnDZyyqE
 - **Por qué:** Las preferencias de Indira pesan igual que las de Carlos; la lista corta no se confirma hasta que ella responda.
 - **Estado:** la Fase 3 queda en espera de las respuestas de ambos socios.
+
+## 2026-10-21 — Lista corta confirmada para la Fase 3
+- **Quién decidió:** Carlos e Indira (Indira vía el resumen compartido).
+- **Qué:** Pasan a comparación a fondo cinco ideas: (1) chatbot de WhatsApp con panel (fichas 08, 09 y 14 como un producto con módulos), (2) cliente incógnito + micro-capacitación para cafeterías y tiendas (10), (3) contenido y taller "construye tu app con IA" (13), (4) sorpresas y detalles (06), (5) decoración para eventos (05). Quedan fuera 04, 07, 11 y 12 con los motivos del cierre de la Fase 2.
+- **Datos nuevos:** contratos sin restricción según los socios (S-06 validado por declaración); enlace de SorprendeLima entregado (https://www.sorprendelima.pe/); contactos: academia de marinera (amigo cercano), librería (dispuesta), amigas de la agencia (conversación posible, compra no asegurada).
+- **Siguiente paso:** analista-mercado, analista-financiero y abogado-del-diablo trabajan en paralelo sobre las cinco con el mismo método. Responsable: Director. Fecha: 2026-10-21.

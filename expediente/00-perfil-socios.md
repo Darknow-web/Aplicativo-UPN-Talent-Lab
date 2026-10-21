@@ -24,14 +24,14 @@
 | Obligaciones fijas relevantes | Ninguna que condicione el aporte de S/ 150/mes | [VERIFICADO: Carlos, 2026-10-21] |
 | Qué quiere obtener | 1) **Independizarse de su empleo actual lo antes posible, con fecha objetivo julio de 2027**. 2) Construir patrimonio hacia S/ 1 millón | [VERIFICADO: Carlos, 2026-10-21] |
 | Intereses | Crear aplicaciones con "vibe coding" usando Claude Code; capacitación y entrenamiento; fútbol; videos de crecimiento personal, IA y nuevas skills de IA | [VERIFICADO: Carlos, 2026-10-21] |
-| Contactos útiles | Dueño de una academia de marinera. La mamá de Indira tiene una librería. Grupo de amigas de la UPN que acaban de montar una agencia de creación de contenido; una de ellas vende galletas rellenas por redes sociales | [VERIFICADO: Carlos, 2026-10-21] — sin detalle de cercanía ni disposición a colaborar [DESCONOCIDO] |
+| Contactos útiles | Dueño de una academia de marinera (amigo cercano de Carlos; puede hablar con él). La mamá de Indira tiene una librería (dispuesta a planear con ellos). Grupo de amigas de la UPN con agencia de creación de contenido recién iniciada (aceptarían conversar; compra no asegurada); una de ellas vende galletas rellenas por redes | [VERIFICADO: Carlos, 2026-10-21] |
 | Habilidades y experiencia (detalle) | Ver sección "Habilidades con evidencia" abajo | |
 
 ### Habilidades con evidencia — bloque 3 (2026-10-21)
 **Construcción de software con IA** [VERIFICADO: Carlos, 2026-10-21; sin verificación externa de la agencia]:
 - Con uso real por terceros (nuevos ingresos de SuperPet): plataformas de capacitación tipo simulador; plataforma de competencias tipo Kahoot para reforzar aprendizaje; plataforma de vinculación de notas con presentaciones para candidatos a jefes.
 - Funcionan pero sin usuarios: chatbot de WhatsApp para consultas de colaboradores sobre procesos (sin la API oficial de Meta); app que planificaba outfits semanales (Sastra); un videojuego sin terminar.
-- Pregunta abierta para legal: las herramientas usadas en SuperPet se construyeron para el empleador; hay que aclarar propiedad intelectual y si el contrato de Carlos tiene cláusulas de exclusividad antes de reutilizar cualquier parte [DESCONOCIDO].
+- Contratos: ambos declaran que sus contratos no restringen trabajar para terceros [VERIFICADO: declaración de los socios, 2026-10-21; la agencia no leyó los contratos]. Las herramientas construidas para SuperPet son del empleador: no se reutiliza su código; lo que se construya para el negocio parte de cero.
 **Capacitación y ventas** [VERIFICADO: Carlos, 2026-10-21]: como Entrenador de Marca capacita a nuevos ingresos en procesos y protocolos de venta; visita tiendas de su cartera para verificar cumplimiento de metas, evaluar el protocolo de atención de cada colaborador y los KPI de tienda.
 **Bellie** [VERIFICADO: Carlos, 2026-10-21]: fue un proyecto universitario; **no vendió ningún producto** y por eso se cerró. Cuenta como experiencia de montar una tienda WooCommerce, no como experiencia de venta.
 
@@ -76,7 +76,7 @@ Horas en común (ambos libres): noches de lunes, miércoles y viernes desde las 
 
 **Ideas nuevas, pensadas en conjunto** [VERIFICADO: Carlos e Indira, 2026-10-21]. No dieron el motivo de atracción de cada una [DESCONOCIDO]:
 1. Decoración para eventos.
-2. Sorpresas y detalles (referencia nombrada por ellos: "SorprendeLima"; la agencia no ha verificado ese negocio).
+2. Sorpresas y detalles (referencia nombrada por ellos: SorprendeLima, https://www.sorprendelima.pe/ — enlace entregado por Carlos el 2026-10-21; pendiente de revisión por el analista de mercado).
 3. Agencia de marketing que vende paquetes de contenido.
 4. Chatbot de WhatsApp de ventas + panel de administración.
 5. Chatbot de WhatsApp de atención al cliente + panel de administración.
