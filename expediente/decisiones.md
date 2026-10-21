@@ -39,3 +39,9 @@
 - **Qué:** 14 ideas en `expediente/opciones/`. **Descartadas por filtro F6** (primera venta después de 90 días): 01 Sastra, 02 app de rutinas de gimnasio, 03 Life Quest. **Pasan filtros:** 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14 (las 05, 06, 11, 12 y 14 con condiciones anotadas en su ficha).
 - **Por qué:** las tres apps de consumo exigen cientos de usuarios gratuitos antes de la primera suscripción pagada y no tienen canal; no hay forma de vender antes del 2027-01-19 sin presupuesto de adquisición.
 - **Pendiente para la Fase 3:** reducir las 11 candidatas a 5 (propuesta preliminar del Director sujeta a confirmación de los socios); tratar 08, 09 y 14 como un solo producto con módulos; aclarar S-06 (contratos) y el enlace de "SorprendeLima".
+
+## 2026-10-21 — Resumen compartido con Indira antes de confirmar la lista corta
+- **Quién:** Carlos pidió un documento para Indira; lo redactó el Director.
+- **Qué:** Resumen del estado (Fases 0 a 2), recursos registrados, filtros y pesos, las 14 ideas, la posición de la agencia y la propuesta de lista corta de 5, con las preguntas pendientes para Indira. Documento compartible: https://claude.ai/artifact/URuqNpurKv8k4WJnDZyyqE
+- **Por qué:** Las preferencias de Indira pesan igual que las de Carlos; la lista corta no se confirma hasta que ella responda.
+- **Estado:** la Fase 3 queda en espera de las respuestas de ambos socios.
