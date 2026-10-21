@@ -33,3 +33,9 @@
 - **Regla para "tiempo hasta la primera venta":** se puntúa en dos bandas, a pedido de los socios: venta posible antes del **2026-12-01** (puntaje máximo) y venta posible antes del **2027-01-31** (puntaje intermedio). Más allá del 31 de enero puntúa bajo; más allá de 90 días no pasa F6.
 - **Por qué:** se fijan antes de generar ideas para que no se ajusten a favor de una favorita. La pérdida tolerable combinada (S/ 1 300) permite que una validación de la Fase 4 use hasta S/ 300 adicionales si Indira los aporta; la inversión inicial de F1 se mantiene en S/ 400 porque es el capital que existe hoy.
 - **Alternativas descartadas:** préstamo pequeño en la Etapa 1 (propuesto por los socios, descartado por la agencia y aceptado por ellos); el 1 de diciembre como filtro eliminatorio (se dejó como banda de puntaje).
+
+## 2026-10-21 — Cierre de la Fase 2 (exploración amplia)
+- **Quién:** Director, sobre el informe del explorador de oportunidades (`expediente/informes/2026-10-21-explorador-de-oportunidades.md`).
+- **Qué:** 14 ideas en `expediente/opciones/`. **Descartadas por filtro F6** (primera venta después de 90 días): 01 Sastra, 02 app de rutinas de gimnasio, 03 Life Quest. **Pasan filtros:** 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14 (las 05, 06, 11, 12 y 14 con condiciones anotadas en su ficha).
+- **Por qué:** las tres apps de consumo exigen cientos de usuarios gratuitos antes de la primera suscripción pagada y no tienen canal; no hay forma de vender antes del 2027-01-19 sin presupuesto de adquisición.
+- **Pendiente para la Fase 3:** reducir las 11 candidatas a 5 (propuesta preliminar del Director sujeta a confirmación de los socios); tratar 08, 09 y 14 como un solo producto con módulos; aclarar S-06 (contratos) y el enlace de "SorprendeLima".

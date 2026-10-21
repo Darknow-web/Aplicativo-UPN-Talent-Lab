@@ -1,0 +1,15 @@
+# Agencia de marketing que vende paquetes de contenido a negocios pequeños
+**Tipo:** servicio
+**Origen:** idea de los socios (nueva, conjunta) [VERIFICADO: Carlos e Indira, 2026-10-21]. Motivo de atracción no declarado [DESCONOCIDO].
+**Problema que resuelve y para quién:** Negocios pequeños de Lima (tiendas, academias, cafeterías) que saben que deben publicar en Instagram/TikTok y no tienen tiempo ni quien lo haga. Se vende un paquete mensual: X publicaciones + Y videos cortos + calendario.
+**Ventaja concreta de Carlos e Indira:** Sin ventaja diferencial. Carlos estudia Marketing y construye automatizaciones con IA que podrían abaratar la producción (redacción, calendarios) [VERIFICADO: Carlos, 2026-10-21], pero eso hoy lo hace cualquier freelancer con las mismas herramientas. No hay portafolio ni clientes. Las amigas de la UPN que acaban de montar una agencia de contenido [VERIFICADO: Carlos, 2026-10-21] son a la vez competencia directa y posible aliada (subcontrato); disposición [DESCONOCIDO — S-07].
+**Evidencia de demanda en Lima:**
+- Sueldo promedio de community manager en Perú: S/ 1 346/mes según CompuTrabajo citado por Crehana [VERIFICADO: Crehana, consultado 2026-10-21; fecha de la cifra no precisada]; base S/ 1 300, hasta S/ 2 500–3 000 [VERIFICADO: Mercado Negro, fecha no precisada]. Indica un mercado con mucha oferta de mano de obra y precios bajos.
+- Avisos de empleo en Lima para "community manager / creador de contenido" en S/ 1 500/mes [VERIFICADO: Cazvid, consultado 2026-10-21]. Precio de paquetes para emprendedores en soles: [DESCONOCIDO]; la agencia no encontró tarifas publicadas.
+- 67,5 % de las mypes de una muestra peruana usan redes sociales como principal plataforma [VERIFICADO: AiBi Revista de Investigación, enero 2025 — muestra, no dato nacional].
+**Inversión inicial aproximada:** S/ 0–150 [ESTIMADO: celular propio, Canva/CapCut gratuitos, trípode S/ 60; sin oficina].
+**Horas semanales aproximadas para operar:** 15–25 h con 2–3 clientes [ESTIMADO: 4–6 h de grabación por cliente al mes + edición y publicación 1–2 h/semana por cliente + reuniones]. La grabación en locales debe caer en noches o fines de semana.
+**Tiempo estimado hasta la primera venta:** 20–50 días → **antes del 2026-12-01 posible, antes del 2027-01-31 realista** [ESTIMADO: el primer cliente saldría de los contactos (librería de la mamá de Indira, academia de marinera, amiga de las galletas) a precio bajo; sin contactos, el ciclo de venta a negocios es más largo y ninguno ha vendido antes].
+**Filtros eliminatorios:** **PASA** — F1: sí. F2: sí, si los clientes aceptan grabar fuera de horario de oficina (restricción real para negocios que operan de día; se asume que sí [SUPUESTO]). F3: sí. F4: sí, si el canal es referidos y contactos; si para crecer necesitan visitar negocios en frío, se acerca a F4. F5: sí. F6: sí.
+**Estado:** candidata
+**Preguntas abiertas:** ¿Las amigas de la agencia preferirían subcontratarles o verlos como competencia? ¿Qué cobran ellas por paquete? ¿La librería y la academia pagarían S/ 150–300/mes por contenido? (Validar con 2 conversaciones, S/ 0, 1 h.)

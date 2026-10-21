@@ -1,0 +1,12 @@
+# App de rutinas de gimnasio
+**Tipo:** digital-app
+**Origen:** activo existente (construida por Carlos; estado de avance y usuarios no detallados [DESCONOCIDO]). Carlos declaró que ya no le interesa [VERIFICADO: Carlos, 2026-10-21]. Se evalúa igual.
+**Problema que resuelve y para quién:** Personas que van al gimnasio y no saben qué rutina seguir ni cómo registrar su progreso. Público: usuarios de gimnasios en Lima [SUPUESTO: por validar].
+**Ventaja concreta de Carlos e Indira:** Sin ventaja diferencial. Ninguno es entrenador ni tiene contacto con gimnasios; no hay audiencia fitness. El activo construido solo reduce el costo de arranque. Existen apps globales consolidadas de registro de entrenamientos (referencia de otros países; no verificadas una a una en esta fase) [ESTIMADO: conocimiento general del mercado].
+**Evidencia de demanda en Lima:** El mercado fitness en el Perú tiene una penetración de aproximadamente 6 % de la población [VERIFICADO: Revista Economía, citada en búsqueda web del 2026-10-21; fecha de la nota no precisada]. Smart Fit proyectaba crecer 23 % en ventas en 2025 y abrir 15 gimnasios adicionales en Perú [VERIFICADO: Infomercado, 2025]. Esto muestra que hay público de gimnasio, pero no hay ningún dato sobre disposición a pagar por una app de rutinas en Lima [DESCONOCIDO].
+**Inversión inicial aproximada:** S/ 100–470 [ESTIMADO: mismas cuotas de tiendas de apps que Sastra: Google Play ~S/ 95 único; Apple ~S/ 370/año; hosting S/ 20–50/mes].
+**Horas semanales aproximadas para operar:** 8–12 h [ESTIMADO].
+**Tiempo estimado hasta la primera venta:** > 90 días → **después del 2027-01-31** [ESTIMADO: mismo razonamiento que Sastra: app de consumo sin usuarios, sin audiencia, sin canal; conversión a pago requiere cientos de usuarios gratuitos]. Una variante B2B (venderla a gimnasios pequeños como app de marca) acortaría el plazo, pero exigiría visitar gimnasios en frío, lo que roza F4.
+**Filtros eliminatorios:** **NO PASA** — F6: primera venta pagada no razonable en ≤ 90 días. F1 en riesgo si se publica en iOS. F2–F5: pasa.
+**Estado:** descartada en Fase 2 — no pasa F6 (primera venta después de 90 días); valor residual como demo (S-18)
+**Preguntas abiertas:** ¿Qué tan terminada está la app y en qué plataforma corre? ¿Carlos la usa él mismo (dato de retención propia)? ¿Algún gimnasio conocido aceptaría probarla gratis? (Si no, no hay camino a una venta en 90 días.)
