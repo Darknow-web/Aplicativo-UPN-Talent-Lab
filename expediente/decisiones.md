@@ -56,3 +56,11 @@
 - **Quién:** Director, sobre `expediente/informes/2026-10-21-abogado-del-diablo.md`.
 - **Qué se acepta:** (a) S-06 (contratos) vuelve a `pendiente`: la declaración de los socios no sustituye la lectura de la cláusula; (b) se corrige la referencia S-10→S-18 en el informe del explorador; (c) la idea 1 (chatbot) se puntuará reconociendo que las horas de construcción recaen solo en Carlos y no se suman con las de Indira; (d) se pedirá a los socios la preferencia de Indira entre las cinco y el rango de sueldo de cada uno, sin lo cual el criterio "reemplazar un sueldo" no se puede puntuar.
 - **Qué no se acepta todavía:** la objeción de profundidad desigual entre fichas se evalúa cuando llegue el informe de mercado, que tenía el encargo de igualarla.
+
+## 2026-10-21 — Cierre de la Fase 3: matriz y finalistas recomendadas
+- **Quién:** Director, con los informes de mercado, finanzas y abogado del diablo.
+- **Qué:** `entregables/opciones-de-negocio.md`. Ranking con los pesos de la Fase 1: chatbot 73, incógnito 72, taller 70, detalles 63, decoración 43. Finalistas recomendadas: chatbot de WhatsApp con panel y cliente incógnito + micro-capacitación; taller en reserva.
+- **Contradicciones resueltas:** precio de decoración (se da la razón a mercado: S/ 150–250); horas de construcción del chatbot (se da la razón al abogado del diablo: no están en el flujo); supuestos financieros renumerados S-26..S-34 por choque con los de mercado.
+- **Hallazgo que condiciona todo:** ninguna idea reemplaza un sueldo de S/ 2 000 en 12 meses en el escenario base; julio de 2027 no es alcanzable en base.
+- **Pendiente de los socios:** confirmar finalistas; preferencia de Indira; rango de sueldos; cláusula de contratos; capturas de SorprendeLima.
+- **Aceptado con observación:** el informe de mercado tiene ~3 300 palabras, por encima de las 2 páginas; se acepta porque la extensión está en tablas de precios con fuente para cinco ideas.
