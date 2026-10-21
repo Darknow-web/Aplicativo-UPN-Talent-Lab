@@ -51,3 +51,8 @@
 - **Qué:** Pasan a comparación a fondo cinco ideas: (1) chatbot de WhatsApp con panel (fichas 08, 09 y 14 como un producto con módulos), (2) cliente incógnito + micro-capacitación para cafeterías y tiendas (10), (3) contenido y taller "construye tu app con IA" (13), (4) sorpresas y detalles (06), (5) decoración para eventos (05). Quedan fuera 04, 07, 11 y 12 con los motivos del cierre de la Fase 2.
 - **Datos nuevos:** contratos sin restricción según los socios (S-06 validado por declaración); enlace de SorprendeLima entregado (https://www.sorprendelima.pe/); contactos: academia de marinera (amigo cercano), librería (dispuesta), amigas de la agencia (conversación posible, compra no asegurada).
 - **Siguiente paso:** analista-mercado, analista-financiero y abogado-del-diablo trabajan en paralelo sobre las cinco con el mismo método. Responsable: Director. Fecha: 2026-10-21.
+
+## 2026-10-21 — Objeciones del abogado del diablo aceptadas antes de la matriz
+- **Quién:** Director, sobre `expediente/informes/2026-10-21-abogado-del-diablo.md`.
+- **Qué se acepta:** (a) S-06 (contratos) vuelve a `pendiente`: la declaración de los socios no sustituye la lectura de la cláusula; (b) se corrige la referencia S-10→S-18 en el informe del explorador; (c) la idea 1 (chatbot) se puntuará reconociendo que las horas de construcción recaen solo en Carlos y no se suman con las de Indira; (d) se pedirá a los socios la preferencia de Indira entre las cinco y el rango de sueldo de cada uno, sin lo cual el criterio "reemplazar un sueldo" no se puede puntuar.
+- **Qué no se acepta todavía:** la objeción de profundidad desigual entre fichas se evalúa cuando llegue el informe de mercado, que tenía el encargo de igualarla.
