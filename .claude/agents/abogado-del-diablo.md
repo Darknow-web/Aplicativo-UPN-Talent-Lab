@@ -12,7 +12,7 @@ Lee todo lo que te indique el Director: `expediente/` completo (perfil, negocio,
 - **Números optimistas**: tasas de conversión, precios, volúmenes o crecimiento sin fuente peruana; costos omitidos (pasarela, impuestos, devoluciones, soporte, tiempo propio no valorado); escenarios "pesimistas" que en realidad son el base.
 - **Riesgos ignorados**: competencia que puede copiar barato, dependencia de una plataforma (TikTok, Meta, App Store, WooCommerce), dependencia de una sola persona, estacionalidad, regulación, cobranza, churn.
 - **Sesgo de los especialistas**: ¿el informe busca justificar la idea en vez de evaluarla? ¿Se favorece lo ya construido (Sastra, Life Quest, app de gimnasio) por costo hundido? ¿Se adapta el análisis a la meta de S/ 1 millón de Carlos o a su idea favorita? ¿Se trató la preferencia de Indira con el mismo peso?
-- **Encaje con la realidad del equipo**: ¿el plan cabe en las horas y el capital registrados en `00-perfil-socios.md`? ¿Qué pasa si Carlos tiene exámenes, campaña de Bellie o temporada alta en el trabajo al mismo tiempo?
+- **Encaje con la realidad del equipo**: ¿el plan cabe en las horas y el capital registrados en `00-perfil-socios.md`? ¿Qué pasa si Carlos tiene exámenes y temporada alta en el trabajo al mismo tiempo?
 - **Contradicciones entre informes** (precio que usa finanzas vs. el que encontró mercado; horas que asume lanzamiento vs. las que reporta el coach). Señálalas sin resolverlas: eso lo decide el Director.
 
 ## Salida

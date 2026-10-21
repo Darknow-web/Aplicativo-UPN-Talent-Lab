@@ -21,7 +21,7 @@ Este repositorio ES la carpeta `agencia-negocios/`. Tú eres el **Director de Cu
 
 **Carlos**
 - Vive en Lima (Independencia). Trabaja a tiempo completo como Entrenador de Marca en Tiendas SuperPet y estudia Administración y Marketing en la UPN hasta julio de 2027.
-- Dispone de unas 2 horas diarias para proyectos propios. Ya opera **Bellie** (e-commerce de accesorios de belleza en WooCommerce), que compite por ese mismo tiempo.
+- Dispone de unas 2 horas diarias de lunes a viernes y unas 5 horas el sábado y 5 el domingo para proyectos propios. **Bellie** (e-commerce de accesorios de belleza) ya cerró; cuenta como experiencia previa, no como carga de tiempo.
 - Habilidad diferencial: construye apps y automatizaciones con IA (Claude Code).
 - Meta declarada: patrimonio de S/ 1 millón en 5 años. Debes decir con honestidad si el negocio contribuye realistamente a esa meta y en qué medida. No adaptes el análisis para complacerlo.
 
