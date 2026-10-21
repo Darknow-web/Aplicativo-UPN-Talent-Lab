@@ -1,7 +1,7 @@
 # Perfil de los socios
 
 > Se llena en la Fase 0 de `/explorar`. Los datos de Indira que entregue Carlos se marcan **[segunda mano — confirmar con Indira]**. No registrar datos sensibles (DNI, cuentas, claves).
-> Estado de la entrevista: **cerrada el 2026-10-21 (4 bloques).** Queda una ambigüedad abierta (pérdida tolerable de Indira, S-04). Fase 0 completa; sigue la Fase 1.
+> Estado de la entrevista: **cerrada el 2026-10-21 (4 bloques).** Sin ambigüedades abiertas. Fase 0 completa; sigue la Fase 1.
 
 ## Carlos
 
@@ -51,7 +51,7 @@ Las respuestas llegaron redactadas en primera persona; se registran como dadas p
 | Ventanas disponibles | Lunes, miércoles y viernes desde las 20:00; sábados desde las 10:00; domingos después de las 14:00 | [VERIFICADO: Indira, 2026-10-21] |
 | Horas reales por semana | **20 h/semana**; en semanas de exámenes **17 h** | [VERIFICADO: Indira, 2026-10-21] — S-03 corregido y validado |
 | Capital que puede aportar sin endeudarse | **S/ 200 por mes** + **S/ 400 de capital inicial** | [VERIFICADO: Indira, 2026-10-21] |
-| Cuánto puede perder sin que afecte su vida | Bloque 2: "un máximo de 3 meses". Bloque 4: "hasta 6 meses, o sea 120 soles". Las dos respuestas no cuadran entre sí (6 meses × S/ 200 = S/ 1 200, no S/ 120). Hasta que se confirme, la agencia usa la cifra más conservadora: **S/ 120** | [DESCONOCIDO — S-04 sigue pendiente; confirmar cifra exacta] |
+| Cuánto puede perder sin que afecte su vida | **S/ 1 200** (6 meses de aporte). Las respuestas anteriores ("3 meses", "120 soles") fueron corregidas por Indira | [VERIFICADO: Indira, 2026-10-21] — S-04 validado |
 | Meses que puede sostener el proyecto sin ingresos | **3 meses** | [VERIFICADO: Indira, 2026-10-21] |
 | Habilidades y experiencia | Atención al cliente como impulsadora de ventas. En su trabajo actual: Excel, reportes de KPI, análisis de oportunidades de venta de los ejecutivos, uso de CRM y seguimiento a ejecutivos de ventas. Diseño y organización declaradas sin detalle de herramientas [DESCONOCIDO]. Muy detallista; buenas notas en Marketing y Administración | [VERIFICADO: Indira, 2026-10-21] |
 | Obligaciones fijas relevantes | Ninguna que condicione el aporte de S/ 200/mes | [VERIFICADO: Indira, 2026-10-21] |
@@ -67,7 +67,7 @@ Las respuestas llegaron redactadas en primera persona; se registran como dadas p
 | Horas/semana | 20 (17 en exámenes) [VERIFICADO] | 20 (17 en exámenes) [VERIFICADO] | **40 (34 en exámenes)** |
 | Capital inicial (monto único) | S/ 0 | S/ 400 | **S/ 400** |
 | Aporte mensual máximo | S/ 150 | S/ 200 | **S/ 350/mes** |
-| Pérdida tolerable | S/ 100 | S/ 120 (cifra conservadora; S-04 pendiente) | **S/ 220** hasta confirmar |
+| Pérdida tolerable | S/ 100 | S/ 1 200 | **S/ 1 300** |
 | Resistencia sin ingresos | ≥ 12 meses si gasto ≤ S/ 150/mes; 1 mes si lo supera | 3 meses | **3 meses con S/ 350/mes; ≥ 12 meses con ≤ S/ 150/mes** |
 Horas en común (ambos libres): noches de lunes, miércoles y viernes desde las 20:00; sábado; domingo tarde [ESTIMADO].
 
