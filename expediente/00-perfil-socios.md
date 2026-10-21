@@ -1,7 +1,7 @@
 # Perfil de los socios
 
 > Se llena en la Fase 0 de `/explorar`. Los datos de Indira que entregue Carlos se marcan **[segunda mano — confirmar con Indira]**. No registrar datos sensibles (DNI, cuentas, claves).
-> Estado de la entrevista: **bloques 1, 2 y 3 respondidos el 2026-10-21. Pendiente: bloque 4 (ideas previas y por qué atraen, plazo para lanzar, lo que no están dispuestos a hacer, confirmación de S-04).**
+> Estado de la entrevista: **cerrada el 2026-10-21 (4 bloques).** Queda una ambigüedad abierta (pérdida tolerable de Indira, S-04). Fase 0 completa; sigue la Fase 1.
 
 ## Carlos
 
@@ -51,15 +51,15 @@ Las respuestas llegaron redactadas en primera persona; se registran como dadas p
 | Ventanas disponibles | Lunes, miércoles y viernes desde las 20:00; sábados desde las 10:00; domingos después de las 14:00 | [VERIFICADO: Indira, 2026-10-21] |
 | Horas reales por semana | **20 h/semana**; en semanas de exámenes **17 h** | [VERIFICADO: Indira, 2026-10-21] — S-03 corregido y validado |
 | Capital que puede aportar sin endeudarse | **S/ 200 por mes** + **S/ 400 de capital inicial** | [VERIFICADO: Indira, 2026-10-21] |
-| Cuánto puede perder sin que afecte su vida | "Un máximo de 3 meses": se interpreta como 3 meses de aportes ≈ **S/ 600** | [ESTIMADO S-04: interpretación del Director, por confirmar] |
+| Cuánto puede perder sin que afecte su vida | Bloque 2: "un máximo de 3 meses". Bloque 4: "hasta 6 meses, o sea 120 soles". Las dos respuestas no cuadran entre sí (6 meses × S/ 200 = S/ 1 200, no S/ 120). Hasta que se confirme, la agencia usa la cifra más conservadora: **S/ 120** | [DESCONOCIDO — S-04 sigue pendiente; confirmar cifra exacta] |
 | Meses que puede sostener el proyecto sin ingresos | **3 meses** | [VERIFICADO: Indira, 2026-10-21] |
 | Habilidades y experiencia | Atención al cliente como impulsadora de ventas. En su trabajo actual: Excel, reportes de KPI, análisis de oportunidades de venta de los ejecutivos, uso de CRM y seguimiento a ejecutivos de ventas. Diseño y organización declaradas sin detalle de herramientas [DESCONOCIDO]. Muy detallista; buenas notas en Marketing y Administración | [VERIFICADO: Indira, 2026-10-21] |
 | Obligaciones fijas relevantes | Ninguna que condicione el aporte de S/ 200/mes | [VERIFICADO: Indira, 2026-10-21] |
 | Intereses | Salir a lugares nuevos, observar las calles y lo que ofrecen restaurantes y cafeterías, y cómo es el espacio de cada lugar | [VERIFICADO: Carlos sobre Indira, 2026-10-21 — segunda mano] |
 | Contactos útiles | Su mamá tiene una librería (ver contactos de Carlos) | [VERIFICADO: Carlos, 2026-10-21] |
 | Qué quiere obtener | **Independizarse de su trabajo actual y tener un negocio propio.** Comparte la meta de julio de 2027 | [VERIFICADO: Indira, 2026-10-21] |
-| Ideas previas / preferencias | No conoce las ideas candidatas de Carlos (Sastra, app de gimnasio, Life Quest, "Ruta y Mesa"). Ambos declaran estar buscando ideas nuevas | [VERIFICADO: Indira, 2026-10-21] |
-| Cosas que no está dispuesta a hacer | Ninguna declarada ("dispuesta a todo") | [VERIFICADO: Indira, 2026-10-21] — el Director lo tratará con cautela: se repreguntará con ejemplos concretos en el bloque 4 |
+| Ideas previas / preferencias | No conoce las ideas candidatas previas de Carlos. Las ideas nuevas son conjuntas (ver sección "Ideas previas") | [VERIFICADO: Indira, 2026-10-21] |
+| Cosas que no está dispuesta a hacer | Ver "Restricciones" (respuesta conjunta del bloque 4) | [VERIFICADO: ambos, 2026-10-21] |
 
 ## Recursos combinados (cálculo del Director, 2026-10-21)
 | Concepto | Carlos | Indira | Total |
@@ -67,17 +67,28 @@ Las respuestas llegaron redactadas en primera persona; se registran como dadas p
 | Horas/semana | 20 (17 en exámenes) [VERIFICADO] | 20 (17 en exámenes) [VERIFICADO] | **40 (34 en exámenes)** |
 | Capital inicial (monto único) | S/ 0 | S/ 400 | **S/ 400** |
 | Aporte mensual máximo | S/ 150 | S/ 200 | **S/ 350/mes** |
-| Pérdida tolerable | S/ 100 | ~S/ 600 [ESTIMADO S-04] | ~S/ 700 |
+| Pérdida tolerable | S/ 100 | S/ 120 (cifra conservadora; S-04 pendiente) | **S/ 220** hasta confirmar |
 | Resistencia sin ingresos | ≥ 12 meses si gasto ≤ S/ 150/mes; 1 mes si lo supera | 3 meses | **3 meses con S/ 350/mes; ≥ 12 meses con ≤ S/ 150/mes** |
 Horas en común (ambos libres): noches de lunes, miércoles y viernes desde las 20:00; sábado; domingo tarde [ESTIMADO].
 
 ## Ideas previas y por qué les atraen
-(pendiente — bloque 4). Candidatas conocidas: Sastra, app de rutinas de gimnasio, Life Quest, "Ruta y Mesa".
+**Ideas antiguas de Carlos** (Sastra, app de rutinas de gimnasio, Life Quest, "Ruta y Mesa"): **ya no le interesan** [VERIFICADO: Carlos, 2026-10-21]. Indira no las conocía. Entran en la Fase 2 solo como candidatas sin preferencia; el activo construido (Sastra, Life Quest) se anota como menor costo de arranque y nada más.
+
+**Ideas nuevas, pensadas en conjunto** [VERIFICADO: Carlos e Indira, 2026-10-21]. No dieron el motivo de atracción de cada una [DESCONOCIDO]:
+1. Decoración para eventos.
+2. Sorpresas y detalles (referencia nombrada por ellos: "SorprendeLima"; la agencia no ha verificado ese negocio).
+3. Agencia de marketing que vende paquetes de contenido.
+4. Chatbot de WhatsApp de ventas + panel de administración.
+5. Chatbot de WhatsApp de atención al cliente + panel de administración.
+
+**Observación del Director:** las ideas 3, 4 y 5 apuntan a vender a negocios; las 1 y 2 a personas. Ninguno de los dos ha vendido nunca un producto o servicio por cuenta propia (bloque 4, pregunta 5), así que la primera venta será también su primera venta en la vida. Eso pesa en el criterio "tiempo hasta la primera venta".
 
 ## Restricciones
-- Plazo deseado para lanzar: (pendiente — bloque 4; la fecha de independencia deseada es julio de 2027)
-- Cosas que no están dispuestos a hacer: Indira: ninguna declarada. Carlos: (pendiente — bloque 4)
-- Lo que ya intentaron: Bellie (cerrado; motivo pendiente — bloque 4)
+- **Plazo deseado para la primera venta con cliente que pague: 2026-12-01** (41 días desde hoy) [VERIFICADO: ambos, 2026-10-21].
+- **Dispuestos a:** grabar videos mostrando su cara; atender público; manejar inventario físico en casa; pedir un préstamo pequeño [VERIFICADO: ambos, 2026-10-21].
+- **No dispuestos a:** vender puerta a puerta ni por llamadas en frío; dejar el trabajo antes de que el negocio reemplace el sueldo [VERIFICADO: ambos, 2026-10-21].
+- **Horario no disponible para ambos:** lunes a viernes de 9:00 a 18:30 (los dos trabajan). Indira además martes y jueves de 19:30 a 22:40 y domingos de 10:00 a 14:00.
+- **Lo que ya intentaron:** Bellie (proyecto universitario, cero ventas, cerrado). Nunca han vendido un producto o servicio por cuenta propia [VERIFICADO: ambos, 2026-10-21].
 
 ## Datos críticos para pasar a la Fase 1
 - [x] Capital disponible de Carlos (S/ 150/mes; sin monto único)
