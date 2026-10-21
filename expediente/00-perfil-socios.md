@@ -22,7 +22,7 @@
 | Cuánto puede perder sin que afecte su vida | **S/ 100** | [VERIFICADO: Carlos, 2026-10-21] |
 | Meses que puede sostener el proyecto sin ingresos | Si el negocio exige más de S/ 150/mes, **no más de 1 mes**. Con S/ 150/mes o menos: **1 año o más** | [VERIFICADO: Carlos, 2026-10-21] — S-02 validado |
 | Obligaciones fijas relevantes | Ninguna que condicione el aporte de S/ 150/mes | [VERIFICADO: Carlos, 2026-10-21] |
-| Qué quiere obtener | 1) **Independizarse de su empleo actual lo antes posible, con fecha objetivo julio de 2027**. 2) Construir patrimonio hacia S/ 1 millón | [VERIFICADO: Carlos, 2026-10-21] |
+| Qué quiere obtener | 1) **Independizarse de su empleo actual lo antes posible, con fecha objetivo julio de 2027**. 2) Construir patrimonio hacia S/ 1 millón. Sueldo neto a reemplazar: S/ 2 000 | [VERIFICADO: Carlos, 2026-10-21] |
 | Intereses | Crear aplicaciones con "vibe coding" usando Claude Code; capacitación y entrenamiento; fútbol; videos de crecimiento personal, IA y nuevas skills de IA | [VERIFICADO: Carlos, 2026-10-21] |
 | Contactos útiles | Dueño de una academia de marinera (amigo cercano de Carlos; puede hablar con él). La mamá de Indira tiene una librería (dispuesta a planear con ellos). Grupo de amigas de la UPN con agencia de creación de contenido recién iniciada (aceptarían conversar; compra no asegurada); una de ellas vende galletas rellenas por redes | [VERIFICADO: Carlos, 2026-10-21] |
 | Habilidades y experiencia (detalle) | Ver sección "Habilidades con evidencia" abajo | |
@@ -57,8 +57,8 @@ Las respuestas llegaron redactadas en primera persona; se registran como dadas p
 | Obligaciones fijas relevantes | Ninguna que condicione el aporte de S/ 200/mes | [VERIFICADO: Indira, 2026-10-21] |
 | Intereses | Salir a lugares nuevos, observar las calles y lo que ofrecen restaurantes y cafeterías, y cómo es el espacio de cada lugar | [VERIFICADO: Carlos sobre Indira, 2026-10-21 — segunda mano] |
 | Contactos útiles | Su mamá tiene una librería (ver contactos de Carlos) | [VERIFICADO: Carlos, 2026-10-21] |
-| Qué quiere obtener | **Independizarse de su trabajo actual y tener un negocio propio.** Comparte la meta de julio de 2027 | [VERIFICADO: Indira, 2026-10-21] |
-| Ideas previas / preferencias | No conoce las ideas candidatas previas de Carlos. Las ideas nuevas son conjuntas (ver sección "Ideas previas") | [VERIFICADO: Indira, 2026-10-21] |
+| Qué quiere obtener | **Independizarse de su trabajo actual y tener un negocio propio.** Comparte la meta de julio de 2027. Sueldo neto a reemplazar: S/ 2 000 | [VERIFICADO: Indira/Carlos, 2026-10-21] |
+| Ideas previas / preferencias | No conocía las ideas antiguas de Carlos. Tras la Fase 3, su preferencia (respuesta conjunta dada por Carlos): **chatbot de WhatsApp y sorpresas/detalles para fechas especiales**; no se registró cuál le atrae menos | [VERIFICADO: Carlos por ambos, 2026-10-21 — segunda mano respecto a Indira] |
 | Cosas que no está dispuesta a hacer | Ver "Restricciones" (respuesta conjunta del bloque 4) | [VERIFICADO: ambos, 2026-10-21] |
 
 ## Recursos combinados (cálculo del Director, 2026-10-21)

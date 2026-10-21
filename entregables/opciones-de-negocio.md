@@ -55,9 +55,9 @@ Cifras financieras: `python3 finanzas/modelo.py --comparar`, régimen uniforme R
 
 **Lo que ninguna logra:** reemplazar un sueldo en 12 meses en el escenario base. Julio de 2027 solo aparece en el escenario optimista del taller (mes 10) y del chatbot (mes 11), con crecimientos de 20 % mensual que nadie ha comprobado. Los socios deben decidir sabiendo esto.
 
-## 8. Qué se necesita antes de la Fase 4
-- Confirmación de las dos finalistas por Carlos e Indira (o cambio justificado).
-- Preferencia de Indira entre las cinco (no registrada).
-- Rango de sueldo neto de cada socio (S-26), para corregir el criterio de sueldo si S/ 2 000 no es la cifra.
-- Lectura de la cláusula de exclusividad de cada contrato (S-06).
-- 5 capturas con precio de SorprendeLima desde el celular (S-23).
+## 8. Decisión de los socios (2026-10-21, posterior a la recomendación)
+Carlos e Indira eligieron como finalistas **chatbot de WhatsApp con panel** y **sorpresas y detalles por pedido en fechas especiales**. Con el interés declarado (5 para ambas, 2 para incógnito y taller) la matriz da: chatbot 74, incógnito 71, taller 69, detalles 64, decoración 42. La agencia mantiene su desacuerdo parcial (ver `expediente/decisiones.md`) y respeta la decisión: la validación de detalles mide margen real y pedidos pagados. Capturas de SorprendeLima aportadas por los socios: precios S/ 80–360, 761 reseñas, envío a todo Lima [VERIFICADO: capturas, 2026-10-21].
+
+## 9. Pendientes que siguen abiertos
+- Lectura de la cláusula de exclusividad de cada contrato (S-06): los socios no la tienen a mano y aceptan el riesgo.
+- Precio de cajas de detalle sin alimentos ni flores (S-23): SorprendeLima no lo resuelve.

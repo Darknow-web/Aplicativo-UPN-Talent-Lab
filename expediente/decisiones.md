@@ -64,3 +64,16 @@
 - **Hallazgo que condiciona todo:** ninguna idea reemplaza un sueldo de S/ 2 000 en 12 meses en el escenario base; julio de 2027 no es alcanzable en base.
 - **Pendiente de los socios:** confirmar finalistas; preferencia de Indira; rango de sueldos; cláusula de contratos; capturas de SorprendeLima.
 - **Aceptado con observación:** el informe de mercado tiene ~3 300 palabras, por encima de las 2 páginas; se acepta porque la extensión está en tablas de precios con fuente para cinco ideas.
+
+## 2026-10-21 — Finalistas elegidas por los socios: chatbot y sorpresas/detalles
+- **Quién decidió:** Carlos e Indira (respuesta conjunta transmitida por Carlos).
+- **Qué:** Pasan a validación (Fase 4) el **chatbot de WhatsApp con panel** y **sorpresas y detalles por pedido en fechas especiales**. El cliente incógnito, recomendado por la agencia como segunda finalista, queda en reserva.
+- **Posición de la agencia: desacuerdo parcial.** De acuerdo con el chatbot (primero en la matriz, 74 con el interés declarado). En desacuerdo con reemplazar el incógnito por detalles: detalles queda cuarto (64) incluso con interés máximo de ambos socios; no tiene ventaja diferencial frente a competidores consolidados como SorprendeLima (761 reseñas, envío a todo Lima, precios S/ 80–360 verificados con capturas); su margen modelado es S/ 22 por pedido y no cubre un sueldo en ningún escenario; y "fechas especiales" concentra la demanda en pocas semanas al año, lo que el abogado del diablo ya marcó. La decisión es de los socios y se respeta; la agencia no la disfraza: detalles se valida con un criterio de éxito numérico que mide margen real y pedidos pagados, no interés.
+- **Qué hizo cambiar la lista:** la preferencia declarada de ambos socios. No hubo evidencia nueva a favor de detalles; las capturas de SorprendeLima confirman precios de referencia pero también un competidor fuerte.
+- **Condición de bajo costo:** las conversaciones con dueños de cafeterías y tiendas para validar el chatbot incluirán una pregunta sobre evaluación de atención, para no perder el dato del incógnito sin gastar horas adicionales.
+- **Alternativas descartadas:** chatbot + incógnito (recomendación de la agencia); chatbot + taller.
+
+## 2026-10-21 — Riesgo aceptado por los socios: cláusula de contrato no leída
+- **Quién:** Carlos, por ambos.
+- **Qué:** No tienen el contrato a mano. Declaran que si una cláusula afectara, dejarían ese empleo y buscarían otro.
+- **Posición de la agencia:** se registra como riesgo aceptado por los socios. Contradice el filtro F3 y su propia restricción de no dejar el trabajo antes de reemplazar el sueldo. S-06 sigue pendiente; se recomienda leer la cláusula antes de firmar el primer cliente del chatbot (S/ 0, 30 min).
