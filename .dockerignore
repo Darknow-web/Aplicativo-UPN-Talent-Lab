@@ -1,8 +1,0 @@
-.git
-.github
-.gitignore
-.nojekyll
-README.md
-DESPLIEGUE.md
-node_modules
-npm-debug.log
