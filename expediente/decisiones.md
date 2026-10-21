@@ -77,3 +77,10 @@
 - **Quién:** Carlos, por ambos.
 - **Qué:** No tienen el contrato a mano. Declaran que si una cláusula afectara, dejarían ese empleo y buscarían otro.
 - **Posición de la agencia:** se registra como riesgo aceptado por los socios. Contradice el filtro F3 y su propia restricción de no dejar el trabajo antes de reemplazar el sueldo. S-06 sigue pendiente; se recomienda leer la cláusula antes de firmar el primer cliente del chatbot (S/ 0, 30 min).
+
+## 2026-10-21 — Cierre de la Fase 4 (diseño): plan de validación listo para ejecutar
+- **Quién:** Director, sobre `entregables/plan-de-validacion.md` y `expediente/informes/2026-10-21-estratega-lanzamiento.md`.
+- **Qué:** 9 experimentos entre el 2026-10-27 y el 2026-11-22 (A0–A3 chatbot, B1–B4 detalles, D desempate). Costo total S/ 100–130 (145 si se cobra un piloto y se compra chip). Horas: Carlos 29,5 e Indira 32 en cuatro semanas; ninguna semana supera 10 h por socio salvo la W4 de Carlos (10 h) si pasan A2 y B2 a la vez. Criterios de éxito numéricos fijados antes de ejecutar, derivados de `finanzas/modelo.py` (pesimista y base), no inventados.
+- **Regla de desempate aceptada por el Director:** margen real por hora a 3 meses sobre lo cobrado, misma fórmula para A y B; empate < 20 % lo gana la recurrencia (A). Pendiente: que el analista financiero incorpore la función de desempate en `finanzas/modelo.py` antes del 2026-11-15.
+- **Los socios ejecutan; la agencia no ejecuta nada.** Resultados vía `/actualizar`.
+- **Pendiente de los socios:** confirmar el plan y responder las preguntas abiertas del informe (fechas de exámenes y campañas de noviembre; aceptación de la oferta S/ 100 → S/ 150; quién pone los S/ 100–130; registro sanitario de la amiga de las galletas; cuenta de Instagram del negocio; aceptación anticipada de la regla de empate).
