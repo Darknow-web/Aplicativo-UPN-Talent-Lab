@@ -23,6 +23,7 @@ Construir en DOS fases un asistente de WhatsApp para negocios pequeños de Lima 
 ## FASE 1 — DEMO (ahora; tope 6 horas)
 Qué debe poder hacer:
 1. Un archivo preguntas.json con 10 entradas {pregunta, variantes[], respuesta} para una academia de marinera en Lima. Pon textos de EJEMPLO claramente marcados "EJEMPLO" en horarios, precios y dirección; Indira los reemplaza antes de mostrar la demo.
+   Además un archivo cliente.json (ficha de alta): nombre del negocio, rubro, número del dueño, horario de atención, horario de derivación y tono de respuesta. Todo lo que cambia de un negocio a otro vive en estos dos archivos; nada del negocio queda en el código.
 2. Un servidor FastAPI con: GET /webhook (verificación de Meta con META_VERIFY_TOKEN) y POST /webhook (recibe mensajes, responde con la lógica de FAQ + IA, guarda en SQLite).
 3. Modo "número de prueba": funciona con el número de prueba gratuito de la Cloud API de Meta (hasta 5 destinatarios verificados). Documenta en README.md los pasos exactos para: crear la app en developers.facebook.com, obtener token temporal y phone_number_id, registrar un destinatario de prueba, exponer el webhook en local con un túnel (ngrok o cloudflared, el que no cueste) y verificarlo.
 4. Modo "simulado": si Meta no deja enviar (verificación pendiente, token caído), un archivo demo.html que se abre en el navegador, con apariencia de chat de WhatsApp, donde se escribe una pregunta y responde la misma lógica por HTTP local. La demo nunca debe quedar sin funcionar por culpa de Meta.
@@ -36,7 +37,7 @@ Qué debe poder hacer, además de lo anterior:
 1. Número dedicado del cliente (chip nuevo) registrado en la Cloud API; el token permanente va al .env del servidor, nunca al repositorio.
 2. Despliegue en el hosting más barato que corra un proceso Python 24/7 (compara al menos dos opciones con plan gratuito o de hasta S/ 20 al mes y dime cuál elegiste y por qué antes de desplegar). SQLite persistente en disco.
 3. Derivación real: cuando el asistente no sabe, envía al dueño por WhatsApp el número del cliente y su pregunta, y le responde al cliente que el dueño le escribirá. Horario de derivación configurable.
-4. Carga de preguntas sin tocar código: preguntas.json editable por Indira; un comando valida el JSON y recarga sin reiniciar.
+4. Carga de preguntas sin tocar código: preguntas.json y cliente.json editables por Indira; un comando valida los JSON y recarga sin reiniciar. Estructura clientes/<nombre>/ con esos dos archivos, y el servidor atiende varios números a la vez leyendo esas carpetas (un phone_number_id por cliente), para que el segundo cliente no exija rehacer nada.
 5. Reporte semanal: un comando que exporta a CSV las 5 métricas de la semana y el detalle de conversaciones derivadas; Indira lo pega en Google Sheets y lo manda al dueño. No construyas un panel web con usuarios y contraseñas: no cabe en 30 horas.
 6. Contador de costos: tabla con mensajes enviados por mes, tokens de IA usados y costo estimado en soles con un tipo de cambio configurable en .env. Un comando muestra el costo acumulado del mes. Si supera S/ 35, me avisa.
 7. Pruebas mínimas con pytest: coincidencia de FAQ, derivación cuando no hay coincidencia, comando BORRAR, contador de mensajes. Deben pasar antes de cada despliegue.
@@ -67,6 +68,9 @@ Criterio de éxito de la Fase 2: el asistente responde en el número del cliente
 - Español, directo, sin relleno. Términos técnicos en inglés cuando sean el nombre real de la cosa.
 - Cuando termines la Fase 1, dime literalmente: "Fase 1 lista. La Fase 2 queda bloqueada hasta PAGO RECIBIDO."
 ```
+
+## Ajuste del 2026-10-22
+A pedido de Carlos, se agregó la ficha de alta por cliente (cliente.json) y la estructura multi-cliente en la Fase 2, para que el mismo programa sirva a cualquier negocio cambiando solo datos. Pendiente de A0-3: si Meta permite registrar números de varios negocios bajo la cuenta de los socios o si cada cliente debe verificar la suya [DESCONOCIDO].
 
 ## Supuestos tomados por el Director
 1. Stack Python + FastAPI + SQLite: Carlos no declaró preferencia; es lo más barato de alojar y lo que menos horas consume.
