@@ -102,3 +102,9 @@
 - **Qué cambia:** afecta S-40 (número de prueba sin verificación), S-11 (API oficial) y el supuesto de la oferta "instalación en 14 días". No cambia el veredicto de la Fase 3 ni la lista de finalistas: el plan ya preveía este caso (A0 "no pasa" → demo simulada en pantalla, A2 sigue).
 - **Decisión inmediata del Director:** no verificar nada ni gastar ahora; la demo de A2 se hace en modo simulado si el número de prueba también exige verificación. Se encarga al analista de mercado verificar en fuentes oficiales de Meta qué exige hoy el número de prueba, el número real, los documentos aceptados en Perú y la figura para operar números de clientes. Con eso se ajusta la oferta antes de las demos del 9 al 14 de noviembre.
 - **Pregunta pendiente a Carlos:** si la verificación la pidió el número de prueba o al intentar agregar su propio número.
+
+## 2026-10-22 — Resultado de la verificación de Meta y ajuste del plan
+- **Quién:** Director, con `expediente/informes/2026-10-22-analista-mercado-meta.md`.
+- **Qué cambia:** el número de prueba y un número real no exigen verificación de negocio para empezar [VERIFICADO: Meta, 2026-10-22]; la pantalla de documentos corresponde al flujo de Business Suite, no al App Dashboard (S-46, por confirmar con captura). Para el piloto, la cuenta de WhatsApp Business se crea a nombre del cliente y él registra su tarjeta (S-47); los socios no verifican nada en la validación. Supuestos nuevos S-43 a S-47; S-11 validado parcial.
+- **Lo que sigue sin dato:** precio por mensaje en soles (S-44) y si Meta acepta Ficha RUC de persona natural (S-43).
+- **Veredicto y finalistas:** sin cambio. La oferta mantiene "instalación en 14 días".
