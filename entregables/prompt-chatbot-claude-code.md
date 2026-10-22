@@ -76,3 +76,6 @@ A pedido de Carlos, se agregó la ficha de alta por cliente (cliente.json) y la 
 1. Stack Python + FastAPI + SQLite: Carlos no declaró preferencia; es lo más barato de alojar y lo que menos horas consume.
 2. IA con el modelo más barato de Anthropic a temperatura 0, restringida a elegir entre las 10 preguntas cargadas: evita que el asistente invente y mantiene el costo variable dentro de los S/ 35 (S-29).
 3. Reporte semanal por CSV y no por panel web con usuarios: cabe en 30 horas; el panel con 5 indicadores queda como pantalla estática para la demo (lo que pide A2).
+
+## Prompt de corrección enviado el 2026-10-22 (Claude Code ya tenía un plan; aún no ejecutaba)
+Objetivo del ajuste: que el programa genere chatbots para cualquier negocio que contrate a los socios, con una carpeta por cliente (`cliente.json` + `preguntas.json`), comandos de alta y validación para Indira, demo con selector de cliente, datos separados por cliente en SQLite, y un solo proceso atendiendo varios `phone_number_id` en la Fase 2. Prioridad dentro del tope de 6 h: (a) carpetas y carga, (b) comandos de alta/validación, (c) selector en la demo; lo que no quepa va a PENDIENTES.md. Texto completo entregado a Carlos en el chat del 2026-10-22.
