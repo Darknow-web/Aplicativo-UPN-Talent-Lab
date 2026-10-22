@@ -84,3 +84,9 @@
 - **Regla de desempate aceptada por el Director:** margen real por hora a 3 meses sobre lo cobrado, misma fórmula para A y B; empate < 20 % lo gana la recurrencia (A). Pendiente: que el analista financiero incorpore la función de desempate en `finanzas/modelo.py` antes del 2026-11-15.
 - **Los socios ejecutan; la agencia no ejecuta nada.** Resultados vía `/actualizar`.
 - **Pendiente de los socios:** confirmar el plan y responder las preguntas abiertas del informe (fechas de exámenes y campañas de noviembre; aceptación de la oferta S/ 100 → S/ 150; quién pone los S/ 100–130; registro sanitario de la amiga de las galletas; cuenta de Instagram del negocio; aceptación anticipada de la regla de empate).
+
+## 2026-10-22 — Plan de validación confirmado por los socios
+- **Quién decidió:** Carlos, por ambos.
+- **Qué:** (1) Plan de validación confirmado sin cambios. (2) Exámenes de la UPN terminaron la semana del 19-oct: la ventana 27-oct a 22-nov queda libre (S-39 validado). (3) Oferta del chatbot aceptada: S/ 100 adelantado por el piloto y S/ 150/mes desde el segundo mes, sin mes gratis; Carlos pidió explicación del precio (respondida por el Director el 2026-10-22). (4) Dinero: Carlos paga los gastos del chatbot (A1: S/ 30; chip si se vende); Indira paga los de las cajas (B1: S/ 40–60; B3: S/ 30–40). Ambos dentro de su aporte mensual y de su pérdida tolerable. (5) Regla de empate aceptada por adelantado: con diferencia < 20 % en margen por hora gana el chatbot por ser recurrente. Los socios ven el chatbot como ingreso estable y las cajas como ingreso extra; coincide con lo que muestra el modelo (detalles no cubre un sueldo en ningún escenario).
+- **Entregable adicional pedido por Carlos:** el plan en Excel, desglosado paso a paso con fechas, para ejecutarlo desde ya (`entregables/plan-de-validacion.xlsx`).
+- **Pendiente de la agencia:** función `desempate` en `finanzas/modelo.py` antes del 2026-11-15 (analista financiero).
