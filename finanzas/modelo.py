@@ -8,6 +8,9 @@ Uso:
   python3 finanzas/modelo.py --xlsx          # regenera finanzas/modelo.xlsx con fórmulas
   python3 finanzas/modelo.py --json          # resultados en JSON (para otros informes)
   python3 finanzas/modelo.py --idea "Nombre" # solo una idea
+  python3 finanzas/modelo.py --desempate            # Fase 4: margen real por hora (MRH) de A y B con DATOS_DESEMPATE
+  python3 finanzas/modelo.py --desempate --ejemplo  # mismo cálculo con las cifras ILUSTRATIVAS del plan (no son datos)
+  python3 finanzas/modelo.py --desempate --dato A.adelantos_cobrados=100 --dato B.paso_B2=si ...  # datos por argumento
 
 Reglas (ver CLAUDE.md y .claude/agents/analista-financiero.md):
   * Nadie hace aritmética "de memoria": toda cifra de un informe sale de este script.
@@ -360,6 +363,81 @@ IDEAS: list[Idea] = [
         notas="Inversión en kit reutilizable. Solo fines de semana (F2). Se adelanta el costo variable antes de cobrar salvo adelanto del 50 %.",
     ),
 ]
+
+
+# =============================================================================
+# 2b. DESEMPATE A vs B — Fase 4 de /explorar (entregables/plan-de-validacion.md, sección D)
+# =============================================================================
+# Métrica única: margen real por hora a 3 meses (MRH), en S/ por hora, con lo cobrado al 2026-11-15.
+#   A (chatbot):  [adelantos − costos directos del piloto + 2 × (mensualidad − CV_S29) × clientes que siguen el mes 2]
+#                 ÷ [horas A0+A1+A2 + horas de construcción de A3 (o 30 si no terminó) + 2 h × clientes × 2 meses]
+#   B (detalles): [adelantos − costos reales de insumos, empaque y motorizado] ÷ [horas B1+B2+B3+B4]
+# Regla (fijada antes de ejecutar): solo una pasó → esa; ambas → mayor MRH, y si la diferencia es < 20 % gana A
+# (ingreso recurrente); ninguna → volver a Fase 3. Es la recomendación de la agencia, no un veto.
+ORIGEN_DESEMPATE = "DESCONOCIDO — se llena con los registros reales de los socios al 2026-11-15"
+CV_S29_CHATBOT = E(33.07, "ESTIMADO: costo variable por cliente/mes del chatbot (S-29) fijado en el plan de validación, sección D; "
+                          "igual a la suma de costo_variable_unitario de la idea 1 (Meta 13,07 + IA 15 + servidor 5)")
+HORAS_CONSTRUCCION_A3_TOPE = E(30, "VERIFICADO: plan de validación, sección D y criterio de A3 — si A3 no terminó se cuentan 30 h")
+HORAS_POR_CLIENTE_MES_A = E(2, "VERIFICADO: plan de validación, sección D — 2 h por cliente por mes")
+MESES_RECURRENCIA_A = E(2, "VERIFICADO: plan de validación, sección D — meses 2 y 3 del piloto")
+UMBRAL_EMPATE = E(0.20, "VERIFICADO: plan de validación, regla 2 — diferencia < 20 % favorece A")
+
+
+@dataclass
+class Dato:
+    """Un dato real del desempate. `valor` None = todavía no registrado; el comando lo lista como faltante."""
+
+    valor: float | bool | None
+    origen: str
+    descripcion: str
+
+
+def D(descripcion: str, valor=None, origen: str = ORIGEN_DESEMPATE) -> Dato:
+    return Dato(valor, origen, descripcion)
+
+
+DATOS_DESEMPATE: dict[str, dict[str, Dato]] = {
+    "A": {
+        "paso_A2": D("¿A pasó su criterio A2? (≥ 1 pago de S/ 100 con inicio ≤ 2026-11-30) — sí/no"),
+        "adelantos_cobrados": D("S/ adelantos cobrados por pilotos (Yape/transferencia con comprobante)"),
+        "costos_directos_piloto": D("S/ costos directos reales del piloto: chip, Meta, IA, hosting (recibos)"),
+        "mensualidad_acordada": D("S/ mensualidad acordada por escrito para los meses 2 y 3"),
+        "clientes_siguen_mes2": D("n.º de clientes que confirman por WhatsApp seguir el mes 2"),
+        "horas_A0_A1_A2": D("h registradas de A0 + A1 + A2, ambos socios"),
+        "a3_terminado": D("¿A3 (piloto operativo) terminó al cierre del registro? — sí/no"),
+        "horas_construccion_A3": D("h cronometradas de construcción en A3 (solo si a3_terminado = sí; si no, se usan 30 h)"),
+    },
+    "B": {
+        "paso_B2": D("¿B pasó su criterio B2? (≥ 6 pedidos pagados, ≥ S/ 480, ≥ 2 fuera del círculo, ≥ 3/5 sin descuento) — sí/no"),
+        "adelantos_cobrados": D("S/ adelantos cobrados por pedidos (incluye un 2.º pedido pagado para diciembre si lo hubo)"),
+        "costos_reales_pedidos": D("S/ costos reales de insumos, empaque y motorizado de esos pedidos (boletas)"),
+        "horas_B1_B2_B3_B4": D("h registradas de B1 + B2 + B3 + B4, ambos socios"),
+    },
+}
+
+# Cifras ILUSTRATIVAS del plan (sección D y tabla de horas) — solo para fijar escala y probar la función. NO son datos.
+ORIGEN_ILUSTRATIVO = "ILUSTRATIVO: plan de validación 2026-10-22, sección D y tabla resumen; no es un dato real"
+DATOS_DESEMPATE_EJEMPLO: dict[str, dict[str, Dato]] = {
+    "A": {
+        "paso_A2": D("criterio A2", True, ORIGEN_ILUSTRATIVO),
+        "adelantos_cobrados": D("1 piloto × S/ 100", 100, ORIGEN_ILUSTRATIVO),
+        "costos_directos_piloto": D("chip S/ 15 (tabla Dinero) + Meta/IA/hosting del mes del piloto S/ 33,07 (S-29)",
+                                    15 + 33.07, ORIGEN_ILUSTRATIVO),
+        "mensualidad_acordada": D("S/ 100 (precio de contacto, escenario pesimista de la idea 1)", 100, ORIGEN_ILUSTRATIVO),
+        "clientes_siguen_mes2": D("1 cliente", 1, ORIGEN_ILUSTRATIVO),
+        "horas_A0_A1_A2": D("tabla resumen: A0 2+0, A1 5+6, A2 9+4,5", 2 + 0 + 5 + 6 + 9 + 4.5, ORIGEN_ILUSTRATIVO),
+        "a3_terminado": D("se asume que no terminó → 30 h", False, ORIGEN_ILUSTRATIVO),
+        "horas_construccion_A3": D("no aplica (30 h por regla)", None, ORIGEN_ILUSTRATIVO),
+    },
+    "B": {
+        "paso_B2": D("criterio B2", True, ORIGEN_ILUSTRATIVO),
+        "adelantos_cobrados": D("6 pedidos × S/ 80", 6 * 80, ORIGEN_ILUSTRATIVO),
+        "costos_reales_pedidos": D("6 pedidos × S/ 40", 6 * 40, ORIGEN_ILUSTRATIVO),
+        "horas_B1_B2_B3_B4": D("tabla resumen: B1 2+4, B2 1+6,5, B3 0,5+2, B4 2+7", 2 + 4 + 1 + 6.5 + 0.5 + 2 + 2 + 7, ORIGEN_ILUSTRATIVO),
+    },
+}
+# Lo que el plan dice que deberían dar las cifras ilustrativas (sección D): A 1 piloto ≈ 6, A 2 pilotos ≈ 10, B ≈ 10 S/ por hora.
+MRH_PLAN_ILUSTRATIVO = {"A_1_piloto": 6.0, "A_2_pilotos": 10.0, "B": 10.0}
 
 
 # =============================================================================
@@ -1004,8 +1082,224 @@ def exportar_xlsx(ideas: list[Idea], ruta: str) -> None:
 
 
 # =============================================================================
+# 6b. DESEMPATE A vs B (Fase 4) — cálculo e impresión
+# =============================================================================
+
+
+def _valores(datos: dict[str, dict[str, Dato]]) -> tuple[dict, dict]:
+    """Convierte {A: {clave: Dato}, B: {...}} en dos dicts de valores planos."""
+    return {k: d.valor for k, d in datos["A"].items()}, {k: d.valor for k, d in datos["B"].items()}
+
+
+def desempate(A: dict, B: dict, *, cv_s29: float = CV_S29_CHATBOT.valor,
+              horas_construccion_tope: float = HORAS_CONSTRUCCION_A3_TOPE.valor,
+              horas_cliente_mes: float = HORAS_POR_CLIENTE_MES_A.valor,
+              meses_recurrencia: float = MESES_RECURRENCIA_A.valor,
+              umbral_empate: float = UMBRAL_EMPATE.valor) -> dict:
+    """Margen real por hora (MRH) de A y B con la fórmula exacta del plan de validación, sección D.
+
+    A y B son dicts de valores planos con las claves de DATOS_DESEMPATE (None = falta).
+    Devuelve un dict con `faltan` (lista de claves sin dato), `A`, `B` (desglose y MRH cuando se puede calcular)
+    y `recomendacion` (texto de la regla del plan, o None si faltan datos).
+    Nunca inventa: con cualquier dato necesario en None, deja el MRH en None y lista qué falta.
+    """
+    faltan: list[str] = []
+
+    def req(d: dict, lado: str, clave: str):
+        v = d.get(clave)
+        if v is None:
+            faltan.append(f"{lado}.{clave}")
+        return v
+
+    # ---- A -----------------------------------------------------------------
+    paso_A = req(A, "A", "paso_A2")
+    adel_A = req(A, "A", "adelantos_cobrados")
+    cost_A = req(A, "A", "costos_directos_piloto")
+    mens_A = req(A, "A", "mensualidad_acordada")
+    cli_A = req(A, "A", "clientes_siguen_mes2")
+    h_val_A = req(A, "A", "horas_A0_A1_A2")
+    a3_ok = req(A, "A", "a3_terminado")
+    h_con_A = A.get("horas_construccion_A3")
+    h_con_origen = None
+    if a3_ok is True:
+        if h_con_A is None:
+            faltan.append("A.horas_construccion_A3 (A3 terminó: hacen falta las horas cronometradas)")
+        else:
+            h_con_origen = "cronometradas en A3"
+    elif a3_ok is False:
+        h_con_A = horas_construccion_tope
+        h_con_origen = f"{horas_construccion_tope:.0f} h por regla del plan (A3 no terminó)"
+
+    resA: dict = {"paso": paso_A, "mrh": None}
+    if None not in (adel_A, cost_A, mens_A, cli_A, h_val_A, h_con_A):
+        margen_rec = meses_recurrencia * (mens_A - cv_s29) * cli_A
+        num = adel_A - cost_A + margen_rec
+        h_cli = horas_cliente_mes * cli_A * meses_recurrencia
+        den = h_val_A + h_con_A + h_cli
+        resA.update({
+            "adelantos": adel_A, "costos_directos": cost_A, "mensualidad": mens_A, "cv_s29": cv_s29,
+            "clientes_siguen": cli_A, "margen_recurrente_2m": margen_rec, "numerador": num,
+            "horas_A0_A1_A2": h_val_A, "horas_construccion": h_con_A, "horas_construccion_origen": h_con_origen,
+            "horas_clientes": h_cli, "denominador": den,
+            "mrh": (num / den) if den > 0 else None,
+            "mrh_sin_horas_validacion": (num / (h_con_A + h_cli)) if (h_con_A + h_cli) > 0 else None,
+        })
+        if den <= 0:
+            faltan.append("A: el total de horas es 0; no se puede dividir")
+
+    # ---- B -----------------------------------------------------------------
+    paso_B = req(B, "B", "paso_B2")
+    adel_B = req(B, "B", "adelantos_cobrados")
+    cost_B = req(B, "B", "costos_reales_pedidos")
+    h_B = req(B, "B", "horas_B1_B2_B3_B4")
+    resB: dict = {"paso": paso_B, "mrh": None}
+    if None not in (adel_B, cost_B, h_B):
+        num = adel_B - cost_B
+        resB.update({"adelantos": adel_B, "costos": cost_B, "numerador": num, "horas": h_B,
+                     "mrh": (num / h_B) if h_B > 0 else None})
+        if h_B <= 0:
+            faltan.append("B: el total de horas es 0; no se puede dividir")
+
+    # ---- Regla del plan ----------------------------------------------------
+    rec = None
+    regla = None
+    if paso_A is not None and paso_B is not None:
+        if paso_A and not paso_B:
+            rec, regla = "A (chatbot)", "regla 1: solo A pasó su criterio A2"
+        elif paso_B and not paso_A:
+            rec, regla = "B (detalles)", "regla 1: solo B pasó su criterio B2"
+        elif not paso_A and not paso_B:
+            rec, regla = "volver a Fase 3", "regla 3: ninguna pasó su criterio; no se fuerza la elección"
+        elif resA["mrh"] is not None and resB["mrh"] is not None:
+            ma, mb = resA["mrh"], resB["mrh"]
+            mayor = max(ma, mb)
+            dif = abs(ma - mb) / mayor if mayor > 0 else 0.0
+            if mayor <= 0:
+                rec, regla = "volver a Fase 3", "regla 2: ambas pasaron pero ninguna tiene MRH positivo; la agencia recomienda reabrir"
+            elif dif < umbral_empate:
+                rec, regla = "A (chatbot)", f"regla 2: ambas pasaron; diferencia {dif:.1%} < {umbral_empate:.0%} → gana A por recurrencia"
+            elif ma > mb:
+                rec, regla = "A (chatbot)", f"regla 2: ambas pasaron; MRH A > B, diferencia {dif:.1%}"
+            else:
+                rec, regla = "B (detalles)", f"regla 2: ambas pasaron; MRH B > A, diferencia {dif:.1%}"
+            resA["diferencia_relativa"] = resB["diferencia_relativa"] = dif
+    return {"faltan": faltan, "A": resA, "B": resB, "recomendacion": rec, "regla": regla}
+
+
+def _si_no(v) -> str:
+    return "—" if v is None else ("sí" if v else "no")
+
+
+def imprimir_desempate(res: dict, datos: dict[str, dict[str, Dato]], titulo: str) -> None:
+    print(f"\n=== DESEMPATE A vs B — {titulo} ===")
+    print("Fórmula: entregables/plan-de-validacion.md, sección D. Comando: python3 finanzas/modelo.py --desempate [--ejemplo]")
+    print("\nEntradas (valor · origen):")
+    for lado in ("A", "B"):
+        for k, d in datos[lado].items():
+            v = "—" if d.valor is None else (_si_no(d.valor) if isinstance(d.valor, bool) else f"{d.valor:g}")
+            print(f"  {lado}.{k:<24} {v:>8}  [{d.origen}] {d.descripcion}")
+    print(f"  constante CV S-29        {CV_S29_CHATBOT.valor:>8.2f}  [{CV_S29_CHATBOT.origen}]")
+    if res["faltan"]:
+        print("\nFALTAN DATOS — no se calcula nada con valores inventados. Registrar en DATOS_DESEMPATE o pasar con --dato:")
+        for f in res["faltan"]:
+            print(f"  - {f}")
+    a, b = res["A"], res["B"]
+    if a.get("mrh") is not None:
+        print("\nA (chatbot):")
+        print(f"  numerador   = {s(a['adelantos'])} − {s(a['costos_directos'])} + {MESES_RECURRENCIA_A.valor:.0f} × ({s(a['mensualidad'])} − {s(a['cv_s29'])}) × {a['clientes_siguen']:g}"
+              f" = {s(a['numerador'])}")
+        print(f"  denominador = {n(a['horas_A0_A1_A2'])} h (A0+A1+A2) + {n(a['horas_construccion'])} h ({a['horas_construccion_origen']})"
+              f" + {HORAS_POR_CLIENTE_MES_A.valor:.0f} h × {a['clientes_siguen']:g} × {MESES_RECURRENCIA_A.valor:.0f} m = {n(a['denominador'])} h")
+        print(f"  MRH A = {a['mrh']:.2f} S/ por hora   (pasó A2: {_si_no(a['paso'])})")
+    if b.get("mrh") is not None:
+        print("\nB (detalles):")
+        print(f"  numerador   = {s(b['adelantos'])} − {s(b['costos'])} = {s(b['numerador'])}")
+        print(f"  denominador = {n(b['horas'])} h (B1+B2+B3+B4)")
+        print(f"  MRH B = {b['mrh']:.2f} S/ por hora   (pasó B2: {_si_no(b['paso'])})")
+    if res["recomendacion"]:
+        print(f"\nRECOMENDACIÓN DE LA AGENCIA: {res['recomendacion']}  ({res['regla']})")
+        print("La decisión es de los socios y se registra en expediente/decisiones.md.")
+    elif not res["faltan"]:
+        print("\nSin recomendación: faltan los MRH para aplicar la regla 2.")
+
+
+def verificar_ilustracion_plan() -> None:
+    """Corre la fórmula con las cifras ILUSTRATIVAS del plan y las contrasta con lo que el plan dice (≈ 6, ≈ 10, ≈ 10)."""
+    A, B = _valores(DATOS_DESEMPATE_EJEMPLO)
+    r1 = desempate(A, B)
+    A2 = dict(A, adelantos_cobrados=2 * A["adelantos_cobrados"], costos_directos_piloto=2 * A["costos_directos_piloto"],
+              clientes_siguen_mes2=2)
+    r2 = desempate(A2, B)
+    filas = [
+        ("A con 1 piloto", r1["A"]["mrh"], r1["A"]["mrh_sin_horas_validacion"], MRH_PLAN_ILUSTRATIVO["A_1_piloto"]),
+        ("A con 2 pilotos", r2["A"]["mrh"], r2["A"]["mrh_sin_horas_validacion"], MRH_PLAN_ILUSTRATIVO["A_2_pilotos"]),
+        ("B con 6 pedidos", r1["B"]["mrh"], r1["B"]["mrh"], MRH_PLAN_ILUSTRATIVO["B"]),
+    ]
+    print("\n--- Verificación contra la ilustración del plan (sección D) ---")
+    print(f"  {'caso':<18} {'fórmula del plan':>17} {'sin h A0–A2':>12} {'plan dice ≈':>12} {'coincide':>9}")
+    tol = 1.0  # S/ por hora: "aproximadamente"
+    for nombre, mrh, mrh_alt, esperado in filas:
+        ok = abs(mrh - esperado) <= tol
+        print(f"  {nombre:<18} {mrh:>17.2f} {mrh_alt:>12.2f} {esperado:>12.1f} {('sí' if ok else 'NO'):>9}")
+    print(f"  Tolerancia: ± {tol:.0f} S/ por hora. 'sin h A0–A2' = mismo numerador dividido solo entre construcción + horas por cliente.")
+    desvios = [f for f in filas if abs(f[1] - f[3]) > tol]
+    if desvios:
+        print("  DIFERENCIA: la cifra ilustrativa del plan NO se reproduce con la fórmula del plan para: "
+              + ", ".join(f[0] for f in desvios) + ".")
+        print("  La fórmula escrita en la sección D manda (incluye las horas de A0+A1+A2 en el denominador); la cifra ilustrativa")
+        print("  del plan corresponde a omitir esas horas (columna 'sin h A0–A2'). El Director debe corregir la ilustración en el plan,")
+        print("  no la fórmula. Este script usa siempre la fórmula.")
+    else:
+        print("  Las cifras ilustrativas del plan se reproducen con la fórmula.")
+    print("  Con la fórmula del plan y estas cifras ILUSTRATIVAS, A con 2 pilotos da "
+          f"{r2['A']['mrh']:.2f} S/ por hora frente a {r1['B']['mrh']:.2f} de B; el desempate no está tan abierto como dice el plan.")
+
+
+# =============================================================================
 # 7. CLI
 # =============================================================================
+
+
+def _parse_valor(texto: str):
+    t = texto.strip().lower()
+    if t in ("si", "sí", "true", "1", "yes"):
+        return True
+    if t in ("no", "false", "0"):
+        return False
+    return float(texto.replace(",", "."))
+
+
+def main_desempate(args) -> int:
+    if args.ejemplo:
+        datos = DATOS_DESEMPATE_EJEMPLO
+        titulo = "cifras ILUSTRATIVAS del plan (NO son datos reales)"
+    else:
+        datos = {lado: dict(v) for lado, v in DATOS_DESEMPATE.items()}
+        titulo = "datos reales de los socios (DATOS_DESEMPATE / --dato)"
+    for item in args.dato:
+        try:
+            clave, valor = item.split("=", 1)
+            lado, nombre = clave.strip().split(".", 1)
+            if nombre not in datos[lado]:
+                raise KeyError(nombre)
+            d = datos[lado][nombre]
+            datos[lado][nombre] = Dato(_parse_valor(valor), "VERIFICADO: registro de los socios pasado por --dato " + "(" + item + ")", d.descripcion)
+        except (ValueError, KeyError) as exc:
+            claves = ", ".join(f"{l}.{k}" for l in datos for k in datos[l])
+            print(f"--dato inválido '{item}' ({exc}). Claves válidas: {claves}", file=sys.stderr)
+            return 2
+    cv_modelo = sum(e.valor for e in IDEAS[0].costo_variable_unitario.values()) if IDEAS else None
+    print(banner(), end="")
+    A, B = _valores(datos)
+    res = desempate(A, B)
+    imprimir_desempate(res, datos, titulo)
+    if cv_modelo is not None and abs(cv_modelo - CV_S29_CHATBOT.valor) > 0.01:
+        print(f"\nAVISO: el costo variable de la idea 1 en el modelo ({cv_modelo:.2f}) ya no coincide con la constante S-29 del plan "
+              f"({CV_S29_CHATBOT.valor:.2f}); el plan manda, pero conviene revisar.")
+    if args.ejemplo:
+        verificar_ilustracion_plan()
+    print(banner(), end="")
+    return 0 if not res["faltan"] else 3
 
 
 def main(argv=None) -> int:
@@ -1015,7 +1309,19 @@ def main(argv=None) -> int:
                     help="regenerar la hoja de cálculo con fórmulas (por defecto finanzas/modelo.xlsx)")
     ap.add_argument("--json", action="store_true", help="resultados en JSON")
     ap.add_argument("--idea", help="evaluar solo la idea con este nombre (coincidencia parcial)")
+    ap.add_argument("--desempate", action="store_true",
+                    help="Fase 4: margen real por hora de A (chatbot) y B (detalles) con DATOS_DESEMPATE")
+    ap.add_argument("--ejemplo", action="store_true",
+                    help="con --desempate: usar las cifras ILUSTRATIVAS del plan y verificarlas (no son datos)")
+    ap.add_argument("--dato", action="append", default=[], metavar="LADO.CLAVE=VALOR",
+                    help="con --desempate: cargar un dato real por argumento, ej. A.adelantos_cobrados=100 o B.paso_B2=si")
     args = ap.parse_args(argv)
+
+    if args.ejemplo and not args.desempate:
+        print("--ejemplo solo tiene sentido con --desempate.", file=sys.stderr)
+        return 2
+    if args.desempate:
+        return main_desempate(args)
 
     ideas = IDEAS
     if args.idea:
