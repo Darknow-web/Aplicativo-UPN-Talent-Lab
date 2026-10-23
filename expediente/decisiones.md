@@ -108,3 +108,9 @@
 - **Qué cambia:** el número de prueba y un número real no exigen verificación de negocio para empezar [VERIFICADO: Meta, 2026-10-22]; la pantalla de documentos corresponde al flujo de Business Suite, no al App Dashboard (S-46, por confirmar con captura). Para el piloto, la cuenta de WhatsApp Business se crea a nombre del cliente y él registra su tarjeta (S-47); los socios no verifican nada en la validación. Supuestos nuevos S-43 a S-47; S-11 validado parcial.
 - **Lo que sigue sin dato:** precio por mensaje en soles (S-44) y si Meta acepta Ficha RUC de persona natural (S-43).
 - **Veredicto y finalistas:** sin cambio. La oferta mantiene "instalación en 14 días".
+
+## 2026-10-22 — /actualizar: A0 pasa. Número de prueba operativo, tope de 5 destinatarios
+- **Quién:** Carlos.
+- **Dato:** el número de prueba de la Cloud API funciona y envía mensajes reales; admite un máximo de 5 destinatarios registrados. S-40, S-45 y S-46 validados. Paso A0-2 del plan: PASA, cinco días antes de lo previsto.
+- **Consecuencia:** la demo de A2 se hace con mensajes reales desde el número de prueba (no simulada). Los 5 cupos se administran así: Carlos e Indira ocupan 2; los otros 3 se reservan para los dueños a quienes se mostrará la demo, registrándolos el mismo día de la demo y quitándolos después para liberar cupo. El modo simulado (demo.html) queda como respaldo si un dueño no quiere registrar su número.
+- **Pendientes de A0:** nota de 1 página con los 4 datos (A0-3) y el CSV de precios en soles (S-44).
