@@ -114,3 +114,7 @@
 - **Dato:** el número de prueba de la Cloud API funciona y envía mensajes reales; admite un máximo de 5 destinatarios registrados. S-40, S-45 y S-46 validados. Paso A0-2 del plan: PASA, cinco días antes de lo previsto.
 - **Consecuencia:** la demo de A2 se hace con mensajes reales desde el número de prueba (no simulada). Los 5 cupos se administran así: Carlos e Indira ocupan 2; los otros 3 se reservan para los dueños a quienes se mostrará la demo, registrándolos el mismo día de la demo y quitándolos después para liberar cupo. El modo simulado (demo.html) queda como respaldo si un dueño no quiere registrar su número.
 - **Pendientes de A0:** nota de 1 página con los 4 datos (A0-3) y el CSV de precios en soles (S-44).
+
+## 2026-10-23 — MCP "WhatsApp Business Tools" de Meta
+- **Quién:** Director, a partir del enlace que compartió Carlos [VERIFICADO: developers.facebook.com, 2026-10-23].
+- **Qué:** se autoriza su uso en Claude Code solo para configuración y depuración (registro de número, webhooks, plantillas). Confirma dos reglas ya registradas: la mensajería se bloquea hasta aceptar los términos de la Cloud API y los mensajes cobrables exigen pagos configurados. Para operar la cuenta del cliente, el dueño debe dar a Carlos rol de administrador en su app y negocio (coherente con S-47). Está en beta: no se apoya la demo en él.

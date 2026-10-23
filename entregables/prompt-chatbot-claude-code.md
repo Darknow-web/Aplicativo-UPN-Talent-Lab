@@ -79,3 +79,6 @@ A pedido de Carlos, se agregó la ficha de alta por cliente (cliente.json) y la 
 
 ## Prompt de corrección enviado el 2026-10-22 (Claude Code ya tenía un plan; aún no ejecutaba)
 Objetivo del ajuste: que el programa genere chatbots para cualquier negocio que contrate a los socios, con una carpeta por cliente (`cliente.json` + `preguntas.json`), comandos de alta y validación para Indira, demo con selector de cliente, datos separados por cliente en SQLite, y un solo proceso atendiendo varios `phone_number_id` en la Fase 2. Prioridad dentro del tope de 6 h: (a) carpetas y carga, (b) comandos de alta/validación, (c) selector en la demo; lo que no quepa va a PENDIENTES.md. Texto completo entregado a Carlos en el chat del 2026-10-22.
+
+## Añadido del 2026-10-23 — MCP oficial de Meta
+Carlos compartió https://developers.facebook.com/documentation/mcp/whatsapp-business-tools-mcp (leído por el Director el 2026-10-23). Es un servidor MCP en beta que administra la integración de WhatsApp actuando en nombre del desarrollador (números, plantillas, webhooks, envío, pagos, verificación). Sirve para configurar y depurar el piloto; no reemplaza el bot. Línea agregada al prompt: usar el MCP solo para configurar y depurar, nunca enviar a números fuera de la lista permitida, y documentar todo como pasos manuales por si el beta falla.
