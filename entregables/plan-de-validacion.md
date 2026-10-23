@@ -54,6 +54,14 @@ Dos finalistas, cuatro semanas (martes 2026-10-27 a domingo 2026-11-22), **S/ 10
 
 > **Ajuste del 2026-10-22 (tras `/actualizar`: Meta pidió verificación de empresa).** Verificado en fuentes oficiales de Meta (`expediente/informes/2026-10-22-analista-mercado-meta.md`): (1) el número de prueba no exige verificación ni tarjeta y se obtiene en developers.facebook.com → App Dashboard → WhatsApp → API Setup, no en Business Suite; (2) un número real tampoco exige verificación para empezar: sin verificar se pueden responder mensajes de clientes sin límite dentro de la ventana de 24 h (el tope de 250 aplica a conversaciones que inicia el negocio); (3) para el piloto, la cuenta de WhatsApp Business y el número se crean **a nombre del cliente**, con Carlos como rol en su cuenta, y el cliente registra su tarjeta en Meta para el excedente sobre los 1 000 mensajes gratuitos al mes. Nadie verifica nada en la validación. A2 agrega la pregunta: "¿acepta que la cuenta quede a nombre de su negocio y registrar su tarjeta?" (S-47). Verificar el negocio con RUC queda para la Etapa 2.
 
+### A3t. Piloto técnico en la librería (agregado el 2026-10-23 a pedido de Carlos)
+- **Por qué:** Carlos quiere comprobar que no hay trabas en el alta completa de un cliente antes de prometer una fecha de instalación. La agencia está de acuerdo con el objetivo y en desacuerdo parcial con la forma: es construir antes de cobrar, así que se acepta con condiciones.
+- **Condiciones de la agencia:** (1) es trabajo **extra** de Carlos, hasta 20 h, fuera del tope de 10 h/semana de validación y controlado contra sus 20 h semanales totales; (2) la librería **no cuenta** para el criterio de A2 aunque pague: es familia y es el piloto técnico; A2 sigue exigiendo ≥ 1 pago de un dueño que no sea familia; (3) la cuenta y el número van a nombre de la librería (S-47), chip nuevo S/ 15 a cargo de Carlos; (4) si una traba no se resuelve en 4 h, se detiene y se registra con `/actualizar` antes de seguir.
+- **Qué prueba:** S-36 (bot mínimo en ≤ 30 h; aquí ≤ 20 h), S-47, S-20, S-29 (costo medido), y el supuesto de la oferta "instalación en 14 días".
+- **Pasos:** A3t-1 (27–31 oct, Carlos 4 h, Indira 1 h, S/ 15): cuenta a nombre de la librería, términos aceptados, chip, registro del número, modo Live si hace falta, checklist de alta con minutos por paso. A3t-2 (2–8 nov, Carlos 8 h, Indira 1,5 h): bot mínimo multi-cliente con las 10 preguntas reales de la librería y derivación a la mamá de Indira. A3t-3 (9–15 nov, Carlos 6 h, Indira 1 h): despliegue 24/7, 3 días con clientes reales, primer CSV, costo medido.
+- **Criterio de éxito:** operativo ≤ 2026-11-15, ≤ 20 h de Carlos, checklist de alta completo con tiempos. **Pasa** → la oferta promete "instalación en X días" con X = días reales medidos, y A3 (réplica para el cliente que pagó) baja a ~4 h en la semana 4. **No pasa** por traba estructural de Meta → A2 se vende con la demo sin comprometer fecha de instalación; la traba se registra y el Director decide si A sigue.
+- **Desempate:** las horas reales de A3t cuentan como horas de construcción de A (tope 30), en lugar de las 30 h supuestas.
+
 ### A3. Entrega del piloto vendido (condicional a A2)
 - **Qué prueba:** S-36 (nuevo: un bot mínimo para un cliente —10 respuestas, derivación, reporte semanal armado a mano por Indira desde los registros— se construye en ≤ 30 h de Carlos), S-29 (costo variable ≤ S/ 35/cliente/mes, medido 30 días), S-33 (horas por mensualidad).
 - **Qué se hace:** Carlos construye con la Cloud API sobre el número nuevo; Indira carga las 10 preguntas con el dueño y arma el reporte semanal en Google Sheets. Se cronometra todo.
@@ -121,6 +129,8 @@ Dos finalistas, cuatro semanas (martes 2026-10-27 a domingo 2026-11-22), **S/ 10
   4. Lo que los socios decidan se registra en `decisiones.md`; esta regla es la recomendación de la agencia, no un veto.
 
 ---
+
+> **Ajuste del 2026-10-23:** se agregó A3t (piloto técnico en la librería) y A3 pasa a ser la réplica del alta para el cliente que pagó (~4 h en W4). Carlos: validación 27,5 h + piloto técnico 18 h = 45,5 h en cuatro semanas (≤ 20 h/semana). Indira: 30,5 h + 3,5 h. Dinero: S/ 145 (chip del piloto técnico incluido). Detalle actualizado en `entregables/plan-de-validacion.xlsx`.
 
 ## Tabla resumen
 | Id | Experimento | Supuestos | Fechas (2026) | Resp. | S/ | h Carlos | h Indira | Criterio de éxito (resumen) |

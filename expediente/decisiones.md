@@ -118,3 +118,10 @@
 ## 2026-10-23 — MCP "WhatsApp Business Tools" de Meta
 - **Quién:** Director, a partir del enlace que compartió Carlos [VERIFICADO: developers.facebook.com, 2026-10-23].
 - **Qué:** se autoriza su uso en Claude Code solo para configuración y depuración (registro de número, webhooks, plantillas). Confirma dos reglas ya registradas: la mensajería se bloquea hasta aceptar los términos de la Cloud API y los mensajes cobrables exigen pagos configurados. Para operar la cuenta del cliente, el dueño debe dar a Carlos rol de administrador en su app y negocio (coherente con S-47). Está en beta: no se apoya la demo en él.
+
+## 2026-10-23 — Ajuste del plan: piloto técnico en la librería (A3t)
+- **Quién decidió:** Carlos; la agencia acepta con condiciones.
+- **Qué:** antes de prometer instalación a un cliente, Carlos monta el bot completo en la librería de la mamá de Indira para detectar trabas del alta (cuenta a nombre del negocio, términos, chip, registro, modo Live, despliegue). Pasos A3t-1 a A3t-3 del 27-oct al 15-nov; Carlos hasta 20 h extra (18 planificadas), Indira 3,5 h, S/ 15.
+- **Posición de la agencia: desacuerdo parcial.** De acuerdo con el objetivo: no prometer lo que no se sabe instalar. En desacuerdo con que cuente como validación de mercado: es construir antes de cobrar y en un negocio de la familia. Condiciones: (1) horas extra fuera del tope de validación, controladas contra 20 h/semana; (2) la librería no cuenta para el criterio A2 aunque pague; A2 exige ≥ 1 pago de un dueño no familiar; (3) traba no resuelta en 4 h → se detiene y se registra; (4) las horas reales de A3t sustituyen las 30 h supuestas en el desempate.
+- **Qué cambia en la oferta:** "instalación en 14 días" se reemplaza por el plazo real medido en A3t cuando pase; hasta entonces no se promete fecha.
+- **Archivos:** `entregables/plan-de-validacion.md` (sección A3t), `entregables/plan-de-validacion.xlsx` regenerado (generador guardado en `finanzas/generar_plan_xlsx.py`). Si Carlos ya había llenado celdas amarillas en la versión anterior, debe copiarlas: el archivo se regeneró desde cero.
